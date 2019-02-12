@@ -17,6 +17,7 @@ repositories {
 }
 
 dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     compile "joda-time:joda-time:2.2"
     compile "com.sparkjava:spark-kotlin:1.0.0-alpha"
