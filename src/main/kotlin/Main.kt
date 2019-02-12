@@ -1,10 +1,12 @@
 import documentos.InformacionFactura
 import documentos.InformacionTributaria
+import documentos.Pago
 import documentos.TotalImpuesto
 import javax.validation.Validation
 
 
 fun main(args: Array<String>) {
+
     var infoTributaria = InformacionTributaria(
         "1",
         "1",
@@ -36,6 +38,16 @@ fun main(args: Array<String>) {
             "3.25"
         )
     )
+
+    val pagos = arrayOf(
+        Pago(
+            "15",
+            "12.00",
+            "30",
+            "dias"
+        )
+    )
+
     val infoFactura = InformacionFactura(
         "11/06/1111",
         "Alpallana",
@@ -48,7 +60,13 @@ fun main(args: Array<String>) {
         "salinas y santiago",
         "64.94",
         "5.00",
-        impuestos
+        impuestos,
+        "22.22",
+        "11.00",
+        "DOLAR",
+        pagos,
+        "11.00",
+        "11.00"
     )
 
     val factory = Validation.buildDefaultValidatorFactory()
@@ -57,6 +75,13 @@ fun main(args: Array<String>) {
     val violationsInfoFactura = validator.validate(infoFactura)
 
     infoFactura.totalConImpuestos.forEach {
+        val violaciones = validator.validate(it)
+        for (violation in violaciones) {
+            println(violation.message)
+        }
+    }
+
+    infoFactura.pagos.forEach {
         val violaciones = validator.validate(it)
         for (violation in violaciones) {
             println(violation.message)

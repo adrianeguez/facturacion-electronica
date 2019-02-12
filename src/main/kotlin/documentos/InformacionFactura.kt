@@ -125,6 +125,28 @@ class InformacionFactura {
     @NotNull(message = "pagos $mensajeNulo")
     var pagos: Array<Pago>
 
+
+    @Pattern(
+        regexp = "^[0-9]{1,14}(\\.[0-9]{1,2})?\$",
+        message = "valorRetIva $mensajeValores de 1 a 14 enteros y hasta 2 decimales separados por punto"
+    )
+    var valorRetIva: String?
+
+    fun getValorRetIva(): Optional<String> {
+        return Optional.of(valorRetIva!!)
+    }
+
+
+    @Pattern(
+        regexp = "^[0-9]{1,14}(\\.[0-9]{1,2})?\$",
+        message = "valorRetRenta $mensajeValores de 1 a 14 enteros y hasta 2 decimales separados por punto"
+    )
+    var valorRetRenta: String?
+
+    fun getValorRetRenta(): Optional<String> {
+        return Optional.of(valorRetRenta!!)
+    }
+
     constructor(
         fechaEmision: String,
         dirEstablecimiento: String?,
@@ -141,7 +163,9 @@ class InformacionFactura {
         propina: String,
         importeTotal: String,
         moneda: String,
-        pagos: Array<Pago>
+        pagos: Array<Pago>,
+        valorRetIva: String?,
+        valorRetRenta: String?
     ) {
         this.fechaEmision = fechaEmision
         this.dirEstablecimiento = dirEstablecimiento
@@ -159,6 +183,8 @@ class InformacionFactura {
         this.importeTotal = importeTotal
         this.moneda = moneda
         this.pagos = pagos
+        this.valorRetIva = valorRetIva
+        this.valorRetRenta = valorRetRenta
 
     }
 }
