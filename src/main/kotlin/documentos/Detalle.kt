@@ -41,26 +41,29 @@ class Detalle {
 
     @NotNull(message = "precioUnitario $mensajeNulo")
     @Pattern(
-        regexp = "^[0-9]{1,14}(\\.[0-9]{1,2})?\$",
+        regexp = "^[0-9]{1,14}(\\.[0-9]{2})?\$",
         message = "precioUnitario $mensajeValores de 1 a 14 enteros y hasta 2 decimales separados por punto"
     )
     var precioUnitario: String
 
     @NotNull(message = "descuento $mensajeNulo")
     @Pattern(
-        regexp = "^[0-9]{1,14}(\\.[0-9]{1,2})?\$",
+        regexp = "^[0-9]{1,14}(\\.[0-9]{2})?\$",
         message = "descuento $mensajeValores de 1 a 14 enteros y hasta 2 decimales separados por punto"
     )
     var descuento: String
 
     @NotNull(message = "precioTotalSinImpuesto $mensajeNulo")
     @Pattern(
-        regexp = "^[0-9]{1,14}(\\.[0-9]{1,2})?\$",
+        regexp = "^[0-9]{1,14}(\\.[0-9]{2})?\$",
         message = "precioTotalSinImpuesto $mensajeValores de 1 a 14 enteros y hasta 2 decimales separados por punto"
     )
     var precioTotalSinImpuesto: String
 
     var detallesAdicionales: Array<DetalleAdicional>?
+
+    @NotNull(message = "impuestos $mensajeNulo")
+    var impuestos: Array<Impuesto>
 
     constructor(
         codigoPrincipal: String?,
@@ -70,7 +73,8 @@ class Detalle {
         precioUnitario: String,
         descuento: String,
         precioTotalSinImpuesto: String,
-        detallesAdicionales: Array<DetalleAdicional>?
+        detallesAdicionales: Array<DetalleAdicional>?,
+        impuestos: Array<Impuesto>
     ) {
         this.codigoPrincipal = codigoPrincipal
         this.codigoAuxiliar = codigoAuxiliar
@@ -80,5 +84,6 @@ class Detalle {
         this.descuento = descuento
         this.precioTotalSinImpuesto = precioTotalSinImpuesto
         this.detallesAdicionales = detallesAdicionales
+        this.impuestos = impuestos
     }
 }

@@ -77,12 +77,22 @@ fun main(args: Array<String>) {
         null
     )
 
+    val impuesto = Impuesto(
+        "2",
+        "3610",
+        "0.01",
+        "22.22",
+        "22.33"
+    )
+
     val factory = Validation.buildDefaultValidatorFactory()
     val validator = factory.getValidator()
 
     val violationsInfoTributaria = validator.validate(infoTributaria)
     val violationsInfoFactura = validator.validate(infoFactura)
     val violationsDetalle = validator.validate(detalle)
+    val violationsImpuesto = validator.validate(impuesto)
+
 
     infoFactura.totalConImpuestos.forEach {
         val violaciones = validator.validate(it)
@@ -107,6 +117,10 @@ fun main(args: Array<String>) {
     }
 
     for (violation in violationsDetalle) {
+        println(violation.message)
+    }
+
+    for (violation in violationsImpuesto) {
         println(violation.message)
     }
 

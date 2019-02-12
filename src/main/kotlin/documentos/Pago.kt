@@ -22,7 +22,7 @@ class Pago {
 
     @NotNull(message = "total $mensajeNulo")
     @Pattern(
-        regexp = "^[0-9]{1,14}(\\.[0-9]{1,2})?\$",
+        regexp = "^[0-9]{1,14}(\\.[0-9]{2})?\$",
         message = "total $mensajeValores de 1 a 14 enteros y hasta 2 decimales separados por punto"
     )
     val total: String
