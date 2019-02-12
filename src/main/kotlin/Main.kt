@@ -1,7 +1,4 @@
-import documentos.InformacionFactura
-import documentos.InformacionTributaria
-import documentos.Pago
-import documentos.TotalImpuesto
+import documentos.*
 import javax.validation.Validation
 
 
@@ -69,10 +66,23 @@ fun main(args: Array<String>) {
         "11.00"
     )
 
+    val detalle = Detalle(
+        "125BJC-01",
+        "1234D56789-A",
+        "CAMIONETA 4X4 DIESEL 3.7",
+        "10.00",
+        "300000.00",
+        "5000.00",
+        "295000.00",
+        null
+    )
+
     val factory = Validation.buildDefaultValidatorFactory()
     val validator = factory.getValidator()
+
     val violationsInfoTributaria = validator.validate(infoTributaria)
     val violationsInfoFactura = validator.validate(infoFactura)
+    val violationsDetalle = validator.validate(detalle)
 
     infoFactura.totalConImpuestos.forEach {
         val violaciones = validator.validate(it)
@@ -95,4 +105,10 @@ fun main(args: Array<String>) {
     for (violation in violationsInfoFactura) {
         println(violation.message)
     }
+
+    for (violation in violationsDetalle) {
+        println(violation.message)
+    }
+
+
 }
