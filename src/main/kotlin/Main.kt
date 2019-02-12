@@ -1,9 +1,10 @@
+import documentos.InformacionFactura
 import documentos.InformacionTributaria
 import javax.validation.Validation
 
 
 fun main(args: Array<String>) {
-    var a = InformacionTributaria(
+    var infoTributaria = InformacionTributaria(
         "1",
         "1",
         "A",
@@ -16,11 +17,18 @@ fun main(args: Array<String>) {
         "000000001",
         "Enrique Guerrero Portilla OE1-34 AV. Galo Plaza Lasso"
     )
+
+    val infoFactura = InformacionFactura(
+        "11/06/1111"
+    )
     val factory = Validation.buildDefaultValidatorFactory()
     val validator = factory.getValidator()
-    val violations = validator.validate(a)
-    println(a.ambiente)
-    for (violation in violations) {
+    val violationsInfoTributaria = validator.validate(infoTributaria)
+    val violationsInfoFactura = validator.validate(infoFactura)
+    for (violation in violationsInfoTributaria) {
+        println(violation.message)
+    }
+    for (violation in violationsInfoFactura) {
         println(violation.message)
     }
 }
