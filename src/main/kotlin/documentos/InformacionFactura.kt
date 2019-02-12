@@ -52,19 +52,15 @@ class InformacionFactura {
     @Pattern(
         regexp = "04|05|06|07|08|09",
         flags = [CASE_INSENSITIVE],
-        message = "tipoIdentificacionComprador $mensajeValores 04|05|06|07|08|09"
+        message = "tipoIdentificacionComprador $mensajeValores de 04|05|06|07|08|09"
     )
-    var tipoIdentificacionComprador: String?
-
-    fun getTipoIdentificacionComprador(): Optional<String> {
-        return Optional.of(tipoIdentificacionComprador!!)
-    }
+    var tipoIdentificacionComprador: String
 
 
     @Pattern(
         regexp = "^[0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]\$",
         flags = [CASE_INSENSITIVE],
-        message = "tipoIdentificacionComprador $mensajeValores 04|05|06|07|08|09"
+        message = "tipoIdentificacionComprador $mensajeValores de este formato 001-001-000000001"
     )
     val guiaRemision: String?
 
@@ -74,17 +70,78 @@ class InformacionFactura {
 
     @NotNull(message = "razonSocialComprador $mensajeNulo")
     @NotEmpty(message = "razonSocialComprador $mensajeVacio")
+    @Size(min = 1, max = 300, message = "razonSocialComprador $mensajeValores de 1 a 300 caracteres")
     var razonSocialComprador: String
 
+    @NotEmpty(message = "identificacionComprador $mensajeVacio")
+    @Size(min = 1, max = 20, message = "identificacionComprador $mensajeValores de 1 a 20 caracteres")
+    val identificacionComprador: String
+
+    @NotEmpty(message = "direccionComprador $mensajeVacio")
+    @Size(min = 1, max = 20, message = "direccionComprador $mensajeValores de 1 a 300 caracteres")
+    val direccionComprador: String
+
+    fun getDireccionComprador(): Optional<String> {
+        return Optional.of(direccionComprador!!)
+    }
+
+    @NotNull(message = "totalSinImpuestos $mensajeNulo")
+    @Pattern(
+        regexp = "^[0-9]{1,14}(\\.[0-9]{1,2})?\$",
+        message = "totalSinImpuestos $mensajeValores de 1 a 14 enteros y hasta 2 decimales separados por punto"
+    )
+    var totalSinImpuestos: String
+
+    @NotNull(message = "totalDescuento $mensajeNulo")
+    @Pattern(
+        regexp = "^[0-9]{1,14}(\\.[0-9]{1,2})?\$",
+        message = "totalDescuento $mensajeValores de 1 a 14 enteros y hasta 2 decimales separados por punto"
+    )
+    var totalDescuento: String
+
+    @NotNull(message = "totalDescuento $mensajeNulo")
+    var totalConImpuestos: Array<TotalImpuesto>
+
+    @NotNull(message = "propina $mensajeNulo")
+    @Pattern(
+        regexp = "^[0-9]{1,14}(\\.[0-9]{1,2})?\$",
+        message = "propina $mensajeValores de 1 a 14 enteros y hasta 2 decimales separados por punto"
+    )
+    var propina: String
+
+    @NotNull(message = "importeTotal $mensajeNulo")
+    @Pattern(
+        regexp = "^[0-9]{1,14}(\\.[0-9]{1,2})?\$",
+        message = "importeTotal $mensajeValores de 1 a 14 enteros y hasta 2 decimales separados por punto"
+    )
+    var importeTotal: String
+
+    @Pattern(
+        regexp = "DOLAR",
+        message = "moneda $mensajeValores de DOLAR"
+    )
+    var moneda: String
+
+    @NotNull(message = "pagos $mensajeNulo")
+    var pagos: Array<Pago>
 
     constructor(
         fechaEmision: String,
         dirEstablecimiento: String?,
         contribuyenteEspecial: String?,
         obligadoContabilidad: String?,
-        tipoIdentificacionComprador: String?,
+        tipoIdentificacionComprador: String,
         guiaRemision: String?,
-        razonSocialComprador: String
+        razonSocialComprador: String,
+        identificacionComprador: String,
+        direccionComprador: String,
+        totalSinImpuestos: String,
+        totalDescuento: String,
+        totalConImpuestos: Array<TotalImpuesto>,
+        propina: String,
+        importeTotal: String,
+        moneda: String,
+        pagos: Array<Pago>
     ) {
         this.fechaEmision = fechaEmision
         this.dirEstablecimiento = dirEstablecimiento
@@ -93,5 +150,15 @@ class InformacionFactura {
         this.tipoIdentificacionComprador = tipoIdentificacionComprador
         this.guiaRemision = guiaRemision
         this.razonSocialComprador = razonSocialComprador
+        this.identificacionComprador = identificacionComprador
+        this.direccionComprador = direccionComprador
+        this.totalSinImpuestos = totalSinImpuestos
+        this.totalDescuento = totalDescuento
+        this.totalConImpuestos = totalConImpuestos
+        this.propina = propina
+        this.importeTotal = importeTotal
+        this.moneda = moneda
+        this.pagos = pagos
+
     }
 }
