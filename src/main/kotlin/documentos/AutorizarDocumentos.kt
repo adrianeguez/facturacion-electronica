@@ -1,0 +1,5 @@
+package documentos
+
+class AutorizarDocumentos{
+
+}

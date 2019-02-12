@@ -1,0 +1,4 @@
+package documentos
+
+class InformacionFactura {
+}
