@@ -97,5 +97,7 @@ class InformacionTributaria {
         this.secuencial = secuencial
         this.dirMatriz = dirMatriz
     }
+
+
 }
 

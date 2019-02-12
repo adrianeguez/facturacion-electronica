@@ -100,7 +100,7 @@ class InformacionFactura {
     var totalDescuento: String
 
     @NotNull(message = "totalDescuento $mensajeNulo")
-    var totalConImpuestos: Array<TotalImpuesto>
+    var totalConImpuestos: ArrayList<TotalImpuesto>
 
     @NotNull(message = "propina $mensajeNulo")
     @Pattern(
@@ -123,7 +123,7 @@ class InformacionFactura {
     var moneda: String
 
     @NotNull(message = "pagos $mensajeNulo")
-    var pagos: Array<Pago>
+    var pagos: ArrayList<Pago>
 
 
     @Pattern(
@@ -159,11 +159,11 @@ class InformacionFactura {
         direccionComprador: String,
         totalSinImpuestos: String,
         totalDescuento: String,
-        totalConImpuestos: Array<TotalImpuesto>,
+        totalConImpuestos: ArrayList<TotalImpuesto>,
         propina: String,
         importeTotal: String,
         moneda: String,
-        pagos: Array<Pago>,
+        pagos: ArrayList<Pago>,
         valorRetIva: String?,
         valorRetRenta: String?
     ) {

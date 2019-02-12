@@ -8,6 +8,7 @@ import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
+import kotlin.collections.ArrayList
 
 class Detalle {
 
@@ -60,10 +61,10 @@ class Detalle {
     )
     var precioTotalSinImpuesto: String
 
-    var detallesAdicionales: Array<DetalleAdicional>?
+    var detallesAdicionales: ArrayList<DetalleAdicional>?
 
     @NotNull(message = "impuestos $mensajeNulo")
-    var impuestos: Array<Impuesto>
+    var impuestos: ArrayList<Impuesto>
 
     constructor(
         codigoPrincipal: String?,
@@ -73,8 +74,8 @@ class Detalle {
         precioUnitario: String,
         descuento: String,
         precioTotalSinImpuesto: String,
-        detallesAdicionales: Array<DetalleAdicional>?,
-        impuestos: Array<Impuesto>
+        detallesAdicionales: ArrayList<DetalleAdicional>?,
+        impuestos: ArrayList<Impuesto>
     ) {
         this.codigoPrincipal = codigoPrincipal
         this.codigoAuxiliar = codigoAuxiliar

@@ -19,7 +19,7 @@ fun main(args: Array<String>) {
     )
 
 
-    val impuestos = arrayOf(
+    val impuestos = arrayListOf(
         TotalImpuesto(
             "2",
             "2",
@@ -36,7 +36,7 @@ fun main(args: Array<String>) {
         )
     )
 
-    val pagos = arrayOf(
+    val pagos = arrayListOf(
         Pago(
             "15",
             "12.00",
@@ -66,17 +66,6 @@ fun main(args: Array<String>) {
         "11.00"
     )
 
-    val detalle = Detalle(
-        "125BJC-01",
-        "1234D56789-A",
-        "CAMIONETA 4X4 DIESEL 3.7",
-        "10.00",
-        "300000.00",
-        "5000.00",
-        "295000.00",
-        null
-    )
-
     val impuesto = Impuesto(
         "2",
         "3610",
@@ -85,6 +74,38 @@ fun main(args: Array<String>) {
         "22.33"
     )
 
+    val detalle = Detalle(
+        "125BJC-01",
+        "1234D56789-A",
+        "CAMIONETA 4X4 DIESEL 3.7",
+        "10.00",
+        "300000.00",
+        "5000.00",
+        "295000.00",
+        null,
+        arrayListOf(impuesto)
+    )
+
+    val infoAdicional = CampoAdicional(
+        "Codigo Impuesto ISD",
+        "4580"
+    )
+
+    val factura = Factura(
+        infoTributaria,
+        infoFactura,
+        arrayListOf(detalle),
+        arrayListOf(infoAdicional)
+    )
+
+    val errores = factura.validar()
+
+    errores.forEach {
+        println(it)
+    }
+
+
+    /*
     val factory = Validation.buildDefaultValidatorFactory()
     val validator = factory.getValidator()
 
@@ -114,6 +135,9 @@ fun main(args: Array<String>) {
 
     for (violation in violationsInfoFactura) {
         println(violation.message)
+        println(violation.propertyPath)
+        println(violation.rootBean)
+        println(violation.constraintDescriptor)
     }
 
     for (violation in violationsDetalle) {
@@ -123,6 +147,8 @@ fun main(args: Array<String>) {
     for (violation in violationsImpuesto) {
         println(violation.message)
     }
+
+    */
 
 
 }
