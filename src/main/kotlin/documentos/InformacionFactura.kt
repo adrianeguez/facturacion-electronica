@@ -1,5 +1,9 @@
 package documentos
 
+import utils.mensajeNulo
+import utils.mensajeTamano
+import utils.mensajeVacio
+import utils.mensajeValores
 import java.util.*
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
@@ -9,17 +13,17 @@ import javax.validation.constraints.Size
 
 class InformacionFactura {
 
-    @NotNull(message = "fechaEmision no puede ser nulo")
+    @NotNull(message = "fechaEmision $mensajeNulo")
     @Pattern(
         regexp = "^([0-2][0-9]|(3)[0-1])(\\/)(((0)[0-9])|((1)[0-2]))(\\/)\\d{4}\$",
         flags = [CASE_INSENSITIVE],
-        message = "fechaEmision debe tener fecha dd/mm/aaaa"
+        message = "fechaEmision $mensajeValores de fecha dd/mm/aaaa"
     )
     var fechaEmision: String
 
 
-    @NotEmpty(message = "dirEstablecimiento no puede estar vacio")
-    @Size(min = 1, max = 300, message = "dirEstablecimiento debe tener de 1 a 300 caracteres")
+    @NotEmpty(message = "dirEstablecimiento $mensajeVacio")
+    @Size(min = 1, max = 300, message = "dirEstablecimiento $mensajeValores de 1 a 300 caracteres")
     var dirEstablecimiento: String?
 
     fun getDirEstablecimiento(): Optional<String> {
@@ -27,8 +31,8 @@ class InformacionFactura {
     }
 
 
-    @NotEmpty(message = "contribuyenteEspecial no puede estar vacio")
-    @Size(min = 1, max = 13, message = "contribuyenteEspecial debe tener de 1 a 13 caracteres")
+    @NotEmpty(message = "contribuyenteEspecial $mensajeVacio")
+    @Size(min = 1, max = 13, message = "contribuyenteEspecial $mensajeValores de 1 a 13 caracteres")
     var contribuyenteEspecial: String?
 
     fun getContribuyenteEspecial(): Optional<String> {
@@ -37,7 +41,7 @@ class InformacionFactura {
 
     @Pattern(
         regexp = "SI|NO",
-        message = "obligadoContabilidad debe tener valores SI|NO"
+        message = "obligadoContabilidad $mensajeValores SI|NO"
     )
     var obligadoContabilidad: String?
 
@@ -48,7 +52,7 @@ class InformacionFactura {
     @Pattern(
         regexp = "04|05|06|07|08|09",
         flags = [CASE_INSENSITIVE],
-        message = "tipoIdentificacionComprador debe tener estos valores 04|05|06|07|08|09"
+        message = "tipoIdentificacionComprador $mensajeValores 04|05|06|07|08|09"
     )
     var tipoIdentificacionComprador: String?
 
@@ -60,7 +64,7 @@ class InformacionFactura {
     @Pattern(
         regexp = "^[0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]\$",
         flags = [CASE_INSENSITIVE],
-        message = "tipoIdentificacionComprador debe tener estos valores 04|05|06|07|08|09"
+        message = "tipoIdentificacionComprador $mensajeValores 04|05|06|07|08|09"
     )
     val guiaRemision: String?
 
@@ -68,13 +72,19 @@ class InformacionFactura {
         return Optional.of(guiaRemision!!)
     }
 
+    @NotNull(message = "razonSocialComprador $mensajeNulo")
+    @NotEmpty(message = "razonSocialComprador $mensajeVacio")
+    var razonSocialComprador: String
+
+
     constructor(
         fechaEmision: String,
         dirEstablecimiento: String?,
         contribuyenteEspecial: String?,
         obligadoContabilidad: String?,
         tipoIdentificacionComprador: String?,
-        guiaRemision: String?
+        guiaRemision: String?,
+        razonSocialComprador: String
     ) {
         this.fechaEmision = fechaEmision
         this.dirEstablecimiento = dirEstablecimiento
@@ -82,5 +92,6 @@ class InformacionFactura {
         this.obligadoContabilidad = obligadoContabilidad
         this.tipoIdentificacionComprador = tipoIdentificacionComprador
         this.guiaRemision = guiaRemision
+        this.razonSocialComprador = razonSocialComprador
     }
 }
