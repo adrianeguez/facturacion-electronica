@@ -39,13 +39,13 @@ class InformacionTributaria {
         return Optional.of(nombreComercial!!)
     }
 
-    @NotNull(message = "ruc no puede ser nulo")
+    @NotNull(message = "ruc $mensajeNulo")
     @Size(min = 13, max = 13, message = "ruc $mensajeTamano 13 caracteres")
     var ruc: String
 
-    @NotNull(message = "claveAcceso no puede ser nulo")
+
     @Size(min = 49, max = 49, message = "claveAcceso $mensajeTamano 49 caracteres")
-    var claveAcceso: String
+    var claveAcceso: String?
 
     @Pattern(
         regexp = "01|04|05|06|07",
@@ -54,7 +54,7 @@ class InformacionTributaria {
     )
     var codDoc: String
 
-    @NotNull(message = "estab no puede ser nulo")
+    @NotNull(message = "estab $mensajeNulo")
     @Size(min = 3, max = 3, message = "estab $mensajeTamano 3 caracteres")
     var estab: String
 
@@ -62,7 +62,7 @@ class InformacionTributaria {
     @Size(min = 3, max = 3, message = "ptoEmision $mensajeTamano 3 caracteres")
     var ptoEmision: String
 
-    @NotNull(message = "secuencial no puede ser nulo")
+    @NotNull(message = "secuencial $mensajeNulo")
     @Size(min = 9, max = 9, message = "secuencial $mensajeTamano 9 caracteres")
     var secuencial: String
 
@@ -78,7 +78,7 @@ class InformacionTributaria {
         razonSocial: String,
         nombreComercial: String?,
         ruc: String,
-        claveAcceso: String,
+        claveAcceso: String?,
         codDoc: String,
         estab: String,
         ptoEmision: String,

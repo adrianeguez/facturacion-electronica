@@ -49,19 +49,20 @@ class GenerarDocumentos {
             var caracteresADevolver: String = caracteresARemover
             for (i in 0 until cadenaDeCaracteresASustituir.length) {
                 caracteresADevolver =
-                    caracteresADevolver.replace(cadenaDeCaracteresAReemplazar[i], cadenaDeCaracteresAReemplazar[i])
+                        caracteresADevolver.replace(cadenaDeCaracteresAReemplazar[i], cadenaDeCaracteresAReemplazar[i])
             }
             return caracteresADevolver
         }
 
-        fun generaClave(
+        fun generarClave(
             fechaEmision: Date,
             tipoComprobante: String,
             ruc: String?,
             ambiente: String,
             serie: String,
             numeroComprobante: String,
-            codigoNumerico: String, tipoEmision: String
+            codigoNumerico: String,
+            tipoEmision: String
         ): String? {
             var ruc = ruc
             var claveGenerada: String?
@@ -80,7 +81,7 @@ class GenerarDocumentos {
             clave.append(numeroComprobante)
             clave.append(codigoNumerico)
             clave.append(tipoEmision)
-            verificador = generaDigitoModulo11(clave.toString())
+            verificador = generarDigitoModulo11(clave.toString())
             clave.append(Integer.valueOf(verificador))
             claveGenerada = clave.toString()
             if (clave.toString().length != 49) {
@@ -89,7 +90,7 @@ class GenerarDocumentos {
             return claveGenerada
         }
 
-        fun generaDigitoModulo11(cadena: String): Int {
+        fun generarDigitoModulo11(cadena: String): Int {
             val baseMultiplicador = 7
             println("CADENA-->$cadena")
             val aux = IntArray(cadena.length)
@@ -282,7 +283,8 @@ class GenerarDocumentos {
      */
         //</editor-fold >
         //<editor-fold defaultstate="collapsed" desc=" ARMAR FACTURA">
-        fun generaXMLFactura(claveAcceso: String): String? {
+
+        fun generarFacturaXML(claveAcceso: String): String? {
 
             try {
                 var out: FileOutputStream? = null

@@ -8,12 +8,14 @@ import javax.validation.constraints.Pattern
 
 abstract class ImpuestoBase {
 
+    @NotNull(message = "codigo $mensajeNulo")
     @Pattern(
         regexp = "2|3|5",
         message = "codigo $mensajeValores de 2|3|5"
     )
     var codigo: String
 
+    @NotNull(message = "codigoPorcentaje $mensajeNulo")
     @Pattern(
         regexp = tarifaICE,
         message = "codigoPorcentaje $mensajeValores de $tarifaICE"

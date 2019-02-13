@@ -1,6 +1,9 @@
+import com.beust.klaxon.Klaxon
 import documentos.*
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.validation.Validation
-
+import com.beust.klaxon.KlaxonException
 
 fun main(args: Array<String>) {
 
@@ -10,7 +13,7 @@ fun main(args: Array<String>) {
         "A",
         null,
         "1234567890123",
-        "2110201101179214673900110020010000000011234567813",
+        null,
         "01",
         "002",
         "001",
@@ -30,7 +33,7 @@ fun main(args: Array<String>) {
         TotalImpuesto(
             "3",
             "3072",
-            null,
+            "1.00",
             "64.94",
             "3.25"
         )
@@ -74,6 +77,11 @@ fun main(args: Array<String>) {
         "22.33"
     )
 
+    val detallesAdicionales = arrayListOf<DetalleAdicional>(
+        DetalleAdicional("Marca Chevrolet", "Chevrolet"),
+        DetalleAdicional("Modelo", "2012")
+    )
+
     val detalle = Detalle(
         "125BJC-01",
         "1234D56789-A",
@@ -82,7 +90,7 @@ fun main(args: Array<String>) {
         "300000.00",
         "5000.00",
         "295000.00",
-        null,
+        detallesAdicionales,
         arrayListOf(impuesto)
     )
 
@@ -103,52 +111,36 @@ fun main(args: Array<String>) {
     errores.forEach {
         println(it)
     }
-
-
-    /*
-    val factory = Validation.buildDefaultValidatorFactory()
-    val validator = factory.getValidator()
-
-    val violationsInfoTributaria = validator.validate(infoTributaria)
-    val violationsInfoFactura = validator.validate(infoFactura)
-    val violationsDetalle = validator.validate(detalle)
-    val violationsImpuesto = validator.validate(impuesto)
-
-
-    infoFactura.totalConImpuestos.forEach {
-        val violaciones = validator.validate(it)
-        for (violation in violaciones) {
-            println(violation.message)
-        }
+    if (errores.size > 0) {
+        println("Hay Errores")
+    } else {
+        println("No hay errores")
     }
 
-    infoFactura.pagos.forEach {
-        val violaciones = validator.validate(it)
-        for (violation in violaciones) {
-            println(violation.message)
-        }
-    }
+    println(factura.generarFacturaXML())
 
-    for (violation in violationsInfoTributaria) {
-        println(violation.message)
-    }
 
-    for (violation in violationsInfoFactura) {
-        println(violation.message)
-        println(violation.propertyPath)
-        println(violation.rootBean)
-        println(violation.constraintDescriptor)
+    try {
+        val result = Klaxon()
+            .parse<Impuesto?>(
+                """
+                    {
+                      "codigo":"2",
+                      "codigoPorcentaje":"3610",
+                      "tarifa": null,
+                      "baseImponible":"22.22",
+                      "valor":"22.33"
+                    }
+                    """
+            )
+        println(result?.codigo)
+        println(result?.codigoPorcentaje)
+        println(result?.tarifa)
+        println(result?.baseImponible)
+        println(result?.valor)
+    } catch (e: KlaxonException) {
+        println("ERROR")
     }
-
-    for (violation in violationsDetalle) {
-        println(violation.message)
-    }
-
-    for (violation in violationsImpuesto) {
-        println(violation.message)
-    }
-
-    */
 
 
 }
