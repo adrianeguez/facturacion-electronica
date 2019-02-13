@@ -30,16 +30,20 @@ fun main(args: Array<String>) {
         TotalImpuesto(
             "2",
             "2",
+            null,
             "5.00",
             "68.19",
-            "7.58"
+            "7.58",
+            null
         ),
         TotalImpuesto(
             "3",
             "3072",
+            null,
             "1.00",
             "64.94",
-            "3.25"
+            "3.25",
+            null
         )
     )
 
@@ -275,110 +279,154 @@ fun main(args: Array<String>) {
                             "dirMatriz": "PICHINCHA / QUITO / QUITO/ LLANO CHICO"
                         },
                         "infoFactura": {
-                            "fechaEmision": "21/10/2012",
-                            "dirEstablecimiento": "Sebastián Moreno S/N Francisco García",
-                            "contribuyenteEspecial": "5368",
+                            "fechaEmision": "13/02/2019",
+                            "dirEstablecimiento": "PICHINCHA / CAYAMBE / CAYAMBE / ROCAFUERTE N0-45 Y LIBERTAD",
+                            "contribuyenteEspecial": "0047",
                             "obligadoContabilidad": "SI",
-                            "tipoIdentificacionComprador": "04",
-                            "guiaRemision": "001-001-000000001",
-                            "razonSocialComprador": "PRUEBAS SERVICIO DE RENTAS INTERNAS",
-                            "identificacionComprador": "1713328506001",
-                            "direccionComprador": "salinas y santiago",
-                            "totalSinImpuestos": "295000.00",
-                            "totalDescuento": "5005.00",
+                            "tipoIdentificacionComprador": "05",
+                            "guiaRemision": null,
+                            "razonSocialComprador": "BESTSYSTEM",
+                            "identificacionComprador": "1710372705",
+                            "direccionComprador": "Direccion",
+                            "totalSinImpuestos": "1098.90",
+                            "totalDescuento": "0.00",
                             "totalConImpuestos": [
                                 {
                                     "codigo": "3",
-                                    "codigoPorcentaje": "3072",
-                                    "descuentoAdicional": null,
-                                    "baseImponible": "295000.00",
-                                    "valor": "14750.00"
+                                    "codigoPorcentaje": "0",
+                                    "descuentoAdicional" : "0.00",
+                                    "baseImponible": "0.00",
+                                    "tarifa": "1.00",
+                                    "valor": "0.00",
+                                    "valorDevolucionIva": null
                                 },
                                 {
                                     "codigo": "2",
                                     "codigoPorcentaje": "2",
-                                    "descuentoAdicional": "5.00",
-                                    "baseImponible": "309750.00",
-                                    "valor": "37169.40"
-                                },
-                                {
-                                    "codigo": "5",
-                                    "codigoPorcentaje": "3053",
-                                    "descuentoAdicional": null,
-                                    "baseImponible": "12000.00",
-                                    "valor": "240.00"
+                                    "descuentoAdicional" : "0.00",
+                                    "baseImponible": "1098.90",
+                                    "tarifa": "1.00",
+                                    "valor": "131.86",
+                                    "valorDevolucionIva": null
                                 }
                             ],
                             "propina": "0.00",
-                            "importeTotal": "347159.40",
+                            "importeTotal": "1230.76",
                             "moneda": "DOLAR",
                             "pagos": [
                                 {
-                                    "formaPago": "01",
-                                    "total": "347159.40",
-                                    "plazo": "30",
+                                    "formaPago": "20",
+                                    "total": "1230.76",
+                                    "plazo": "30.00",
                                     "unidadTiempo": "dias"
                                 }
                             ],
-                            "valorRetIva": "10620.00",
-                            "valorRetRenta": "2950.00"
+                            "valorRetIva": "0.00",
+                            "valorRetRenta": "0.00"
                         },
                         "detalles": [
                             {
-                                "codigoPrincipal": "125BJC-01",
-                                "codigoAuxiliar": "1234D56789-A",
-                                "descripcion": "CAMIONETA 4X4 DIESEL 3.7",
-                                "cantidad": "10.00",
-                                "precioUnitario": "300000.00",
-                                "descuento": "5000.00",
-                                "precioTotalSinImpuesto": "295000.00",
-                                "detallesAdicionales": [
-                                    {
-                                        "nombre": "Marca Chevrolet",
-                                        "valor": "Chevrolet"
-                                    },
-                                    {
-                                        "nombre": "Modelo",
-                                        "valor": "2012"
-                                    },
-                                    {
-                                        "nombre": "Chasis",
-                                        "valor": "8LDETA03V20003289"
-                                    }
-                                ],
+                                "codigoPrincipal": "679_73",
+                                "codigoAuxiliar": null,
+                                "descripcion": "ABRIGO IMPERMIABLE PESADO",
+                                "cantidad": "94.00",
+                                "precioUnitario": "11.25",
+                                "descuento": "0.00",
+                                "precioTotalSinImpuesto": "1057.50",
+                                "detallesAdicionales":null,
                                 "impuestos": [
                                     {
                                         "codigo": "2",
                                         "codigoPorcentaje": "2",
                                         "tarifa": "12.00",
-                                        "baseImponible": "68.19",
-                                        "valor": "8.18"
-                                    },
+                                        "baseImponible": "1057.50",
+                                        "valor": "1057.50"
+                                    }
+                                ]
+                            },
+                            {
+                                "codigoPrincipal": "A25-32",
+                                "codigoAuxiliar": null,
+                                "descripcion": "ABRAZADERAS 25/32",
+                                "cantidad": "1.00",
+                                "precioUnitario": "0.45",
+                                "descuento": "0.00",
+                                "precioTotalSinImpuesto": "0.45",
+                                "detallesAdicionales":null,
+                                "impuestos": [
                                     {
-                                        "codigo": "3",
-                                        "codigoPorcentaje": "3072",
-                                        "tarifa": "5.00",
-                                        "baseImponible": "64.94",
-                                        "valor": "3.25"
-                                    },
+                                        "codigo": "2",
+                                        "codigoPorcentaje": "2",
+                                        "tarifa": "12.00",
+                                        "baseImponible": "0.45",
+                                        "valor": "0.45"
+                                    }
+                                ]
+                            },
+                            {
+                                "codigoPrincipal": "A3-4",
+                                "codigoAuxiliar": null,
+                                "descripcion": "ABRAZADERAS 3/4",
+                                "cantidad": "91.00",
+                                "precioUnitario": "0.45",
+                                "descuento": "0.00",
+                                "precioTotalSinImpuesto": "40.95",
+                                "detallesAdicionales":null,
+                                "impuestos": [
                                     {
-                                        "codigo": "5",
-                                        "codigoPorcentaje": "3630",
-                                        "tarifa": "0.02",
-                                        "baseImponible": "12000.00",
-                                        "valor": "240.00"
+                                        "codigo": "2",
+                                        "codigoPorcentaje": "2",
+                                        "tarifa": "12.00",
+                                        "baseImponible": "40.95",
+                                        "valor": "40.95"
                                     }
                                 ]
                             }
                         ],
                         "infoAdicional": [
                             {
-                                "nombre": "Codigo Impuesto ISD",
-                                "valor": "4580"
+                                "nombre": "DIRECCION",
+                                "valor": "LLANO CHICO"
                             },
                             {
-                                "nombre": "Impuesto ISD",
-                                "valor": "15.42x"
+                                "nombre": "E-MAIL",
+                                "valor": "asetemp@hotmail.com"
+                            },
+                            {
+                                "nombre": "APELLIDO",
+                                "valor": "HINOJOSA"
+                            },
+                            {
+                                "nombre": "NOMBRE",
+                                "valor": "WASHINGTON"
+                            },
+                            {
+                                "nombre": "NOMBRECOMERCIAL",
+                                "valor": "BESTSYSTEM"
+                            },
+                            {
+                                "nombre": "CIUDAD",
+                                "valor": "QUITO"
+                            },
+                            {
+                                "nombre": "TELEFONO",
+                                "valor": "0993530018"
+                            },
+                            {
+                                "nombre": "CELULAR",
+                                "valor": "0987654321"
+                            },
+                            {
+                                "nombre": "PLAZO",
+                                "valor": "1.00"
+                            },
+                            {
+                                "nombre": "DIAS",
+                                "valor": "30.00"
+                            },
+                            {
+                                "nombre": "TARIFAIMP",
+                                "valor": "12.00"
                             }
                         ]
                     }

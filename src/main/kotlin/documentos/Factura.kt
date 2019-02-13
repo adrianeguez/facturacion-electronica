@@ -197,12 +197,15 @@ class Factura {
 
     private fun generarInformacionTributaria(): String {
         val nombreEtiquetaInformacionTributaria = "infoTributaria"
-
+        var nombreComercial = ""
+        if (this.infoTributario.nombreComercial != null) {
+            nombreComercial = "        <nombreComercial>${this.infoTributario.nombreComercial}</nombreComercial>\n"
+        }
         val informacionTributaria = ("<$nombreEtiquetaInformacionTributaria>\n"
                 + "        <ambiente>${this.infoTributario.ambiente}</ambiente>\n"
                 + "        <tipoEmision>${this.infoTributario.tipoEmision}</tipoEmision>\n"
                 + "        <razonSocial>${this.infoTributario.razonSocial}</razonSocial>\n"
-                + "        <nombreComercial>${if (this.infoTributario.nombreComercial != null) this.infoTributario.nombreComercial else ""}</nombreComercial>\n"
+                + nombreComercial
                 + "        <ruc>${this.infoTributario.ruc}</ruc>\n"
                 + "        <claveAcceso>${this.infoTributario.claveAcceso}</claveAcceso>\n"
                 + "        <codDoc>${this.infoTributario.codDoc}</codDoc>\n"
@@ -217,14 +220,29 @@ class Factura {
 
     private fun generarInformacionFactura(): String {
         val nombreEtiquetaInformacionFactura = "infoFactura"
+        var obligadoContabilidad = ""
+        if (this.infoFactura.obligadoContabilidad != null) {
+            obligadoContabilidad =
+                    "        <obligadoContabilidad>${this.infoFactura.obligadoContabilidad}</obligadoContabilidad>\n"
+        }
+        var contribuyenteEspecial = ""
+        println("this.infoFactura.contribuyenteEspecial")
+        println(this.infoFactura.contribuyenteEspecial)
+        if (this.infoFactura.contribuyenteEspecial != null) {
+            contribuyenteEspecial =
+                    "        <contribuyenteEspecial>${this.infoFactura.contribuyenteEspecial}</contribuyenteEspecial>\n"
+        }
+        var direccionEstablecimiento = ""
+        if (this.infoFactura.dirEstablecimiento != null) {
+            direccionEstablecimiento =
+                    "        <dirEstablecimiento>${this.infoFactura.dirEstablecimiento ?: ""}</dirEstablecimiento>\n"
+        }
 
         val informacionFactura = ("<$nombreEtiquetaInformacionFactura>\n"
                 + "        <fechaEmision>${this.infoFactura.fechaEmision}</fechaEmision>\n"
-                + "        <dirEstablecimiento>${this.infoFactura.dirEstablecimiento ?: ""}</dirEstablecimiento>\n"
-                + "        <contribuyenteEspecial>${this.infoFactura.contribuyenteEspecial
-            ?: ""}</contribuyenteEspecial>\n"
-                + "        <obligadoContabilidad>${this.infoFactura.obligadoContabilidad
-            ?: ""}</obligadoContabilidad>\n"
+                + direccionEstablecimiento
+                + contribuyenteEspecial
+                + obligadoContabilidad
                 + "        <tipoIdentificacionComprador>${this.infoFactura.tipoIdentificacionComprador}</tipoIdentificacionComprador>\n"
                 + "        <razonSocialComprador>${this.infoFactura.razonSocialComprador}</razonSocialComprador>\n"
                 + "        <identificacionComprador>${this.infoFactura.identificacionComprador}</identificacionComprador>\n"
@@ -253,12 +271,33 @@ class Factura {
         val nombreEtiquetaTotalImpuestos = "totalImpuesto"
         var totalImpuestos = ""
         totalImpuestosArreglo.forEach {
+
+            var descuentoAdicional = ""
+            if (it.descuentoAdicional != null) {
+                descuentoAdicional =
+                        "                <descuentoAdicional>${it.descuentoAdicional}</descuentoAdicional>\n"
+            }
+
+            var tarifa = ""
+            if (it.tarifa != null) {
+                tarifa =
+                        "                <tarifa>${it.tarifa}</tarifa>\n"
+            }
+
+            var valorDevolucionIva = ""
+            if (it.valorDevolucionIva != null) {
+                valorDevolucionIva =
+                        "                <valorDevolucionIva>${it.valorDevolucionIva}</valorDevolucionIva>\n"
+            }
+
             totalImpuestos += ("            <$nombreEtiquetaTotalImpuestos>\n"
                     + "                <codigo>${it.codigo}</codigo>\n"
                     + "                <codigoPorcentaje>${it.codigoPorcentaje}</codigoPorcentaje>\n"
-                    + "                <descuentoAdicional>${it.descuentoAdicional ?: ""}</descuentoAdicional>\n"
+                    + descuentoAdicional
+                    + tarifa
                     + "                <baseImponible>${it.baseImponible}</baseImponible>\n"
                     + "                <valor>${it.valor}</valor>\n"
+                    + valorDevolucionIva
                     + "             </$nombreEtiquetaTotalImpuestos>\n")
         }
         return totalImpuestos
@@ -274,16 +313,24 @@ class Factura {
 
     private fun generarPago(totalPagos: ArrayList<Pago>): String {
         val nombreEtiquetaPago = "pago"
-        var totalImpuestos = ""
+        var totalPago = ""
         totalPagos.forEach {
-            totalImpuestos += ("            <$nombreEtiquetaPago>\n"
+            var plazo = ""
+            if (it.plazo != null) {
+                plazo = "                <plazo>${it.plazo}</plazo>\n"
+            }
+            var unidadTiempo = ""
+            if (it.unidadTiempo != null) {
+                unidadTiempo = "                <unidadTiempo>${it.unidadTiempo}</unidadTiempo>\n"
+            }
+            totalPago += ("            <$nombreEtiquetaPago>\n"
                     + "                <formaPago>${it.formaPago}</formaPago>\n"
                     + "                <total>${it.total}</total>\n"
-                    + "                <plazo>${it.plazo ?: ""}</plazo>\n"
-                    + "                <unidadTiempo>${it.unidadTiempo ?: ""}</unidadTiempo>\n"
+                    + plazo
+                    + unidadTiempo
                     + "             </$nombreEtiquetaPago>\n")
         }
-        return totalImpuestos
+        return totalPago
     }
 
     fun generarDetalles(): String {
@@ -303,11 +350,18 @@ class Factura {
             if (it.detallesAdicionales != null) {
                 detallesAdicionales = generarDetallesAdicionales(it.detallesAdicionales)
             }
-
+            var codigoAuxiliar = ""
+            if (it.codigoAuxiliar != null) {
+                codigoAuxiliar = "         <codigoAuxiliar>${it.codigoAuxiliar ?: ""}</codigoAuxiliar>\n"
+            }
+            var codigoPrincipal = ""
+            if (it.codigoPrincipal != null) {
+                codigoPrincipal = "         <codigoPrincipal>${it.codigoPrincipal ?: ""}</codigoPrincipal>\n"
+            }
 
             totalDetalle += ("         <$nombreEtiquetaDetalle>\n"
-                    + "         <codigoPrincipal>${it.codigoPrincipal ?: ""}</codigoPrincipal>\n"
-                    + "         <codigoAuxiliar>${it.codigoAuxiliar ?: ""}</codigoAuxiliar>\n"
+                    + codigoPrincipal
+                    + codigoAuxiliar
                     + "         <descripcion>${it.descripcion}</descripcion>\n"
                     + "         <cantidad>${it.cantidad}</cantidad>\n"
                     + "         <precioUnitario>${it.precioUnitario}</precioUnitario>\n"
@@ -322,10 +376,14 @@ class Factura {
 
     private fun generarDetallesAdicionales(detallesAdicionales: ArrayList<DetalleAdicional>?): String {
         val nombreEtiquetaDetallesAdicionales = "detallesAdicionales"
-        val totalDetallesAdicionales = ("         <$nombreEtiquetaDetallesAdicionales>\n"
-                + generarDetalleAdicional(detallesAdicionales)
-                + "         </$nombreEtiquetaDetallesAdicionales>\n")
-        return totalDetallesAdicionales
+        if (detallesAdicionales != null) {
+            val totalDetallesAdicionales = ("         <$nombreEtiquetaDetallesAdicionales>\n"
+                    + generarDetalleAdicional(detallesAdicionales)
+                    + "         </$nombreEtiquetaDetallesAdicionales>\n")
+            return totalDetallesAdicionales
+        } else {
+            return ""
+        }
     }
 
     private fun generarDetalleAdicional(detallesAdicionales: ArrayList<DetalleAdicional>?): String {
@@ -352,6 +410,7 @@ class Factura {
                     + "                <codigo>${it.codigo}</codigo>\n"
                     + "                <codigoPorcentaje>${it.codigoPorcentaje}</codigoPorcentaje>\n"
                     + "                <baseImponible>${it.baseImponible}</baseImponible>\n"
+                    + "                <tarifa>${it.tarifa}</tarifa>\n"
                     + "                <valor>${it.valor}</valor>\n"
                     + "             </$nombreEtiquetaImpuesto>\n")
         }

@@ -3,6 +3,7 @@ package documentos
 import utils.mensajeNulo
 import utils.mensajeValores
 import utils.tarifaICE
+import java.util.*
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 
@@ -36,15 +37,27 @@ abstract class ImpuestoBase {
     )
     var valor: String
 
+    @Pattern(
+        regexp = "^[0-9]{1,14}(\\.[0-9]{2})?\$",
+        message = "tarifa $mensajeValores de 1 a 14 enteros y hasta 2 decimales separados por punto"
+    )
+    var tarifa: String?
+
+    fun getTarifa(): Optional<String> {
+        return Optional.of(tarifa!!)
+    }
+
     constructor(
         codigo: String,
         codigoPorcentaje: String,
         baseImponible: String,
-        valor: String
+        valor: String,
+        tarifa: String?
     ) {
         this.codigo = codigo
         this.codigoPorcentaje = codigoPorcentaje
         this.baseImponible = baseImponible
         this.valor = valor
+        this.tarifa = tarifa
     }
 }
