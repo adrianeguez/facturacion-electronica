@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.validation.Validation
 import com.beust.klaxon.KlaxonException
+import java.io.File
 
 fun main(args: Array<String>) {
 
@@ -103,7 +104,7 @@ fun main(args: Array<String>) {
         infoTributaria,
         infoFactura,
         arrayListOf(detalle),
-        arrayListOf(infoAdicional)
+        null
     )
 
     val errores = factura.validar()
@@ -117,30 +118,150 @@ fun main(args: Array<String>) {
         println("No hay errores")
     }
 
-    println(factura.generarFacturaXML())
+    // println(factura.generarFacturaXML())
 
 
     try {
         val result = Klaxon()
-            .parse<Impuesto?>(
+            .parse<Factura?>(
                 """
                     {
-                      "codigo":"2",
-                      "codigoPorcentaje":"3610",
-                      "tarifa": null,
-                      "baseImponible":"22.22",
-                      "valor":"22.33"
+                        "infoTributario": {
+                            "ambiente": "1",
+                            "tipoEmision": "1",
+                            "razonSocial": "Distribuidora de Suministros Nacional S.A.",
+                            "nombreComercial": null,
+                            "ruc": "1234567890123",
+                            "claveAcceso": null,
+                            "codDoc": "01",
+                            "estab": "002",
+                            "ptoEmision": "001",
+                            "secuencial": "000000001",
+                            "dirMatriz": "Enrique Guerrero Portilla OE1-34 AV. Galo Plaza Lasso"
+                        },
+                        "infoFactura": {
+                            "fechaEmision": "21/10/2012",
+                            "dirEstablecimiento": "Sebastián Moreno S/N Francisco García",
+                            "contribuyenteEspecial": "5368",
+                            "obligadoContabilidad": "SI",
+                            "tipoIdentificacionComprador": "04",
+                            "guiaRemision": "001-001-000000001",
+                            "razonSocialComprador": "PRUEBAS SERVICIO DE RENTAS INTERNAS",
+                            "identificacionComprador": "1713328506001",
+                            "direccionComprador": "salinas y santiago",
+                            "totalSinImpuestos": "295000.00",
+                            "totalDescuento": "5005.00",
+                            "totalConImpuestos": [
+                                {
+                                    "codigo": "3",
+                                    "codigoPorcentaje": "3072",
+                                    "descuentoAdicional": null,
+                                    "baseImponible": "295000.00",
+                                    "valor": "14750.00"
+                                },
+                                {
+                                    "codigo": "2",
+                                    "codigoPorcentaje": "2",
+                                    "descuentoAdicional": "5.00",
+                                    "baseImponible": "309750.00",
+                                    "valor": "37169.40"
+                                },
+                                {
+                                    "codigo": "5",
+                                    "codigoPorcentaje": "3053",
+                                    "descuentoAdicional": null,
+                                    "baseImponible": "12000.00",
+                                    "valor": "240.00"
+                                }
+                            ],
+                            "propina": "0.00",
+                            "importeTotal": "347159.40",
+                            "moneda": "DOLAR",
+                            "pagos": [
+                                {
+                                    "formaPago": "01",
+                                    "total": "347159.40",
+                                    "plazo": "30",
+                                    "unidadTiempo": "dias"
+                                }
+                            ],
+                            "valorRetIva": "10620.00",
+                            "valorRetRenta": "2950.00"
+                        },
+                        "detalles": [
+                            {
+                                "codigoPrincipal": "125BJC-01",
+                                "codigoAuxiliar": "1234D56789-A",
+                                "descripcion": "CAMIONETA 4X4 DIESEL 3.7",
+                                "cantidad": "10.00",
+                                "precioUnitario": "300000.00",
+                                "descuento": "5000.00",
+                                "precioTotalSinImpuesto": "295000.00",
+                                "detallesAdicionales": [
+                                    {
+                                        "nombre": "Marca Chevrolet",
+                                        "valor": "Chevrolet"
+                                    },
+                                    {
+                                        "nombre": "Modelo",
+                                        "valor": "2012"
+                                    },
+                                    {
+                                        "nombre": "Chasis",
+                                        "valor": "8LDETA03V20003289"
+                                    }
+                                ],
+                                "impuestos": [
+                                    {
+                                        "codigo": "2",
+                                        "codigoPorcentaje": "2",
+                                        "tarifa": "12.00",
+                                        "baseImponible": "68.19",
+                                        "valor": "8.18"
+                                    },
+                                    {
+                                        "codigo": "3",
+                                        "codigoPorcentaje": "3072",
+                                        "tarifa": "5.00",
+                                        "baseImponible": "64.94",
+                                        "valor": "3.25"
+                                    },
+                                    {
+                                        "codigo": "5",
+                                        "codigoPorcentaje": "3630",
+                                        "tarifa": "0.02",
+                                        "baseImponible": "12000.00",
+                                        "valor": "240.00"
+                                    }
+                                ]
+                            }
+                        ],
+                        "infoAdicional": [
+                            {
+                                "nombre": "Codigo Impuesto ISD",
+                                "valor": "4580"
+                            },
+                            {
+                                "nombre": "Impuesto ISD",
+                                "valor": "15.42x"
+                            }
+                        ]
                     }
                     """
             )
-        println(result?.codigo)
-        println(result?.codigoPorcentaje)
-        println(result?.tarifa)
-        println(result?.baseImponible)
-        println(result?.valor)
+        val errores = result?.validar()
+        if (errores?.size ?: 0 > 0) {
+            println("Error")
+            errores?.forEach {
+                println(it)
+            }
+        } else {
+            result?.generarFacturaXML()
+            result?.generarArchivoFacturaXML("/home/dev-08/Documents/factura/", "factura-prueba-01.xml", null)
+        }
     } catch (e: KlaxonException) {
+        println(e)
         println("ERROR")
     }
-
 
 }

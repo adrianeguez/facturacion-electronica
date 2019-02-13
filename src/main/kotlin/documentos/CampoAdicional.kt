@@ -23,8 +23,8 @@ class CampoAdicional {
         nombre: String,
         valor: String
     ) {
-        this.nombre = nombre
-        this.valor = valor
+        this.nombre = GenerarDocumentos.removerCaracteresEspeciales(nombre)
+        this.valor = GenerarDocumentos.removerCaracteresEspeciales(valor)
     }
 
 }

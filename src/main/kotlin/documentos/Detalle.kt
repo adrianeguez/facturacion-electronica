@@ -77,9 +77,11 @@ class Detalle {
         detallesAdicionales: ArrayList<DetalleAdicional>?,
         impuestos: ArrayList<Impuesto>
     ) {
-        this.codigoPrincipal = codigoPrincipal
-        this.codigoAuxiliar = codigoAuxiliar
-        this.descripcion = descripcion
+        this.codigoPrincipal =
+                if (codigoPrincipal == null) null else GenerarDocumentos.removerCaracteresEspeciales(codigoPrincipal)
+        this.codigoAuxiliar =
+                if (codigoAuxiliar == null) null else GenerarDocumentos.removerCaracteresEspeciales(codigoAuxiliar)
+        this.descripcion = GenerarDocumentos.removerCaracteresEspeciales(descripcion)
         this.cantidad = cantidad
         this.precioUnitario = precioUnitario
         this.descuento = descuento

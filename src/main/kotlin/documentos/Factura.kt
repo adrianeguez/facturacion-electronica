@@ -1,26 +1,35 @@
 package documentos
 
 import documentos.GenerarDocumentos.Companion.generarClave
+import ec.gob.sri.comprobantes.util.ArchivoUtils
 import utils.mensajeNulo
-import java.text.DateFormat
+import java.io.FileNotFoundException
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.validation.Validation
 import javax.validation.constraints.NotNull
 import kotlin.collections.ArrayList
+import java.io.FileOutputStream
+import java.io.File
+import java.util.logging.Level
+import java.util.logging.Logger
+
 
 class Factura {
 
 
     private val factory = Validation.buildDefaultValidatorFactory()
     private val validator = factory.getValidator()
-    private val codigoNumerico = "12345678" // Codigo Quemado en guía del SRI
-    private val versionXML = "1.0"
-    private val encodingXML = "UTF-8"
-    private val standaloneXML = "yes"
-    private val nombreEtiquetaFactura = "factura"
-    private val idComprobante = "comprobante" // Codigo Quemado en guía del SRI
-    private val versionFacturaXML = "1.1.0" // Codigo Quemado en guía del SRI
+
+    var codigoNumerico = "12345678" // Codigo Quemado en guía del SRI
+    var versionXML = "1.0"
+    var encodingXML = "UTF-8"
+    var standaloneXML = "yes"
+    var nombreEtiquetaFactura = "factura"
+    var idComprobante = "comprobante" // Codigo Quemado en guía del SRI
+    var versionFacturaXML = "1.1.0" // Codigo Quemado en guía del SRI
+    var stringFacturaXML = ""
 
     @NotNull(message = "infoTributario $mensajeNulo")
     var infoTributario: InformacionTributaria
@@ -33,20 +42,16 @@ class Factura {
 
     var infoAdicional: ArrayList<CampoAdicional>?
 
-    var ambiente: String
-
     constructor(
         infoTributario: InformacionTributaria,
         infoFactura: InformacionFactura,
         detalles: ArrayList<Detalle>,
-        infoAdicional: ArrayList<CampoAdicional>,
-        ambiente: String = "1"
+        infoAdicional: ArrayList<CampoAdicional>?
     ) {
         this.infoTributario = infoTributario
         this.infoFactura = infoFactura
         this.detalles = detalles
         this.infoAdicional = infoAdicional
-        this.ambiente = ambiente
         val format = SimpleDateFormat("dd/MM/yyyy")
         val fecha: Date = format.parse(this.infoFactura.fechaEmision)
 
@@ -54,7 +59,7 @@ class Factura {
             fecha,
             this.infoTributario.codDoc,
             this.infoTributario.ruc,
-            this.ambiente,
+            this.infoTributario.ambiente,
             (this.infoTributario.estab + this.infoTributario.ptoEmision),
             this.infoTributario.secuencial,
             this.codigoNumerico,
@@ -131,19 +136,61 @@ class Factura {
     }
 
     fun generarFacturaXML(): String {
-        var xmlString: String =
+        val xmlString: String =
             "<?xml version=\"$versionXML\" encoding=\"$encodingXML\" standalone=\"$standaloneXML\"?>\n" +
                     "<$nombreEtiquetaFactura id=\"${idComprobante}\" version=\"$versionFacturaXML\">\n" +
                     generarCuerpoFactura() +
                     "</$nombreEtiquetaFactura>"
+        this.stringFacturaXML = xmlString
         return xmlString
+    }
+
+    fun generarArchivoFacturaXML(
+        pathAGuardarArchivo: String,
+        nombreArchivoAGuardar: String,
+        stringFacturaXML: String?
+    ): String? {
+        val xml = stringFacturaXML ?: this.stringFacturaXML
+        var archivoPathNombre = pathAGuardarArchivo + nombreArchivoAGuardar
+
+        try {
+
+            val stringBuilder = StringBuilder()
+            println(xml)
+            stringBuilder.append(xml)
+
+            val carpetaSalida = File(pathAGuardarArchivo)
+
+            if (!carpetaSalida.exists()) {
+                carpetaSalida.mkdirs()
+            }
+
+            val archivoSalida = File(archivoPathNombre)
+
+            archivoSalida.writeText(xml)
+
+            println("Archivo generado")
+
+            return archivoPathNombre
+
+        } catch (ex: FileNotFoundException) {
+
+            Logger.getLogger(ArchivoUtils::class.java.name).log(Level.SEVERE, null, ex)
+
+        } catch (ex: IOException) {
+
+            Logger.getLogger(ArchivoUtils::class.java.name).log(Level.SEVERE, null, ex)
+
+        }
+        return null
     }
 
     private fun generarCuerpoFactura(): String {
 
         val contenidoFactura = generarInformacionTributaria() +
                 generarInformacionFactura() +
-                generarDetalles()
+                generarDetalles() +
+                generarInformacionAdicional()
 
         return contenidoFactura
     }
@@ -309,6 +356,26 @@ class Factura {
                     + "             </$nombreEtiquetaImpuesto>\n")
         }
         return totalImpuesto
+    }
+
+    private fun generarInformacionAdicional(): String {
+        val nombreEtiquetaInformacionAdicional = "infoAdicional"
+        if (this.infoAdicional != null && this.infoAdicional?.size ?: 0 > 0) {
+            val informacionAdicional = ("<$nombreEtiquetaInformacionAdicional>\n"
+                    + generarCampoAdicional(this.infoAdicional!!)
+                    + "</$nombreEtiquetaInformacionAdicional>\n")
+            return informacionAdicional
+        } else {
+            return ""
+        }
+    }
+
+    fun generarCampoAdicional(informacionAdicional: ArrayList<CampoAdicional>): String {
+        var totalCamposAdicionales = ""
+        informacionAdicional.forEach {
+            totalCamposAdicionales += ("         <campoAdicional nombre=\"${it.nombre}\">${it.valor}</campoAdicional>\n")
+        }
+        return totalCamposAdicionales
     }
 
 

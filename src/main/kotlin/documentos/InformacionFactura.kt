@@ -168,14 +168,16 @@ class InformacionFactura {
         valorRetRenta: String?
     ) {
         this.fechaEmision = fechaEmision
-        this.dirEstablecimiento = dirEstablecimiento
-        this.contribuyenteEspecial = contribuyenteEspecial
+        this.dirEstablecimiento =
+                if (dirEstablecimiento == null) null else GenerarDocumentos.removerCaracteresEspeciales(dirEstablecimiento)
+        this.contribuyenteEspecial =
+                if (contribuyenteEspecial == null) null else GenerarDocumentos.removerCaracteresEspeciales(contribuyenteEspecial)
         this.obligadoContabilidad = obligadoContabilidad
         this.tipoIdentificacionComprador = tipoIdentificacionComprador
         this.guiaRemision = guiaRemision
-        this.razonSocialComprador = razonSocialComprador
-        this.identificacionComprador = identificacionComprador
-        this.direccionComprador = direccionComprador
+        this.razonSocialComprador = GenerarDocumentos.removerCaracteresEspeciales(razonSocialComprador)
+        this.identificacionComprador = GenerarDocumentos.removerCaracteresEspeciales(identificacionComprador)
+        this.direccionComprador = GenerarDocumentos.removerCaracteresEspeciales(direccionComprador)
         this.totalSinImpuestos = totalSinImpuestos
         this.totalDescuento = totalDescuento
         this.totalConImpuestos = totalConImpuestos
