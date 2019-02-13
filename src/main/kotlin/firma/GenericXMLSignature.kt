@@ -54,13 +54,13 @@ abstract class GenericXMLSignature {
             return ks
         }
 
-    protected fun execute() {
+    protected fun execute(): Boolean {
 
 
         val keyStore = keyStore
         if (keyStore == null) {
             System.err.println("No se pudo obtener keyStore de firma.")
-            return
+            return false
         }
         val alias = getAlias(keyStore)
 
@@ -70,7 +70,7 @@ abstract class GenericXMLSignature {
             certificate = keyStore.getCertificate(alias) as X509Certificate
             if (certificate == null) {
                 System.err.println("No existe ningún certificado para firmar.")
-                return
+                return false
             }
         } catch (e1: KeyStoreException) {
             e1.printStackTrace()
@@ -84,12 +84,15 @@ abstract class GenericXMLSignature {
         } catch (e: UnrecoverableKeyException) {
             System.err.println("No existe clave privada para firmar.")
             e.printStackTrace()
+            return false
         } catch (e: KeyStoreException) {
             System.err.println("No existe clave privada para firmar.")
             e.printStackTrace()
+            return false
         } catch (e: NoSuchAlgorithmException) {
             System.err.println("No existe clave privada para firmar.")
             e.printStackTrace()
+            return false
         }
 
         val provider = keyStore.provider
@@ -103,12 +106,13 @@ abstract class GenericXMLSignature {
         } catch (ex: Exception) {
             System.err.println("Error firmando documento")
             ex.printStackTrace()
-            return
+            return false
         }
 
         val filePath = pathOut + File.separator + signatureFileName
         println("Firma guardad en: $filePath")
         saveDocumenteDisk(documentoFirmado, filePath)
+        return true
     }
 
     /**
@@ -128,8 +132,8 @@ abstract class GenericXMLSignature {
         objectIdentifier: ObjectIdentifier? = null,
         mymeTipe: String = "text/xml",
         encoding: URI? = null,
-        parentSignNode:String = "comprobante",
-        codificacionXML:String = "UTF-8"
+        parentSignNode: String = "comprobante",
+        codificacionXML: String = "UTF-8"
     ): DataToSign
 
 

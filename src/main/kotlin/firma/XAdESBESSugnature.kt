@@ -69,22 +69,22 @@ class XAdESBESSignature : GenericXMLSignature {
          * @param args Argumentos del programa
          */
         fun firmar(
-            xmlPath: String,
-            nomreArchivoFirmado: String,
-            ClaveFima: String,
-            dirFirma: String,
-            FOLDER_BASE_FIRMADO: String
-        ) {
-            val signature = XAdESBESSignature(xmlPath)
-            signature.passSignature = ClaveFima
-            signature.pathSignature = dirFirma
-            pathFile = FOLDER_BASE_FIRMADO
+            directorioXMLConNombreArchivo: String,
+            nombreNuevoArchivoXMLFirmado: String,
+            claveFirmaRegistroCivil: String,
+            directorioYNombreArchivoRegistroCivilP12: String,
+            directorioAGuardarArchivoFirmado: String
+        ): Boolean {
+            val signature = XAdESBESSignature(directorioXMLConNombreArchivo)
+            signature.passSignature = claveFirmaRegistroCivil
+            signature.pathSignature = directorioYNombreArchivoRegistroCivilP12
+            pathFile = directorioAGuardarArchivoFirmado
             val folder = File(pathFile!!)
             if (!folder.exists()) {
                 folder.mkdirs()
             }
-            nameFile = nomreArchivoFirmado
-            signature.execute()
+            nameFile = nombreNuevoArchivoXMLFirmado
+            return signature.execute()
         }
     }
 

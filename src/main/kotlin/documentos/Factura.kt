@@ -146,12 +146,12 @@ class Factura {
     }
 
     fun generarArchivoFacturaXML(
-        pathAGuardarArchivo: String,
-        nombreArchivoAGuardar: String,
-        stringFacturaXML: String?
+        directorioAGuardarArchivo: String,
+        nombreArchivoXMLAGuardar: String,
+        stringFacturaXML: String? = null
     ): String? {
         val xml = stringFacturaXML ?: this.stringFacturaXML
-        var archivoPathNombre = pathAGuardarArchivo + nombreArchivoAGuardar
+        var archivoPathNombre = directorioAGuardarArchivo + nombreArchivoXMLAGuardar
 
         try {
 
@@ -159,7 +159,7 @@ class Factura {
             println(xml)
             stringBuilder.append(xml)
 
-            val carpetaSalida = File(pathAGuardarArchivo)
+            val carpetaSalida = File(directorioAGuardarArchivo)
 
             if (!carpetaSalida.exists()) {
                 carpetaSalida.mkdirs()
