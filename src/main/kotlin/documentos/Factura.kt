@@ -409,8 +409,8 @@ class Factura {
             totalImpuesto += ("            <$nombreEtiquetaImpuesto>\n"
                     + "                <codigo>${it.codigo}</codigo>\n"
                     + "                <codigoPorcentaje>${it.codigoPorcentaje}</codigoPorcentaje>\n"
-                    + "                <baseImponible>${it.baseImponible}</baseImponible>\n"
                     + "                <tarifa>${it.tarifa}</tarifa>\n"
+                    + "                <baseImponible>${it.baseImponible}</baseImponible>\n"
                     + "                <valor>${it.valor}</valor>\n"
                     + "             </$nombreEtiquetaImpuesto>\n")
         }

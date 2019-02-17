@@ -1,12 +1,15 @@
 package documentos
 
-import ec.gob.sri.comprobantes.util.AutorizacionComprobantesWs
 import ec.gob.sri.comprobantes.exception.RespuestaAutorizacionException
+import ec.gob.sri.comprobantes.util.AutorizacionComprobantesWs
 import ec.gob.sri.comprobantes.ws.aut.RespuestaComprobante
 import ec.gob.sri.comprobantes.ws.RespuestaSolicitud
 import ec.gob.sri.comprobantes.ws.RecepcionComprobantesOfflineService
 import java.net.URL
+import java.util.logging.Level
+import java.util.logging.Logger
 import javax.xml.namespace.QName
+import javax.xml.ws.WebServiceException
 
 class AutorizarDocumentos {
     companion object {
@@ -36,13 +39,23 @@ class AutorizarDocumentos {
         }
 
         @Throws(RespuestaAutorizacionException::class)
-        fun autorizarComprobante(claveDeAcceso: String): RespuestaComprobante {
+        fun autorizarComprobante(claveDeAcceso: String): RespuestaComprobante? {
             //produccion
             //cel.sri.gob.ec
-            return AutorizacionComprobantesWs("$host$segmentoURLComprobantesElectronicos$queryParamsComprobantesElectronicos")
-                .llamadaWSAutorizacionInd(
-                    claveDeAcceso
-                )
+            println("Autorizar comprobante")
+            println("Clave de acceso $claveDeAcceso")
+            println("$host$segmentoURLComprobantesElectronicos$queryParamsComprobantesElectronicos")
+            try {
+                return AutorizacionComprobantesWs("$host$segmentoURLComprobantesElectronicos$queryParamsComprobantesElectronicos")
+                    .llamadaWSAutorizacionInd(
+                        claveDeAcceso
+                    )
+            } catch (ex: WebServiceException) {
+                Logger.getLogger(AutorizacionComprobantesWs::class.java.name).log(Level.SEVERE, null as String?, ex)
+                println("ERROR EN WEB SERVICE")
+            }
+            return null
+
         }
 
     }

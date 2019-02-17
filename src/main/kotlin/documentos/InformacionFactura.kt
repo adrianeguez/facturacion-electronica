@@ -78,7 +78,7 @@ class InformacionFactura {
     val identificacionComprador: String
 
     @NotEmpty(message = "direccionComprador $mensajeVacio")
-    @Size(min = 1, max = 20, message = "direccionComprador $mensajeValores de 1 a 300 caracteres")
+    @Size(min = 1, max = 300, message = "direccionComprador $mensajeValores de 1 a 300 caracteres")
     val direccionComprador: String
 
     fun getDireccionComprador(): Optional<String> {

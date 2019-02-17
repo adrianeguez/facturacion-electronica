@@ -6,9 +6,11 @@ import firma.XAdESBESSignature
 import org.apache.log4j.BasicConfigurator
 import java.io.File
 import utils.UtilsFacturacionElectronica
+import javax.xml.ws.WebServiceException
 
 
 fun main(args: Array<String>) {
+
     BasicConfigurator.configure()
 
     var infoTributaria = InformacionTributaria(
@@ -275,7 +277,7 @@ fun main(args: Array<String>) {
                             "codDoc": "01",
                             "estab": "001",
                             "ptoEmision": "001",
-                            "secuencial": "000000011",
+                            "secuencial": "000000012",
                             "dirMatriz": "PICHINCHA / QUITO / QUITO/ LLANO CHICO"
                         },
                         "infoFactura": {
@@ -283,40 +285,31 @@ fun main(args: Array<String>) {
                             "dirEstablecimiento": "PICHINCHA / CAYAMBE / CAYAMBE / ROCAFUERTE N0-45 Y LIBERTAD",
                             "contribuyenteEspecial": "0047",
                             "obligadoContabilidad": "SI",
-                            "tipoIdentificacionComprador": "05",
+                            "tipoIdentificacionComprador": "04",
                             "guiaRemision": null,
-                            "razonSocialComprador": "BESTSYSTEM",
-                            "identificacionComprador": "1710372705",
-                            "direccionComprador": "Direccion",
-                            "totalSinImpuestos": "1098.90",
-                            "totalDescuento": "0.00",
+                            "razonSocialComprador": "BAZAR Y PAPELERIA MEXICO",
+                            "identificacionComprador": "1800095612001",
+                            "direccionComprador": "CHAMBO 1067 Y GUAYLLABAMBA",
+                            "totalSinImpuestos": "161.79",
+                            "totalDescuento": "20.48",
                             "totalConImpuestos": [
-                                {
-                                    "codigo": "3",
-                                    "codigoPorcentaje": "0",
-                                    "descuentoAdicional" : "0.00",
-                                    "baseImponible": "0.00",
-                                    "tarifa": "1.00",
-                                    "valor": "0.00",
-                                    "valorDevolucionIva": null
-                                },
                                 {
                                     "codigo": "2",
                                     "codigoPorcentaje": "2",
-                                    "descuentoAdicional" : "0.00",
-                                    "baseImponible": "1098.90",
-                                    "tarifa": "1.00",
-                                    "valor": "131.86",
+                                    "descuentoAdicional" : null,
+                                    "baseImponible": "161.79",
+                                    "tarifa": null,
+                                    "valor": "19.41",
                                     "valorDevolucionIva": null
                                 }
                             ],
                             "propina": "0.00",
-                            "importeTotal": "1230.76",
+                            "importeTotal": "181.20",
                             "moneda": "DOLAR",
                             "pagos": [
                                 {
                                     "formaPago": "20",
-                                    "total": "1230.76",
+                                    "total": "181.20",
                                     "plazo": "30.00",
                                     "unidadTiempo": "dias"
                                 }
@@ -329,18 +322,18 @@ fun main(args: Array<String>) {
                                 "codigoPrincipal": "679_73",
                                 "codigoAuxiliar": null,
                                 "descripcion": "ABRIGO IMPERMIABLE PESADO",
-                                "cantidad": "94.00",
-                                "precioUnitario": "11.25",
-                                "descuento": "0.00",
-                                "precioTotalSinImpuesto": "1057.50",
+                                "cantidad": "8.00",
+                                "precioUnitario": "7.75",
+                                "descuento": "10.46",
+                                "precioTotalSinImpuesto": "51.54",
                                 "detallesAdicionales":null,
                                 "impuestos": [
                                     {
                                         "codigo": "2",
                                         "codigoPorcentaje": "2",
                                         "tarifa": "12.00",
-                                        "baseImponible": "1057.50",
-                                        "valor": "1057.50"
+                                        "baseImponible": "51.54",
+                                        "valor": "6.18"
                                     }
                                 ]
                             },
@@ -348,37 +341,18 @@ fun main(args: Array<String>) {
                                 "codigoPrincipal": "A25-32",
                                 "codigoAuxiliar": null,
                                 "descripcion": "ABRAZADERAS 25/32",
-                                "cantidad": "1.00",
-                                "precioUnitario": "0.45",
-                                "descuento": "0.00",
-                                "precioTotalSinImpuesto": "0.45",
+                                "cantidad": "17.00",
+                                "precioUnitario": "2.11",
+                                "descuento": "5.80",
+                                "precioTotalSinImpuesto": "30.07",
                                 "detallesAdicionales":null,
                                 "impuestos": [
                                     {
                                         "codigo": "2",
                                         "codigoPorcentaje": "2",
                                         "tarifa": "12.00",
-                                        "baseImponible": "0.45",
-                                        "valor": "0.45"
-                                    }
-                                ]
-                            },
-                            {
-                                "codigoPrincipal": "A3-4",
-                                "codigoAuxiliar": null,
-                                "descripcion": "ABRAZADERAS 3/4",
-                                "cantidad": "91.00",
-                                "precioUnitario": "0.45",
-                                "descuento": "0.00",
-                                "precioTotalSinImpuesto": "40.95",
-                                "detallesAdicionales":null,
-                                "impuestos": [
-                                    {
-                                        "codigo": "2",
-                                        "codigoPorcentaje": "2",
-                                        "tarifa": "12.00",
-                                        "baseImponible": "40.95",
-                                        "valor": "40.95"
+                                        "baseImponible": "30.07",
+                                        "valor": "3.61"
                                     }
                                 ]
                             }
@@ -432,6 +406,7 @@ fun main(args: Array<String>) {
                     }
                     """
             )
+
         val errores = result?.validar()
         if (errores?.size ?: 0 > 0) {
             println("Error")
@@ -480,17 +455,23 @@ fun main(args: Array<String>) {
                             }
                             if (respuestaSolicitud.estado == "RECIBIDA") {
                                 try {
+                                    println("ESTADO EFECTIVAMENTE ES RECIBIDO")
                                     val respuestaComprobante =
                                         AutorizarDocumentos.autorizarComprobante(factura.infoTributario.claveAcceso!!)
                                     println("Recibimos respuesta")
-                                    respuestaComprobante.autorizaciones.autorizacion.forEach {
-                                        println("Autorizado")
-                                        println(it.comprobante)
-                                        println(it.estado)
-                                        println(it.fechaAutorizacion)
-                                        println(it.mensajes)
-                                        println(it.numeroAutorizacion)
+                                    if (respuestaComprobante != null) {
+                                        respuestaComprobante.autorizaciones.autorizacion.forEach {
+                                            println("Autorizado")
+                                            println(it.comprobante)
+                                            println(it.estado)
+                                            println(it.fechaAutorizacion)
+                                            println(it.mensajes)
+                                            println(it.numeroAutorizacion)
+                                        }
+                                    }else{
+                                        println("Errores en respuesta de comprobante")
                                     }
+
 
                                 } catch (ex: RespuestaAutorizacionException) {
                                     println("Respuesta solicitud NO recibida")
