@@ -277,7 +277,7 @@ fun main(args: Array<String>) {
                             "codDoc": "01",
                             "estab": "001",
                             "ptoEmision": "001",
-                            "secuencial": "000000012",
+                            "secuencial": "000000013",
                             "dirMatriz": "PICHINCHA / QUITO / QUITO/ LLANO CHICO"
                         },
                         "infoFactura": {

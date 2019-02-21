@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<factura version="1.1.0" id="comprobante">
+    <infoTributaria>
+        <ambiente>2</ambiente>
+        <tipoEmision>1</tipoEmision>
+        <razonSocial>R.MERCANTILES S.C.C</razonSocial>
+        <nombreComercial>R.MERCANTILES S.C.C.</nombreComercial>
+        <ruc>1791304233001</ruc>
+        <claveAcceso>1402201901179130423300120010200000000070000000711</claveAcceso>
+        <codDoc>01</codDoc>
+        <estab>001</estab>
+        <ptoEmi>020</ptoEmi>
+        <secuencial>000000007</secuencial>
+        <dirMatriz>GRAL. VENTIMILLA E8-30 Y AV. 6 DE DICIEMBRE</dirMatriz>
+    </infoTributaria>
+    <infoFactura>
+        <fechaEmision>14/02/2019</fechaEmision>
+        <dirEstablecimiento>GRAL. VEINTIMILLA E8-30 Y AV. 6 DE DICIEMBRE</dirEstablecimiento>
+        <obligadoContabilidad>SI</obligadoContabilidad>
+        <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+        <razonSocialComprador>BAZAR Y PAPELERIA MEXICO</razonSocialComprador>
+        <identificacionComprador>1800095612001</identificacionComprador>
+        <direccionComprador>CHAMBO 1067 Y GUAYLLABAMBA</direccionComprador>
+        <totalSinImpuestos>161.79</totalSinImpuestos>
+        <totalDescuento>20.48</totalDescuento>
+        <totalConImpuestos>
+            <totalImpuesto>
+                <codigo>2</codigo>
+                <codigoPorcentaje>2</codigoPorcentaje>
+                <baseImponible>161.79</baseImponible>
+                <valor>19.41</valor>
+            </totalImpuesto>
+        </totalConImpuestos>
+        <propina>0.00</propina>
+        <importeTotal>181.20</importeTotal>
+        <moneda>DOLAR</moneda>
+        <pagos>
+            <pago>
+                <formaPago>20</formaPago>
+                <total>181.20</total>
+                <plazo>30</plazo>
+                <unidadTiempo>dias</unidadTiempo>
+            </pago>
+        </pagos>
+    </infoFactura>
+    <detalles>
+        <detalle>
+            <codigoPrincipal>0152002</codigoPrincipal>
+            <codigoAuxiliar>7450008864655</codigoAuxiliar>
+            <descripcion>SILICON BARRA MERLETTO 11.2X27 FUNDA/30 UNID</descripcion>
+            <cantidad>8.00</cantidad>
+            <precioUnitario>7.750000</precioUnitario>
+            <descuento>10.46</descuento>
+            <precioTotalSinImpuesto>51.54</precioTotalSinImpuesto>
+            <impuestos>
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>2</codigoPorcentaje>
+                    <tarifa>12.00</tarifa>
+                    <baseImponible>51.54</baseImponible>
+                    <valor>6.18</valor>
+                </impuesto>
+            </impuestos>
+        </detalle>
+        <detalle>
+            <codigoPrincipal>0200650551</codigoPrincipal>
+            <codigoAuxiliar>0200650551</codigoAuxiliar>
+            <descripcion>OURO KRAFT 66X80 C/10 HJ HABANO</descripcion>
+            <cantidad>40.00</cantidad>
+            <precioUnitario>2.110000</precioUnitario>
+            <descuento>4.22</descuento>
+            <precioTotalSinImpuesto>80.18</precioTotalSinImpuesto>
+            <impuestos>
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>2</codigoPorcentaje>
+                    <tarifa>12.00</tarifa>
+                    <baseImponible>80.18</baseImponible>
+                    <valor>9.62</valor>
+                </impuesto>
+            </impuestos>
+        </detalle>
+        <detalle>
+            <codigoPrincipal>0200650552</codigoPrincipal>
+            <codigoAuxiliar>0200650552</codigoAuxiliar>
+            <descripcion>OURO KRAFT 66X80 C/10 HJ ROJO</descripcion>
+            <cantidad>17.00</cantidad>
+            <precioUnitario>2.110000</precioUnitario>
+            <descuento>5.80</descuento>
+            <precioTotalSinImpuesto>30.07</precioTotalSinImpuesto>
+            <impuestos>
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>2</codigoPorcentaje>
+                    <tarifa>12.00</tarifa>
+                    <baseImponible>30.07</baseImponible>
+                    <valor>3.61</valor>
+                </impuesto>
+            </impuestos>
+        </detalle>
+    </detalles>
+    <infoAdicional>
+        <campoAdicional nombre="emailCliente">_@_.com</campoAdicional>
+        <campoAdicional nombre="Atendido por">JUAN CARLOS HINOJOSA</campoAdicional>
+        <campoAdicional nombre="fechaVencimiento">16/03/2019</campoAdicional>
+    </infoAdicional>
+</factura>
