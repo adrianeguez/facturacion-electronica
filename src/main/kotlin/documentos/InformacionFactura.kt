@@ -64,6 +64,7 @@ class InformacionFactura {
     )
     val guiaRemision: String?
 
+
     fun getGuiaRemision(): Optional<String> {
         return Optional.of(guiaRemision!!)
     }

@@ -109,164 +109,45 @@ fun main(args: Array<String>) {
         "4580"
     )
 
-    val factura = Factura(
-        infoTributaria,
-        infoFactura,
-        arrayListOf(detalle),
-        null
-    )
-
-    val errores = factura.validar()
-
-    errores.forEach {
-        println(it)
-    }
-    if (errores.size > 0) {
-        println("Hay Errores")
-    } else {
-        println("No hay errores")
-    }
+//    val factura = Factura(
+//        infoTributaria,
+//        infoFactura,
+//        arrayListOf(detalle),
+//        null
+//    )
+//
+//    val errores = factura.validar()
+//
+//    errores.forEach {
+//        println(it)
+//    }
+//    if (errores.size > 0) {
+//        println("Hay Errores")
+//    } else {
+//        println("No hay errores")
+//    }
 
     // println(factura.generarFacturaXML())
 
 
     try {
-        val directorioXML = "/home/dev-08/Documents/factura/"
-        val directorioGuardarXMLFirmados = "/home/dev-08/Documents/factura/firmados"
+        val directorioGuardarXML = "/home/work/Documents/factura"
+        val directorioGuardarXMLFirmados = "/home/work/Documents/factura/firmados"
         val nombreArchivoXML = "factura-prueba-01.xml"
         val nombreArchivoXMLFirmado = "factura-prueba-01-firmado.xml"
         val clave = "LuisPadilla2115"
         val directorioYNombreArchivoRegistroCivilP12 =
-            "/home/dev-08/Documents/Github/adrianeguez/netbeans/luis_alfredo_padilla_camuendo.p12"
+            "/home/work/Documents/Github/facturacion-electronica/documentacion/luis_alfredo_padilla_camuendo.p12"
 
         val facturaEstructuraString = """
                     {
-                        "infoTributario": {
-                            "ambiente": "1",
-                            "tipoEmision": "1",
-                            "razonSocial": "Distribuidora de Suministros Nacional S.A.",
-                            "nombreComercial": null,
-                            "ruc": "1234567890123",
-                            "claveAcceso": null,
-                            "codDoc": "01",
-                            "estab": "002",
-                            "ptoEmision": "001",
-                            "secuencial": "000000001",
-                            "dirMatriz": "Enrique Guerrero Portilla OE1-34 AV. Galo Plaza Lasso"
-                        },
-                        "infoFactura": {
-                            "fechaEmision": "21/10/2012",
-                            "dirEstablecimiento": "Sebastián Moreno S/N Francisco García",
-                            "contribuyenteEspecial": "5368",
-                            "obligadoContabilidad": "SI",
-                            "tipoIdentificacionComprador": "04",
-                            "guiaRemision": "001-001-000000001",
-                            "razonSocialComprador": "PRUEBAS SERVICIO DE RENTAS INTERNAS",
-                            "identificacionComprador": "1713328506001",
-                            "direccionComprador": "salinas y santiago",
-                            "totalSinImpuestos": "295000.00",
-                            "totalDescuento": "5005.00",
-                            "totalConImpuestos": [
-                                {
-                                    "codigo": "3",
-                                    "codigoPorcentaje": "3072",
-                                    "descuentoAdicional": null,
-                                    "baseImponible": "295000.00",
-                                    "valor": "14750.00"
-                                },
-                                {
-                                    "codigo": "2",
-                                    "codigoPorcentaje": "2",
-                                    "descuentoAdicional": "5.00",
-                                    "baseImponible": "309750.00",
-                                    "valor": "37169.40"
-                                },
-                                {
-                                    "codigo": "5",
-                                    "codigoPorcentaje": "3053",
-                                    "descuentoAdicional": null,
-                                    "baseImponible": "12000.00",
-                                    "valor": "240.00"
-                                }
-                            ],
-                            "propina": "0.00",
-                            "importeTotal": "347159.40",
-                            "moneda": "DOLAR",
-                            "pagos": [
-                                {
-                                    "formaPago": "01",
-                                    "total": "347159.40",
-                                    "plazo": "30",
-                                    "unidadTiempo": "dias"
-                                }
-                            ],
-                            "valorRetIva": "10620.00",
-                            "valorRetRenta": "2950.00"
-                        },
-                        "detalles": [
-                            {
-                                "codigoPrincipal": "125BJC-01",
-                                "codigoAuxiliar": "1234D56789-A",
-                                "descripcion": "CAMIONETA 4X4 DIESEL 3.7",
-                                "cantidad": "10.00",
-                                "precioUnitario": "300000.00",
-                                "descuento": "5000.00",
-                                "precioTotalSinImpuesto": "295000.00",
-                                "detallesAdicionales": [
-                                    {
-                                        "nombre": "Marca Chevrolet",
-                                        "valor": "Chevrolet"
-                                    },
-                                    {
-                                        "nombre": "Modelo",
-                                        "valor": "2012"
-                                    },
-                                    {
-                                        "nombre": "Chasis",
-                                        "valor": "8LDETA03V20003289"
-                                    }
-                                ],
-                                "impuestos": [
-                                    {
-                                        "codigo": "2",
-                                        "codigoPorcentaje": "2",
-                                        "tarifa": "12.00",
-                                        "baseImponible": "68.19",
-                                        "valor": "8.18"
-                                    },
-                                    {
-                                        "codigo": "3",
-                                        "codigoPorcentaje": "3072",
-                                        "tarifa": "5.00",
-                                        "baseImponible": "64.94",
-                                        "valor": "3.25"
-                                    },
-                                    {
-                                        "codigo": "5",
-                                        "codigoPorcentaje": "3630",
-                                        "tarifa": "0.02",
-                                        "baseImponible": "12000.00",
-                                        "valor": "240.00"
-                                    }
-                                ]
-                            }
-                        ],
-                        "infoAdicional": [
-                            {
-                                "nombre": "Codigo Impuesto ISD",
-                                "valor": "4580"
-                            },
-                            {
-                                "nombre": "Impuesto ISD",
-                                "valor": "15.42x"
-                            }
-                        ]
-                    }
-                    """
-        val result = Klaxon()
-            .parse<Factura?>(
-                """
-                    {
+                        "directorioGuardarXML":"${directorioGuardarXML}",
+                        "directorioGuardarXMLFirmados":"${directorioGuardarXMLFirmados}",
+                        "nombreArchivoXML":"${nombreArchivoXML}",
+                        "nombreArchivoXMLFirmado":"${nombreArchivoXMLFirmado}",
+                        "clave":"${clave}",
+                        "directorioYNombreArchivoRegistroCivilP12":"${directorioYNombreArchivoRegistroCivilP12}",
+                        "debug": true
                         "infoTributario": {
                             "ambiente": "1",
                             "tipoEmision": "1",
@@ -277,7 +158,7 @@ fun main(args: Array<String>) {
                             "codDoc": "01",
                             "estab": "001",
                             "ptoEmision": "001",
-                            "secuencial": "000000013",
+                            "secuencial": "000000016",
                             "dirMatriz": "PICHINCHA / QUITO / QUITO/ LLANO CHICO"
                         },
                         "infoFactura": {
@@ -405,92 +286,15 @@ fun main(args: Array<String>) {
                         ]
                     }
                     """
+
+        val result = Klaxon()
+            .parse<Factura?>(
+                facturaEstructuraString
             )
 
-        val errores = result?.validar()
-        if (errores?.size ?: 0 > 0) {
-            println("Error")
-            errores?.forEach {
-                println(it)
-            }
-        } else {
-            result?.generarFacturaXML()
+        val resultadoEnvioFactura = result?.enviarFactura(facturaEstructuraString)
 
-            val resultado = result?.generarArchivoFacturaXML(
-                directorioXML,
-                nombreArchivoXML
-            )
-
-            if (resultado != null) {
-                val archivoFirmado = XAdESBESSignature
-                    .firmar(
-                        directorioXML + nombreArchivoXML,
-                        nombreArchivoXMLFirmado,
-                        clave,
-                        directorioYNombreArchivoRegistroCivilP12,
-                        directorioGuardarXMLFirmados
-                    )
-                if (archivoFirmado) {
-                    println("Se firmo archivos")
-
-                    val directorioYNombreArchivoXMLFirmado =
-                        directorioGuardarXMLFirmados + File.separator + nombreArchivoXMLFirmado
-
-                    val datos = UtilsFacturacionElectronica.convertirBytes(directorioYNombreArchivoXMLFirmado)
-                    println("Convirtiendo datos")
-                    if (datos != null) {
-                        val respuestaSolicitud = AutorizarDocumentos.validar(datos)
-                        println("Validando Datos")
-                        if (respuestaSolicitud != null && (respuestaSolicitud.comprobantes != null ?: false)) {
-                            println("Validando si solicitud es RECIBIDA")
-                            println(respuestaSolicitud.toString())
-                            println(respuestaSolicitud.estado)
-                            respuestaSolicitud.comprobantes.comprobante.forEach {
-                                it.mensajes.mensaje.forEach {
-                                    println(it.tipo)
-                                    println(it.identificador)
-                                    println(it.informacionAdicional)
-                                    println(it.mensaje)
-                                }
-                            }
-                            if (respuestaSolicitud.estado == "RECIBIDA") {
-                                try {
-                                    println("ESTADO EFECTIVAMENTE ES RECIBIDO")
-                                    val respuestaComprobante =
-                                        AutorizarDocumentos.autorizarComprobante(factura.infoTributario.claveAcceso!!)
-                                    println("Recibimos respuesta")
-                                    if (respuestaComprobante != null) {
-                                        respuestaComprobante.autorizaciones.autorizacion.forEach {
-                                            println("Autorizado")
-                                            println(it.comprobante)
-                                            println(it.estado)
-                                            println(it.fechaAutorizacion)
-                                            println(it.mensajes)
-                                            println(it.numeroAutorizacion)
-                                        }
-                                    }else{
-                                        println("Errores en respuesta de comprobante")
-                                    }
-
-
-                                } catch (ex: RespuestaAutorizacionException) {
-                                    println("Respuesta solicitud NO recibida")
-                                }
-                            }
-                        } else {
-                            println("Error en respuesta")
-                        }
-                    } else {
-                        println("Error convirtiendo archivo a bytes")
-                    }
-
-                } else {
-                    println("Error firmando archivo")
-                }
-            } else {
-                println("Error creando archivo XML")
-            }
-        }
+        println(resultadoEnvioFactura)
 
 
     } catch (e: KlaxonException) {

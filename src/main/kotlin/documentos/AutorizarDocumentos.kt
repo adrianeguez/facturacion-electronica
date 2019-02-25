@@ -15,8 +15,13 @@ class AutorizarDocumentos {
     companion object {
 
         var host: String = "https://celcer.sri.gob.ec"
-        var segmentoURLComprobantesElectronicos: String = "/comprobantes-electronicos-ws/RecepcionComprobantesOffline"
-        var queryParamsComprobantesElectronicos: String = "?wsdl"
+        var segmentoURLComprobantesElectronicosRecepcion: String =
+            "/comprobantes-electronicos-ws/RecepcionComprobantesOffline"
+        var queryParamsComprobantesElectronicosRecepcion: String = "?wsdl"
+
+        var segmentoURLComprobantesElectronicosAutorizacion: String =
+            "/comprobantes-electronicos-ws/AutorizacionComprobantesOffline"
+        var queryParamsComprobantesElectronicosAutorizacion: String = "?wsdl"
         var namespaceURIRecepcion: String = "http://ec.gob.sri.ws.recepcion"
         var localPartRecepcion: String = "RecepcionComprobantesOfflineService"
 
@@ -24,7 +29,8 @@ class AutorizarDocumentos {
             try {
                 //produccion
                 //cel.sri.gob.ec
-                val url = URL("$host$segmentoURLComprobantesElectronicos$queryParamsComprobantesElectronicos")
+                val url =
+                    URL("$host$segmentoURLComprobantesElectronicosRecepcion$queryParamsComprobantesElectronicosRecepcion")
                 val qname = QName(namespaceURIRecepcion, localPartRecepcion)
                 val service = RecepcionComprobantesOfflineService(url, qname)
                 val portRec = service.recepcionComprobantesOfflinePort
@@ -44,9 +50,9 @@ class AutorizarDocumentos {
             //cel.sri.gob.ec
             println("Autorizar comprobante")
             println("Clave de acceso $claveDeAcceso")
-            println("$host$segmentoURLComprobantesElectronicos$queryParamsComprobantesElectronicos")
+            println("$host$segmentoURLComprobantesElectronicosAutorizacion$queryParamsComprobantesElectronicosAutorizacion")
             try {
-                return AutorizacionComprobantesWs("$host$segmentoURLComprobantesElectronicos$queryParamsComprobantesElectronicos")
+                return AutorizacionComprobantesWs("$host$segmentoURLComprobantesElectronicosAutorizacion$queryParamsComprobantesElectronicosAutorizacion")
                     .llamadaWSAutorizacionInd(
                         claveDeAcceso
                     )

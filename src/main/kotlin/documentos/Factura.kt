@@ -1,7 +1,12 @@
 package documentos
 
+import com.beust.klaxon.Klaxon
+import com.beust.klaxon.KlaxonException
 import documentos.GenerarDocumentos.Companion.generarClave
+import ec.gob.sri.comprobantes.exception.RespuestaAutorizacionException
 import ec.gob.sri.comprobantes.util.ArchivoUtils
+import firma.XAdESBESSignature
+import utils.UtilsFacturacionElectronica
 import utils.mensajeNulo
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -42,12 +47,34 @@ class Factura {
 
     var infoAdicional: ArrayList<CampoAdicional>?
 
+    var directorioGuardarXML: String
+    var directorioGuardarXMLFirmados: String
+    var nombreArchivoXML: String
+    var nombreArchivoXMLFirmado: String
+    var clave: String
+    var directorioYNombreArchivoRegistroCivilP12: String
+    val debug: Boolean
+
     constructor(
         infoTributario: InformacionTributaria,
         infoFactura: InformacionFactura,
         detalles: ArrayList<Detalle>,
-        infoAdicional: ArrayList<CampoAdicional>?
+        infoAdicional: ArrayList<CampoAdicional>?,
+        directorioGuardarXML: String,
+        directorioGuardarXMLFirmados: String,
+        nombreArchivoXML: String,
+        nombreArchivoXMLFirmado: String,
+        clave: String,
+        directorioYNombreArchivoRegistroCivilP12: String,
+        debug: Boolean = true
     ) {
+        this.debug = debug
+        this.directorioGuardarXML = directorioGuardarXML
+        this.directorioGuardarXMLFirmados = directorioGuardarXMLFirmados
+        this.nombreArchivoXML = nombreArchivoXML
+        this.nombreArchivoXMLFirmado = nombreArchivoXMLFirmado
+        this.clave = clave
+        this.directorioYNombreArchivoRegistroCivilP12 = directorioYNombreArchivoRegistroCivilP12
         this.infoTributario = infoTributario
         this.infoFactura = infoFactura
         this.detalles = detalles
@@ -223,19 +250,19 @@ class Factura {
         var obligadoContabilidad = ""
         if (this.infoFactura.obligadoContabilidad != null) {
             obligadoContabilidad =
-                    "        <obligadoContabilidad>${this.infoFactura.obligadoContabilidad}</obligadoContabilidad>\n"
+                "        <obligadoContabilidad>${this.infoFactura.obligadoContabilidad}</obligadoContabilidad>\n"
         }
         var contribuyenteEspecial = ""
         println("this.infoFactura.contribuyenteEspecial")
         println(this.infoFactura.contribuyenteEspecial)
         if (this.infoFactura.contribuyenteEspecial != null) {
             contribuyenteEspecial =
-                    "        <contribuyenteEspecial>${this.infoFactura.contribuyenteEspecial}</contribuyenteEspecial>\n"
+                "        <contribuyenteEspecial>${this.infoFactura.contribuyenteEspecial}</contribuyenteEspecial>\n"
         }
         var direccionEstablecimiento = ""
         if (this.infoFactura.dirEstablecimiento != null) {
             direccionEstablecimiento =
-                    "        <dirEstablecimiento>${this.infoFactura.dirEstablecimiento ?: ""}</dirEstablecimiento>\n"
+                "        <dirEstablecimiento>${this.infoFactura.dirEstablecimiento ?: ""}</dirEstablecimiento>\n"
         }
 
         val informacionFactura = ("<$nombreEtiquetaInformacionFactura>\n"
@@ -275,19 +302,19 @@ class Factura {
             var descuentoAdicional = ""
             if (it.descuentoAdicional != null) {
                 descuentoAdicional =
-                        "                <descuentoAdicional>${it.descuentoAdicional}</descuentoAdicional>\n"
+                    "                <descuentoAdicional>${it.descuentoAdicional}</descuentoAdicional>\n"
             }
 
             var tarifa = ""
             if (it.tarifa != null) {
                 tarifa =
-                        "                <tarifa>${it.tarifa}</tarifa>\n"
+                    "                <tarifa>${it.tarifa}</tarifa>\n"
             }
 
             var valorDevolucionIva = ""
             if (it.valorDevolucionIva != null) {
                 valorDevolucionIva =
-                        "                <valorDevolucionIva>${it.valorDevolucionIva}</valorDevolucionIva>\n"
+                    "                <valorDevolucionIva>${it.valorDevolucionIva}</valorDevolucionIva>\n"
             }
 
             totalImpuestos += ("            <$nombreEtiquetaTotalImpuestos>\n"
@@ -437,5 +464,265 @@ class Factura {
         return totalCamposAdicionales
     }
 
+
+    fun enviarFactura(json: String): String {
+        val resultado = Klaxon()
+            .parse<Factura?>(
+                json
+            )
+        try {
+            val errores = resultado?.validar()
+            if (errores?.size ?: 0 > 0) {
+                if (debug) {
+                    println("Error")
+                }
+                var erroresAEnviar = "["
+                errores?.forEach {
+                    if (debug) {
+                        println(it)
+                    }
+                    erroresAEnviar += erroresAEnviar + "\"mensaje\":\"${it}\""
+                }
+                erroresAEnviar += "]"
+
+                return """
+                        {
+                            "mensaje":"Errores en parseo de factura.",
+                            "error": 400,
+                            "data":${erroresAEnviar}
+                        }
+                        """.trimIndent()
+            } else {
+                resultado?.generarFacturaXML()
+
+                val archivoGenerado = resultado?.generarArchivoFacturaXML(
+                    resultado.directorioGuardarXML,
+                    resultado.nombreArchivoXML
+                )
+
+                if (archivoGenerado != null) {
+                    val archivoFirmado = XAdESBESSignature
+                        .firmar(
+                            resultado.directorioGuardarXML + resultado.nombreArchivoXML,
+                            resultado.nombreArchivoXMLFirmado,
+                            resultado.clave,
+                            resultado.directorioYNombreArchivoRegistroCivilP12,
+                            resultado.directorioGuardarXMLFirmados
+                        )
+                    if (archivoFirmado) {
+                        if (debug) {
+                            println("Se firmo archivos")
+                        }
+                        val directorioYNombreArchivoXMLFirmado =
+                            resultado.directorioGuardarXMLFirmados + File.separator + resultado.nombreArchivoXMLFirmado
+
+                        val datos = UtilsFacturacionElectronica.convertirBytes(directorioYNombreArchivoXMLFirmado)
+                        if (debug) {
+                            println("Convirtiendo datos")
+                        }
+
+                        if (datos != null) {
+                            val respuestaSolicitud = AutorizarDocumentos.validar(datos)
+                            if (debug) {
+                                println("Validando Datos")
+                            }
+                            if (respuestaSolicitud != null && (respuestaSolicitud.comprobantes != null ?: false)) {
+                                if (debug) {
+                                    println("Validando si solicitud es RECIBIDA")
+                                    println("Estado: ${respuestaSolicitud.estado}")
+                                }
+                                if (respuestaSolicitud.estado == "RECIBIDA") {
+                                    try {
+                                        if (debug) {
+                                            println("ESTADO RECIBIDA")
+                                        }
+                                        val respuestaComprobante =
+                                            AutorizarDocumentos.autorizarComprobante(resultado.infoTributario.claveAcceso!!)
+                                        if (debug) {
+                                            println("recibimos respuesta")
+                                            println("numeroComprobantes ${respuestaComprobante?.numeroComprobantes}")
+                                        }
+                                        var autorizaciones = "["
+                                        respuestaComprobante?.autorizaciones?.autorizacion?.forEachIndexed { index, it ->
+
+                                            if (debug) {
+                                                println("numeroAutorizacion ${it.numeroAutorizacion}")
+                                                println("comprobante ${it.comprobante}")
+                                                println("estado ${it.estado}")
+                                                println("fechaAutorizacion ${it.fechaAutorizacion}")
+                                                println("Mensajes:")
+                                            }
+                                            val comprobanteString = it.comprobante.replace("\"", "\\\"").replace("\n", "").replace("\r", "");
+                                            var autorizacion = """
+                                                {
+                                                    "numeroAutorizacion" : "${it.numeroAutorizacion}",
+                                                    "comprobante" : "${comprobanteString}",
+                                                    "estado" : "${it.estado}",
+                                                    "fechaAutorizacion" : "${it.fechaAutorizacion}",
+                                            """.trimIndent()
+
+
+                                            var mensajeString = "["
+                                            it.mensajes.mensaje.forEachIndexed { indiceMensaje, mensaje ->
+                                                if (debug) {
+                                                    println("identificador ${mensaje.identificador}")
+                                                    println("informacionAdicional ${mensaje.informacionAdicional}")
+                                                    println("mensaje ${mensaje.mensaje}")
+                                                    println("tipo ${mensaje.tipo}")
+                                                }
+                                                mensajeString += """
+                                                    {
+                                                        "identificador":"${mensaje.identificador}",
+                                                        "informacionAdicional":"${mensaje.informacionAdicional}",
+                                                        "mensaje":"${mensaje.mensaje}",
+                                                        "tipo":"${mensaje.tipo}"
+                                                    }${if (indiceMensaje != (it.mensajes.mensaje.size - 1)) "," else ""}
+                                                """.trimIndent()
+                                            }
+                                            mensajeString += "]"
+                                            autorizacion += """
+                                                "mensajes":${mensajeString}
+                                                }${if (index != ((respuestaComprobante.autorizaciones?.autorizacion?.size
+                                                    ?: 1) - 1)
+                                            ) "," else ""}
+                                            """.trimIndent()
+
+                                            autorizaciones += "${autorizacion}"
+                                        }
+                                        autorizaciones += "]"
+                                        return """
+                                            {
+                                                "mensaje":"Se recibieron autorizaciones",
+                                                "error":null,
+                                                "data":{
+                                                    "estadoSolicitud":"RECIBIDA",
+                                                    "claveAccesoConsultada":"${respuestaComprobante?.claveAccesoConsultada}",
+                                                    "numeroComprobantes":"${respuestaComprobante?.numeroComprobantes}",
+                                                    "autorizaciones":${autorizaciones}
+                                                }
+                                            }
+                                        """.trimIndent()
+
+                                    } catch (ex: RespuestaAutorizacionException) {
+                                        if (debug) {
+                                            println("Respuesta solicitud NO recibida")
+                                        }
+                                        return """
+                                                {
+                                                    "mensaje":"Respuesta solicitud NO recibida.",
+                                                    "error": 500
+                                                }
+                                                """
+                                    }
+                                } else {
+                                    var mensajesRespuestaSolicitudNoRecibida = "["
+                                    respuestaSolicitud.comprobantes.comprobante.forEach {
+                                        it.mensajes.mensaje.forEachIndexed { index, mensaje ->
+                                            if (debug) {
+                                                println(mensaje.tipo)
+                                                println(mensaje.identificador)
+                                                println(mensaje.informacionAdicional)
+                                                println(mensaje.mensaje)
+                                            }
+                                            mensajesRespuestaSolicitudNoRecibida += """
+                                                {
+                                                    "tipo":"${mensaje.tipo}",
+                                                    "identificador":"${mensaje.identificador}",
+                                                    "informacionAdicional":"${mensaje.informacionAdicional}",
+                                                    "mensaje":"${mensaje.mensaje}"
+                                                }${if (index != (it.mensajes.mensaje.size - 1)) "," else ""}
+                                            """.trimIndent()
+
+                                        }
+                                    }
+                                    mensajesRespuestaSolicitudNoRecibida += "]"
+                                    return """
+                                        {
+                                            "mensaje": "Estado diferente a recibido",
+                                            "error": 400,
+                                            "data": {
+                                                "estadoSolicitud", "${respuestaSolicitud.estado}"
+                                                "mensajes": ${mensajesRespuestaSolicitudNoRecibida}
+                                            }
+                                        }
+                                    """.trimIndent()
+                                }
+                            } else {
+                                if (debug) {
+                                    println("Error en respuesta solicitud")
+                                }
+                                return """
+                                    {
+                                        "mensaje":"Error convirtiendo archivo a bytes.",
+                                        "error": 500
+                                    }
+                                    """.trimIndent()
+                            }
+                        } else {
+                            if (debug) {
+                                println("Error convirtiendo archivo a bytes")
+                            }
+                            return """
+                                    {
+                                        "mensaje":"Error convirtiendo archivo a bytes.",
+                                        "error": 500
+                                    }
+                                    """.trimIndent()
+                        }
+
+                    } else {
+                        if (debug) {
+                            println("Error firmando archivo")
+                        }
+                        return """
+                        {
+                            "mensaje":"Error firmando archivo.",
+                            "error": 500
+                        }
+                        """.trimIndent()
+                    }
+                } else {
+                    if (debug) {
+                        println("Error firmando archivo")
+                    }
+                    return """
+                        {
+                            "mensaje":"Error creando archivo XML.",
+                            "error": 500
+                        }
+                        """.trimIndent()
+                }
+            }
+        } catch (e: KlaxonException) {
+            if (debug) {
+                println(e)
+            }
+            return """
+            {
+                "mensaje":"Errores en parseo de factura.",
+                "error": 400,
+                "data": {
+                    "message":"${e.message}",
+                    "cause":"${e.cause}"
+                }
+            }
+            """.trimIndent()
+        } catch (e: Exception) {
+            if (debug) {
+                println(e)
+            }
+            return """
+            {
+                "mensaje":"Error del servidor.",
+                "error": 400,
+                "data": {
+                    "message":"${e.message}",
+                    "cause":"${e.cause}"
+                }
+            }
+            """.trimIndent()
+        }
+
+    }
 
 }
