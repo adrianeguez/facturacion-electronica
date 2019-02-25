@@ -1,7 +1,8 @@
-package documentos
+package documentos.factura
 
 import com.beust.klaxon.Klaxon
 import com.beust.klaxon.KlaxonException
+import documentos.*
 import documentos.GenerarDocumentos.Companion.generarClave
 import ec.gob.sri.comprobantes.exception.RespuestaAutorizacionException
 import ec.gob.sri.comprobantes.util.ArchivoUtils
@@ -15,7 +16,6 @@ import java.util.*
 import javax.validation.Validation
 import javax.validation.constraints.NotNull
 import kotlin.collections.ArrayList
-import java.io.FileOutputStream
 import java.io.File
 import java.util.logging.Level
 import java.util.logging.Logger

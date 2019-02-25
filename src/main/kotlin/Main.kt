@@ -1,12 +1,8 @@
 import com.beust.klaxon.Klaxon
 import documentos.*
 import com.beust.klaxon.KlaxonException
-import ec.gob.sri.comprobantes.exception.RespuestaAutorizacionException
-import firma.XAdESBESSignature
+import documentos.factura.Factura
 import org.apache.log4j.BasicConfigurator
-import java.io.File
-import utils.UtilsFacturacionElectronica
-import javax.xml.ws.WebServiceException
 
 
 fun main(args: Array<String>) {

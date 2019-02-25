@@ -173,8 +173,6 @@ class InformacionFactura {
                 if (dirEstablecimiento == null) null else GenerarDocumentos.removerCaracteresEspeciales(dirEstablecimiento)
         this.contribuyenteEspecial =
                 if (contribuyenteEspecial == null) null else GenerarDocumentos.removerCaracteresEspeciales(contribuyenteEspecial)
-        println("this.contribuyenteEspecial")
-        println(this.contribuyenteEspecial)
         this.obligadoContabilidad = obligadoContabilidad
         this.tipoIdentificacionComprador = tipoIdentificacionComprador
         this.guiaRemision = guiaRemision
