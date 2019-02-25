@@ -1,17 +1,13 @@
 package documentos
 
-import utils.mensajeValores
-import java.util.*
-import javax.validation.constraints.Pattern
-
-class Impuesto : ImpuestoBase {
+open class Impuesto : ImpuestoBase {
 
     constructor(
         codigo: String,
         codigoPorcentaje: String,
-        tarifa: String?,
         baseImponible: String,
-        valor: String
+        valor: String,
+        tarifa: String?
     ) : super(codigo, codigoPorcentaje, baseImponible, valor, tarifa) {
     }
 }

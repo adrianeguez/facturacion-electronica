@@ -1,5 +1,6 @@
 package documentos.comprobanteretencion
 
+import documentos.Impuesto
 import documentos.InformacionTributaria
 import utils.mensajeNulo
 import javax.validation.Validation
@@ -21,15 +22,20 @@ class ComprobanteRetencion {
     @NotNull(message = "infoTributario $mensajeNulo")
     var infoTributario: InformacionTributaria
 
-    @NotNull(message = "infoTributario $mensajeNulo")
+    @NotNull(message = "infoCompRetencion $mensajeNulo")
     var infoCompRetencion: InformacionComprobanteRetencion
+
+    @NotNull(message = "impuestos $mensajeNulo")
+    var impuestos: ArrayList<Impuesto>
 
     constructor(
         infoTributario: InformacionTributaria,
-        infoCompRetencion: InformacionComprobanteRetencion
+        infoCompRetencion: InformacionComprobanteRetencion,
+        impuestos: ArrayList<Impuesto>
         ) {
         this.infoTributario = infoTributario
         this.infoCompRetencion = infoCompRetencion
+        this.impuestos =impuestos
     }
 
 }
