@@ -9,12 +9,7 @@ import javax.validation.constraints.Pattern
 
 abstract class ImpuestoBase {
 
-    @NotNull(message = "codigo $mensajeNulo")
-    @Pattern(
-        regexp = "2|3|5",
-        message = "codigo $mensajeValores de 2|3|5"
-    )
-    var codigo: String
+
 
     @NotNull(message = "baseImponible $mensajeNulo")
     @Pattern(
@@ -25,11 +20,8 @@ abstract class ImpuestoBase {
 
 
     constructor(
-        codigo: String,
         baseImponible: String
     ) {
-        this.codigo = codigo
-
         this.baseImponible = baseImponible
     }
 }

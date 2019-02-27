@@ -10,6 +10,14 @@ import javax.validation.constraints.Pattern
 
 class ImpuestoRetencion : ImpuestoBase {
 
+    @NotNull(message = "codigo $mensajeNulo")
+    @Pattern(
+        regexp = "9|10|1|11|2|3",
+        message = "codigo $mensajeValores de 9|10|1|11|2|3"
+    )
+    var codigo: String
+
+
     @NotNull(message = "codigoRetencion $mensajeNulo")
     @Pattern(
         regexp = "9|10|1|11|2|3|7|8|4580|303|304|304A|304B|304C|304D|304E|307|308|309|310|311|" +
@@ -34,7 +42,7 @@ class ImpuestoRetencion : ImpuestoBase {
 
     @NotNull(message = "porcentajeRetener $mensajeNulo")
     @Pattern(
-        regexp = "(?:\\b|-)([1-9]{1,2}[0]?|100)\\b",
+        regexp = "(?:\\b|-)([1-9]{1,2}[0]?|100).[0-9]{2}\\b",
         message = "porcentajeRetener $mensajeValores de 1 a 100"
     )
     var porcentajeRetener: String
@@ -80,7 +88,8 @@ class ImpuestoRetencion : ImpuestoBase {
         codDocSustento: String,
         numDocSustento: String?,
         fechaEmisionDocSustento: String
-    ) : super(codigo, baseImponible) {
+    ) : super(baseImponible) {
+        this.codigo = codigo
         this.codigoRetencion = codigoRetencion
         this.porcentajeRetener = porcentajeRetener
         this.valorRetenido = valorRetenido

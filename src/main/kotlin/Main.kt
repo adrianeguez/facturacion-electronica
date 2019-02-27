@@ -1,6 +1,7 @@
 import com.beust.klaxon.Klaxon
 import documentos.*
 import com.beust.klaxon.KlaxonException
+import documentos.comprobanteretencion.ComprobanteRetencion
 import documentos.factura.Factura
 import org.apache.log4j.BasicConfigurator
 
@@ -126,176 +127,280 @@ fun main(args: Array<String>) {
     // println(factura.generarFacturaXML())
 
 
+    // Facura
+
+/*
+try {
+   val directorioGuardarXML = "/home/dev-02/Documents/ComprobanteRetencion"
+   val directorioGuardarXMLFirmados = "/home/dev-02/Documents/ComprobanteRetencion/ComprobanteRetencionFirmado"
+   val nombreArchivoXML = "factura-prueba-01.xml"
+   val nombreArchivoXMLFirmado = "factura-prueba-01-firmado.xml"
+   val clave = "LuisPadilla2115"
+   val directorioYNombreArchivoRegistroCivilP12 =
+       "/home/dev-02/Documents/Github/adrianeguez/facturacion-electronica/documentacion/luis_alfredo_padilla_camuendo.p12"
+
+   val facturaEstructuraString = """
+               {
+                   "directorioGuardarXML":"${directorioGuardarXML}",
+                   "directorioGuardarXMLFirmados":"${directorioGuardarXMLFirmados}",
+                   "nombreArchivoXML":"${nombreArchivoXML}",
+                   "nombreArchivoXMLFirmado":"${nombreArchivoXMLFirmado}",
+                   "clave":"${clave}",
+                   "directorioYNombreArchivoRegistroCivilP12":"${directorioYNombreArchivoRegistroCivilP12}",
+                   "debug": true
+                   "infoTributario": {
+                       "ambiente": "1",
+                       "tipoEmision": "1",
+                       "razonSocial": "PADILLA CAMUENDO LUIS ALFREDO",
+                       "nombreComercial": "COMERCIAL BRENDA",
+                       "ruc": "1710361658001",
+                       "claveAcceso": null,
+                       "codDoc": "01",
+                       "estab": "001",
+                       "ptoEmision": "001",
+                       "secuencial": "000000016",
+                       "dirMatriz": "PICHINCHA / QUITO / QUITO/ LLANO CHICO"
+                   },
+                   "infoFactura": {
+                       "fechaEmision": "13/02/2019",
+                       "dirEstablecimiento": "PICHINCHA / CAYAMBE / CAYAMBE / ROCAFUERTE N0-45 Y LIBERTAD",
+                       "contribuyenteEspecial": "0047",
+                       "obligadoContabilidad": "SI",
+                       "tipoIdentificacionComprador": "04",
+                       "guiaRemision": null,
+                       "razonSocialComprador": "BAZAR Y PAPELERIA MEXICO",
+                       "identificacionComprador": "1800095612001",
+                       "direccionComprador": "CHAMBO 1067 Y GUAYLLABAMBA",
+                       "totalSinImpuestos": "161.79",
+                       "totalDescuento": "20.48",
+                       "totalConImpuestos": [
+                           {
+                               "codigo": "2",
+                               "codigoPorcentaje": "2",
+                               "descuentoAdicional" : null,
+                               "baseImponible": "161.79",
+                               "tarifa": null,
+                               "valor": "19.41",
+                               "valorDevolucionIva": null
+                           }
+                       ],
+                       "propina": "0.00",
+                       "importeTotal": "181.20",
+                       "moneda": "DOLAR",
+                       "pagos": [
+                           {
+                               "formaPago": "20",
+                               "total": "181.20",
+                               "plazo": "30.00",
+                               "unidadTiempo": "dias"
+                           }
+                       ],
+                       "valorRetIva": "0.00",
+                       "valorRetRenta": "0.00"
+                   },
+                   "detalles": [
+                       {
+                           "codigoPrincipal": "679_73",
+                           "codigoAuxiliar": null,
+                           "descripcion": "ABRIGO IMPERMIABLE PESADO",
+                           "cantidad": "8.00",
+                           "precioUnitario": "7.75",
+                           "descuento": "10.46",
+                           "precioTotalSinImpuesto": "51.54",
+                           "detallesAdicionales":null,
+                           "impuestos": [
+                               {
+                                   "codigo": "2",
+                                   "codigoPorcentaje": "2",
+                                   "tarifa": "12.00",
+                                   "baseImponible": "51.54",
+                                   "valor": "6.18"
+                               }
+                           ]
+                       },
+                       {
+                           "codigoPrincipal": "A25-32",
+                           "codigoAuxiliar": null,
+                           "descripcion": "ABRAZADERAS 25/32",
+                           "cantidad": "17.00",
+                           "precioUnitario": "2.11",
+                           "descuento": "5.80",
+                           "precioTotalSinImpuesto": "30.07",
+                           "detallesAdicionales":null,
+                           "impuestos": [
+                               {
+                                   "codigo": "2",
+                                   "codigoPorcentaje": "2",
+                                   "tarifa": "12.00",
+                                   "baseImponible": "30.07",
+                                   "valor": "3.61"
+                               }
+                           ]
+                       }
+                   ],
+                   "infoAdicional": [
+                       {
+                           "nombre": "DIRECCION",
+                           "valor": "LLANO CHICO"
+                       },
+                       {
+                           "nombre": "E-MAIL",
+                           "valor": "asetemp@hotmail.com"
+                       },
+                       {
+                           "nombre": "APELLIDO",
+                           "valor": "HINOJOSA"
+                       },
+                       {
+                           "nombre": "NOMBRE",
+                           "valor": "WASHINGTON"
+                       },
+                       {
+                           "nombre": "NOMBRECOMERCIAL",
+                           "valor": "BESTSYSTEM"
+                       },
+                       {
+                           "nombre": "CIUDAD",
+                           "valor": "QUITO"
+                       },
+                       {
+                           "nombre": "TELEFONO",
+                           "valor": "0993530018"
+                       },
+                       {
+                           "nombre": "CELULAR",
+                           "valor": "0987654321"
+                       },
+                       {
+                           "nombre": "PLAZO",
+                           "valor": "1.00"
+                       },
+                       {
+                           "nombre": "DIAS",
+                           "valor": "30.00"
+                       },
+                       {
+                           "nombre": "TARIFAIMP",
+                           "valor": "12.00"
+                       }
+                   ]
+               }
+               """
+
+   val result = Klaxon()
+       .parse<Factura?>(
+           facturaEstructuraString
+       )
+
+   val resultadoEnvioFactura = result?.enviarFactura(facturaEstructuraString)
+
+   println(resultadoEnvioFactura)
+
+
+} catch (e: KlaxonException) {
+   println(e)
+   println("ERROR")
+}
+*/
+
+// Comprobante de Retencion
+
+
     try {
-        val directorioGuardarXML = "/home/work/Documents/factura"
-        val directorioGuardarXMLFirmados = "/home/work/Documents/factura/firmados"
-        val nombreArchivoXML = "factura-prueba-01.xml"
-        val nombreArchivoXMLFirmado = "factura-prueba-01-firmado.xml"
+        val directorioGuardarXML = "/home/dev-02/Documents/ComprobanteRetencion"
+        val directorioGuardarXMLFirmados = "/home/dev-02/Documents/ComprobanteRetencion/ComprobanteRetencionFirmado"
+        val nombreArchivoXML = "comprobante-retencion-01.xml"
+        val nombreArchivoXMLFirmado = "comprobante-retencion-01-firmado.xml"
         val clave = "LuisPadilla2115"
         val directorioYNombreArchivoRegistroCivilP12 =
-            "/home/work/Documents/Github/facturacion-electronica/documentacion/luis_alfredo_padilla_camuendo.p12"
+            "/home/dev-02/Documents/Github/adrianeguez/facturacion-electronica/documentacion/luis_alfredo_padilla_camuendo.p12"
 
-        val facturaEstructuraString = """
-                    {
-                        "directorioGuardarXML":"${directorioGuardarXML}",
-                        "directorioGuardarXMLFirmados":"${directorioGuardarXMLFirmados}",
-                        "nombreArchivoXML":"${nombreArchivoXML}",
-                        "nombreArchivoXMLFirmado":"${nombreArchivoXMLFirmado}",
-                        "clave":"${clave}",
-                        "directorioYNombreArchivoRegistroCivilP12":"${directorioYNombreArchivoRegistroCivilP12}",
-                        "debug": true
-                        "infoTributario": {
-                            "ambiente": "1",
-                            "tipoEmision": "1",
-                            "razonSocial": "PADILLA CAMUENDO LUIS ALFREDO",
-                            "nombreComercial": "COMERCIAL BRENDA",
-                            "ruc": "1710361658001",
-                            "claveAcceso": null,
-                            "codDoc": "01",
-                            "estab": "001",
-                            "ptoEmision": "001",
-                            "secuencial": "000000016",
-                            "dirMatriz": "PICHINCHA / QUITO / QUITO/ LLANO CHICO"
-                        },
-                        "infoFactura": {
-                            "fechaEmision": "13/02/2019",
-                            "dirEstablecimiento": "PICHINCHA / CAYAMBE / CAYAMBE / ROCAFUERTE N0-45 Y LIBERTAD",
-                            "contribuyenteEspecial": "0047",
-                            "obligadoContabilidad": "SI",
-                            "tipoIdentificacionComprador": "04",
-                            "guiaRemision": null,
-                            "razonSocialComprador": "BAZAR Y PAPELERIA MEXICO",
-                            "identificacionComprador": "1800095612001",
-                            "direccionComprador": "CHAMBO 1067 Y GUAYLLABAMBA",
-                            "totalSinImpuestos": "161.79",
-                            "totalDescuento": "20.48",
-                            "totalConImpuestos": [
-                                {
-                                    "codigo": "2",
-                                    "codigoPorcentaje": "2",
-                                    "descuentoAdicional" : null,
-                                    "baseImponible": "161.79",
-                                    "tarifa": null,
-                                    "valor": "19.41",
-                                    "valorDevolucionIva": null
-                                }
-                            ],
-                            "propina": "0.00",
-                            "importeTotal": "181.20",
-                            "moneda": "DOLAR",
-                            "pagos": [
-                                {
-                                    "formaPago": "20",
-                                    "total": "181.20",
-                                    "plazo": "30.00",
-                                    "unidadTiempo": "dias"
-                                }
-                            ],
-                            "valorRetIva": "0.00",
-                            "valorRetRenta": "0.00"
-                        },
-                        "detalles": [
-                            {
-                                "codigoPrincipal": "679_73",
-                                "codigoAuxiliar": null,
-                                "descripcion": "ABRIGO IMPERMIABLE PESADO",
-                                "cantidad": "8.00",
-                                "precioUnitario": "7.75",
-                                "descuento": "10.46",
-                                "precioTotalSinImpuesto": "51.54",
-                                "detallesAdicionales":null,
-                                "impuestos": [
-                                    {
-                                        "codigo": "2",
-                                        "codigoPorcentaje": "2",
-                                        "tarifa": "12.00",
-                                        "baseImponible": "51.54",
-                                        "valor": "6.18"
-                                    }
-                                ]
-                            },
-                            {
-                                "codigoPrincipal": "A25-32",
-                                "codigoAuxiliar": null,
-                                "descripcion": "ABRAZADERAS 25/32",
-                                "cantidad": "17.00",
-                                "precioUnitario": "2.11",
-                                "descuento": "5.80",
-                                "precioTotalSinImpuesto": "30.07",
-                                "detallesAdicionales":null,
-                                "impuestos": [
-                                    {
-                                        "codigo": "2",
-                                        "codigoPorcentaje": "2",
-                                        "tarifa": "12.00",
-                                        "baseImponible": "30.07",
-                                        "valor": "3.61"
-                                    }
-                                ]
-                            }
-                        ],
-                        "infoAdicional": [
-                            {
-                                "nombre": "DIRECCION",
-                                "valor": "LLANO CHICO"
-                            },
-                            {
-                                "nombre": "E-MAIL",
-                                "valor": "asetemp@hotmail.com"
-                            },
-                            {
-                                "nombre": "APELLIDO",
-                                "valor": "HINOJOSA"
-                            },
-                            {
-                                "nombre": "NOMBRE",
-                                "valor": "WASHINGTON"
-                            },
-                            {
-                                "nombre": "NOMBRECOMERCIAL",
-                                "valor": "BESTSYSTEM"
-                            },
-                            {
-                                "nombre": "CIUDAD",
-                                "valor": "QUITO"
-                            },
-                            {
-                                "nombre": "TELEFONO",
-                                "valor": "0993530018"
-                            },
-                            {
-                                "nombre": "CELULAR",
-                                "valor": "0987654321"
-                            },
-                            {
-                                "nombre": "PLAZO",
-                                "valor": "1.00"
-                            },
-                            {
-                                "nombre": "DIAS",
-                                "valor": "30.00"
-                            },
-                            {
-                                "nombre": "TARIFAIMP",
-                                "valor": "12.00"
-                            }
-                        ]
-                    }
-                    """
+        val comprobanteRetencionEstructuraString = """
+               {
+                   "directorioGuardarXML":"${directorioGuardarXML}",
+                   "directorioGuardarXMLFirmados":"${directorioGuardarXMLFirmados}",
+                   "nombreArchivoXML":"${nombreArchivoXML}",
+                   "nombreArchivoXMLFirmado":"${nombreArchivoXMLFirmado}",
+                   "clave":"${clave}",
+                   "directorioYNombreArchivoRegistroCivilP12":"${directorioYNombreArchivoRegistroCivilP12}",
+                   "debug": true
+                   "infoTributario": {
+                       "ambiente": "1",
+                       "tipoEmision": "1",
+                       "razonSocial": "PADILLA CAMUENDO LUIS ALFREDO",
+                       "nombreComercial": "COMERCIAL BRENDA",
+                       "ruc": "1710361658001",
+                       "claveAcceso": null,
+                       "codDoc": "01",
+                       "estab": "001",
+                       "ptoEmision": "001",
+                       "secuencial": "000000016",
+                       "dirMatriz": "PICHINCHA / QUITO / QUITO/ LLANO CHICO"
+                   },
+                   "infoCompRetencion": {
+                       "fechaEmision": "13/01/2019",
+                       "dirEstablecimiento": "GRAL. VEINTIMILLA E8-30 Y AV. 6 DE DICIEMBRE",
+                       "obligadoContabilidad": "SI",
+                       "contribuyenteEspecial":null,
+                       "tipoIdentificacionSujetoRetenido": "04",
+                       "razonSocialSujetoRetenido": "EGUEZ VASQUEZ FRANCISCO IVAN",
+                       "identificacionSujetoRetenido": "1707075493001",
+                       "periodoFiscal": "02/2019"
+                   },
+                   "impuestos": [
+                       {
+                           "codigo": "2",
+                           "codigoRetencion": "2",
+                           "baseImponible": "120.00",
+                           "porcentajeRetener": "70.00",
+                           "valorRetenido": "84.00"
+                           "codDocSustento": "01"
+                           "numDocSustento": "003005021421211"
+                           "fechaEmisionDocSustento": "14/02/2019"
+                       },
+                       {
+                           "codigo": "1",
+                           "codigoRetencion": "304",
+                           "baseImponible": "1000.00",
+                           "porcentajeRetener": "8.00",
+                           "valorRetenido": "80.00"
+                           "codDocSustento": "01"
+                           "numDocSustento": "003005021421211"
+                           "fechaEmisionDocSustento": "14/02/2019"
+                       }
+                   ],
+                   "infoAdicional": [
+                       {
+                           "nombre": "ConceptoRetencion",
+                           "valor": "MANTENIMIENTO PREVENTIVO DEL CIR"
+                       },
+                       {
+                           "nombre": "Direccion",
+                           "valor": "LEONARDO MURIALDO Y HUACAMAYOS"
+                       },
+                       {
+                           "nombre": "Telefono",
+                           "valor": "2071425 0998786306"
+                       }
+                   ]
+               }
+               """
 
         val result = Klaxon()
-            .parse<Factura?>(
-                facturaEstructuraString
+            .parse<ComprobanteRetencion?>(
+                comprobanteRetencionEstructuraString
             )
 
-        val resultadoEnvioFactura = result?.enviarFactura(facturaEstructuraString)
+        val resultadoEnvioComprobanteRetencion =
+            result?.enviarComprobanteRetencion(comprobanteRetencionEstructuraString)
 
-        println(resultadoEnvioFactura)
+        println(resultadoEnvioComprobanteRetencion)
 
 
     } catch (e: KlaxonException) {
         println(e)
         println("ERROR")
     }
+
 
 }

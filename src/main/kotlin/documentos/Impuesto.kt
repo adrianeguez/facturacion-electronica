@@ -9,6 +9,14 @@ import javax.validation.constraints.Pattern
 
 open class Impuesto : ImpuestoBase {
 
+    @NotNull(message = "codigo $mensajeNulo")
+    @Pattern(
+        regexp = "2|3|5",
+        message = "codigo $mensajeValores de 2|3|5"
+    )
+    var codigo: String
+
+
     @NotNull(message = "valor $mensajeNulo")
     @Pattern(
         regexp = "^[0-9]{1,14}(\\.[0-9]{2})?\$",
@@ -39,9 +47,10 @@ open class Impuesto : ImpuestoBase {
         baseImponible: String,
         valor: String,
         tarifa: String?
-    ) : super(codigo, baseImponible) {
+    ) : super(baseImponible) {
         this.valor = valor
         this.codigoPorcentaje = codigoPorcentaje
         this.tarifa = tarifa
+        this.codigo = codigo
     }
 }

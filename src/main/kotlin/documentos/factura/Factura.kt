@@ -508,6 +508,7 @@ class Factura {
                     resultado.directorioGuardarXML,
                     resultado.nombreArchivoXML
                 )
+                println("archivo generado: $archivoGenerado")
 
                 if (archivoGenerado != null) {
                     val archivoFirmado = XAdESBESSignature
@@ -561,7 +562,7 @@ class Factura {
                                                 println("fechaAutorizacion ${it.fechaAutorizacion}")
                                                 println("Mensajes:")
                                             }
-                                            val comprobanteString = it.comprobante.replace("\"", "\\\"").replace("\n", "").replace("\r", "");
+                                            val comprobanteString = eliminarCaracteresEspeciales(it.comprobante)
                                             var autorizacion = """
                                                 {
                                                     "numeroAutorizacion" : "${it.numeroAutorizacion}",
@@ -575,14 +576,14 @@ class Factura {
                                             it.mensajes.mensaje.forEachIndexed { indiceMensaje, mensaje ->
                                                 if (debug) {
                                                     println("identificador ${mensaje.identificador}")
-                                                    println("informacionAdicional ${mensaje.informacionAdicional}")
+                                                    println("informacionAdicional ${eliminarCaracteresEspeciales(mensaje.informacionAdicional)}")
                                                     println("mensaje ${mensaje.mensaje}")
                                                     println("tipo ${mensaje.tipo}")
                                                 }
                                                 mensajeString += """
                                                     {
                                                         "identificador":"${mensaje.identificador}",
-                                                        "informacionAdicional":"${mensaje.informacionAdicional}",
+                                                        "informacionAdicional":"${eliminarCaracteresEspeciales(mensaje.informacionAdicional)}",
                                                         "mensaje":"${mensaje.mensaje}",
                                                         "tipo":"${mensaje.tipo}"
                                                     }${if (indiceMensaje != (it.mensajes.mensaje.size - 1)) "," else ""}
@@ -637,7 +638,7 @@ class Factura {
                                                 {
                                                     "tipo":"${mensaje.tipo}",
                                                     "identificador":"${mensaje.identificador}",
-                                                    "informacionAdicional":"${mensaje.informacionAdicional}",
+                                                    "informacionAdicional":"${eliminarCaracteresEspeciales(mensaje.informacionAdicional)}",
                                                     "mensaje":"${mensaje.mensaje}"
                                                 }${if (index != (it.mensajes.mensaje.size - 1)) "," else ""}
                                             """.trimIndent()
@@ -732,6 +733,11 @@ class Factura {
             """.trimIndent()
         }
 
+    }
+
+    private fun eliminarCaracteresEspeciales(texto: String): String {
+        return texto.replace("\"", "\\\"").replace("\n", "")
+            .replace("\r", "")
     }
 
 }

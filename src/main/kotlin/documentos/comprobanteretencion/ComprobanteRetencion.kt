@@ -53,7 +53,6 @@ class ComprobanteRetencion {
     var directorioYNombreArchivoRegistroCivilP12: String
 
 
-
     val debug: Boolean
 
     constructor(
@@ -139,7 +138,7 @@ class ComprobanteRetencion {
 
     fun generarComprobanteRetencionXML(): String {
         val xmlString: String =
-            "<?xml version=\"$versionXML\" encoding=\"$encodingXML\" >\n" +
+            "<?xml version=\"$versionXML\" encoding=\"$encodingXML\" standalone=\"yes\"?>\n" +
                     "<$nombreEtiquetaComprobante id=\"${idComprobante}\" version=\"$versionComprobanteRetencionXML\">\n" +
                     generarCuerpoComprobanteRetencion() +
                     "</$nombreEtiquetaComprobante>"
@@ -405,8 +404,7 @@ class ComprobanteRetencion {
                                                 println("Mensajes:")
                                             }
                                             val comprobanteString =
-                                                it.comprobante.replace("\"", "\\\"").replace("\n", "")
-                                                    .replace("\r", "");
+                                                eliminarCaracteresEspeciales(it.comprobante)
                                             var autorizacion = """
                                                 {
                                                     "numeroAutorizacion" : "${it.numeroAutorizacion}",
@@ -420,14 +418,14 @@ class ComprobanteRetencion {
                                             it.mensajes.mensaje.forEachIndexed { indiceMensaje, mensaje ->
                                                 if (debug) {
                                                     println("identificador ${mensaje.identificador}")
-                                                    println("informacionAdicional ${mensaje.informacionAdicional}")
+                                                    println("informacionAdicional ${eliminarCaracteresEspeciales(mensaje.informacionAdicional)}")
                                                     println("mensaje ${mensaje.mensaje}")
                                                     println("tipo ${mensaje.tipo}")
                                                 }
                                                 mensajeString += """
                                                     {
                                                         "identificador":"${mensaje.identificador}",
-                                                        "informacionAdicional":"${mensaje.informacionAdicional}",
+                                                        "informacionAdicional":"${eliminarCaracteresEspeciales(mensaje.informacionAdicional)}",
                                                         "mensaje":"${mensaje.mensaje}",
                                                         "tipo":"${mensaje.tipo}"
                                                     }${if (indiceMensaje != (it.mensajes.mensaje.size - 1)) "," else ""}
@@ -482,7 +480,7 @@ class ComprobanteRetencion {
                                                 {
                                                     "tipo":"${mensaje.tipo}",
                                                     "identificador":"${mensaje.identificador}",
-                                                    "informacionAdicional":"${mensaje.informacionAdicional}",
+                                                    "informacionAdicional":"${eliminarCaracteresEspeciales(mensaje.informacionAdicional)}",
                                                     "mensaje":"${mensaje.mensaje}"
                                                 }${if (index != (it.mensajes.mensaje.size - 1)) "," else ""}
                                             """.trimIndent()
@@ -577,6 +575,11 @@ class ComprobanteRetencion {
             """.trimIndent()
         }
 
+    }
+
+    private fun eliminarCaracteresEspeciales(texto: String): String {
+        return texto.replace("\"", "\\\"").replace("\n", "")
+            .replace("\r", "")
     }
 
 }
