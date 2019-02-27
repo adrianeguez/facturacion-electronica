@@ -4,7 +4,7 @@ import utils.mensajeValores
 import java.util.*
 import javax.validation.constraints.Pattern
 
-class TotalImpuesto : ImpuestoBase {
+class TotalImpuesto : Impuesto {
 
     @Pattern(
         regexp = "^[0-9]{1,14}(\\.[0-9]{2})?\$",

@@ -25,7 +25,7 @@ class Detalle {
     var codigoAuxiliar: String?
 
     fun getCodigoAuxiliar(): Optional<String> {
-        return Optional.of(codigoPrincipal!!)
+        return Optional.of(codigoAuxiliar!!)
     }
 
     @NotNull(message = "descripcion $mensajeNulo")

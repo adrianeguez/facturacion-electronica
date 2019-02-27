@@ -1,15 +1,14 @@
 package documentos.comprobanteretencion
 
-import documentos.Impuesto
+import documentos.ImpuestoBase
 import utils.mensajeNulo
 import utils.mensajeValores
+import java.util.*
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 
 
-
-
-class ImpuestoRetencion : Impuesto {
+class ImpuestoRetencion : ImpuestoBase {
 
     @NotNull(message = "codigoRetencion $mensajeNulo")
     @Pattern(
@@ -32,14 +31,61 @@ class ImpuestoRetencion : Impuesto {
     )
     var codigoRetencion: String
 
+
+    @NotNull(message = "porcentajeRetener $mensajeNulo")
+    @Pattern(
+        regexp = "(?:\\b|-)([1-9]{1,2}[0]?|100)\\b",
+        message = "porcentajeRetener $mensajeValores de 1 a 100"
+    )
+    var porcentajeRetener: String
+
+    @NotNull(message = "valorRetenido $mensajeNulo")
+    @Pattern(
+        regexp = "^[0-9]{1,14}(\\.[0-9]{2})?\$",
+        message = "valorRetenido $mensajeValores de 1 a 14 enteros y hasta 2 decimales separados por punto"
+    )
+    var valorRetenido: String
+
+
+    @NotNull(message = "codDocSustento $mensajeNulo")
+    @Pattern(
+        regexp = "([0-9]{2})",
+        message = "codDocSustento $mensajeValores 2 digitos"
+    )
+    var codDocSustento: String
+
+    @Pattern(
+        regexp = "([0-9]{15})",
+        message = "numDocSustento $mensajeValores de 15 digitos"
+    )
+    var numDocSustento: String?
+
+    fun getNumDocSustento(): Optional<String> {
+        return Optional.of(numDocSustento!!)
+    }
+
+    @Pattern(
+        regexp = "^([0-2][0-9]|(3)[0-1])(\\/)(((0)[0-9])|((1)[0-2]))(\\/)\\d{4}\$",
+        flags = [Pattern.Flag.CASE_INSENSITIVE],
+        message = "fechaEmision $mensajeValores de fecha dd/mm/aaaa"
+    )
+    var fechaEmisionDocSustento: String
+
     constructor(
         codigo: String,
-        codigoRetencion:String,
-        codigoPorcentaje: String,
+        codigoRetencion: String,
         baseImponible: String,
-        valor: String,
-        tarifa: String?
-    ) : super(codigo, codigoPorcentaje, baseImponible, valor, tarifa) {
+        porcentajeRetener: String,
+        valorRetenido: String,
+        codDocSustento: String,
+        numDocSustento: String?,
+        fechaEmisionDocSustento: String
+    ) : super(codigo, baseImponible) {
         this.codigoRetencion = codigoRetencion
+        this.porcentajeRetener = porcentajeRetener
+        this.valorRetenido = valorRetenido
+        this.codDocSustento = codDocSustento
+        this.numDocSustento = numDocSustento
+        this.fechaEmisionDocSustento = fechaEmisionDocSustento
     }
 }

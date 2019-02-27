@@ -68,13 +68,7 @@ class Factura {
         directorioYNombreArchivoRegistroCivilP12: String,
         debug: Boolean = true
     ) {
-        this.debug = debug
-        this.directorioGuardarXML = directorioGuardarXML
-        this.directorioGuardarXMLFirmados = directorioGuardarXMLFirmados
-        this.nombreArchivoXML = nombreArchivoXML
-        this.nombreArchivoXMLFirmado = nombreArchivoXMLFirmado
-        this.clave = clave
-        this.directorioYNombreArchivoRegistroCivilP12 = directorioYNombreArchivoRegistroCivilP12
+
         this.infoTributario = infoTributario
         this.infoFactura = infoFactura
         this.detalles = detalles
@@ -92,6 +86,17 @@ class Factura {
             this.codigoNumerico,
             this.infoTributario.tipoEmision
         )
+
+
+        this.directorioGuardarXML = directorioGuardarXML
+        this.directorioGuardarXMLFirmados = directorioGuardarXMLFirmados
+        this.nombreArchivoXML = nombreArchivoXML
+        this.nombreArchivoXMLFirmado = nombreArchivoXMLFirmado
+        this.clave = clave
+        this.directorioYNombreArchivoRegistroCivilP12 = directorioYNombreArchivoRegistroCivilP12
+
+
+        this.debug = debug
     }
 
     fun validar(): ArrayList<String> {
@@ -247,18 +252,19 @@ class Factura {
 
     private fun generarInformacionFactura(): String {
         val nombreEtiquetaInformacionFactura = "infoFactura"
+
         var obligadoContabilidad = ""
         if (this.infoFactura.obligadoContabilidad != null) {
             obligadoContabilidad =
                 "        <obligadoContabilidad>${this.infoFactura.obligadoContabilidad}</obligadoContabilidad>\n"
         }
+
         var contribuyenteEspecial = ""
-        println("this.infoFactura.contribuyenteEspecial")
-        println(this.infoFactura.contribuyenteEspecial)
         if (this.infoFactura.contribuyenteEspecial != null) {
             contribuyenteEspecial =
                 "        <contribuyenteEspecial>${this.infoFactura.contribuyenteEspecial}</contribuyenteEspecial>\n"
         }
+
         var direccionEstablecimiento = ""
         if (this.infoFactura.dirEstablecimiento != null) {
             direccionEstablecimiento =
@@ -456,7 +462,7 @@ class Factura {
         }
     }
 
-    fun generarCampoAdicional(informacionAdicional: ArrayList<CampoAdicional>): String {
+    private fun generarCampoAdicional(informacionAdicional: ArrayList<CampoAdicional>): String {
         var totalCamposAdicionales = ""
         informacionAdicional.forEach {
             totalCamposAdicionales += ("         <campoAdicional nombre=\"${it.nombre}\">${it.valor}</campoAdicional>\n")
@@ -466,6 +472,9 @@ class Factura {
 
 
     fun enviarFactura(json: String): String {
+
+        val nombreDocumento = "Factura"
+
         val resultado = Klaxon()
             .parse<Factura?>(
                 json
@@ -487,7 +496,7 @@ class Factura {
 
                 return """
                         {
-                            "mensaje":"Errores en parseo de factura.",
+                            "mensaje":"Errores en parseo de $nombreDocumento.",
                             "error": 400,
                             "data":${erroresAEnviar}
                         }
@@ -699,7 +708,7 @@ class Factura {
             }
             return """
             {
-                "mensaje":"Errores en parseo de factura.",
+                "mensaje":"Errores en parseo de $nombreDocumento.",
                 "error": 400,
                 "data": {
                     "message":"${e.message}",
