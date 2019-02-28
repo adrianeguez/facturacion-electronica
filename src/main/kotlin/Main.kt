@@ -307,13 +307,13 @@ try {
 
 
     try {
-        val directorioGuardarXML = "/home/dev-02/Documents/ComprobanteRetencion"
-        val directorioGuardarXMLFirmados = "/home/dev-02/Documents/ComprobanteRetencion/ComprobanteRetencionFirmado"
+        val directorioGuardarXML = "/home/server/Documents/Comprobante Retencion"
+        val directorioGuardarXMLFirmados = "/home/server/Documents/Comprobante Retencion"
         val nombreArchivoXML = "comprobante-retencion-01.xml"
         val nombreArchivoXMLFirmado = "comprobante-retencion-01-firmado.xml"
         val clave = "LuisPadilla2115"
         val directorioYNombreArchivoRegistroCivilP12 =
-            "/home/dev-02/Documents/Github/adrianeguez/facturacion-electronica/documentacion/luis_alfredo_padilla_camuendo.p12"
+            "/home/server/Documents/Github/facturacion-electronica/documentacion/luis_alfredo_padilla_camuendo.p12"
 
         val comprobanteRetencionEstructuraString = """
                {
@@ -338,7 +338,7 @@ try {
                        "dirMatriz": "PICHINCHA / QUITO / QUITO/ LLANO CHICO"
                    },
                    "infoCompRetencion": {
-                       "fechaEmision": "13/01/2019",
+                       "fechaEmision": "10/12/2018",
                        "dirEstablecimiento": "GRAL. VEINTIMILLA E8-30 Y AV. 6 DE DICIEMBRE",
                        "obligadoContabilidad": "SI",
                        "contribuyenteEspecial":null,
