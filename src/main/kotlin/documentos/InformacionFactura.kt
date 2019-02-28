@@ -62,7 +62,7 @@ class InformacionFactura {
         flags = [CASE_INSENSITIVE],
         message = "tipoIdentificacionComprador $mensajeValores de este formato 001-001-000000001"
     )
-    val guiaRemision: String?
+    var guiaRemision: String?
 
 
     fun getGuiaRemision(): Optional<String> {
@@ -76,11 +76,11 @@ class InformacionFactura {
 
     @NotEmpty(message = "identificacionComprador $mensajeVacio")
     @Size(min = 1, max = 20, message = "identificacionComprador $mensajeValores de 1 a 20 caracteres")
-    val identificacionComprador: String
+    var identificacionComprador: String
 
     @NotEmpty(message = "direccionComprador $mensajeVacio")
     @Size(min = 1, max = 300, message = "direccionComprador $mensajeValores de 1 a 300 caracteres")
-    val direccionComprador: String
+    var direccionComprador: String
 
     fun getDireccionComprador(): Optional<String> {
         return Optional.of(direccionComprador!!)

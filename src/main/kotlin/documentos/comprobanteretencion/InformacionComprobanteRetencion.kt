@@ -95,7 +95,7 @@ class InformacionComprobanteRetencion {
             )
         this.obligadoContabilidad = obligadoContabilidad
         this.tipoIdentificacionSujetoRetenido = tipoIdentificacionSujetoRetenido
-        this.razonSocialSujetoRetenido = razonSocialSujetoRetenido
+        this.razonSocialSujetoRetenido = GenerarDocumentos.removerCaracteresEspeciales(razonSocialSujetoRetenido)
         this.identificacionSujetoRetenido = identificacionSujetoRetenido
         this.periodoFiscal = periodoFiscal
     }

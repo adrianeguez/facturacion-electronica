@@ -297,7 +297,7 @@ class ComprobanteRetencion {
         val nombreEtiquetaInformacionAdicional = "infoAdicional"
         if (this.infoAdicional != null && this.infoAdicional?.size ?: 0 > 0) {
             val informacionAdicional = ("<$nombreEtiquetaInformacionAdicional>\n"
-                    + generarCampoAdicional(this.infoAdicional!!)
+                    + generarCampoAdicional(this.infoAdicional ?: arrayListOf())
                     + "</$nombreEtiquetaInformacionAdicional>\n")
             return informacionAdicional
         } else {
