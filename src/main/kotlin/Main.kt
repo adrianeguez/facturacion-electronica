@@ -305,7 +305,7 @@ try {
 
 // Comprobante de Retencion
 
-
+    /*
     try {
         val directorioGuardarXML = "/home/server/Documents/Comprobante Retencion"
         val directorioGuardarXMLFirmados = "/home/server/Documents/Comprobante Retencion"
@@ -401,6 +401,110 @@ try {
         println(e)
         println("ERROR")
     }
+    */
 
+    try {
+        val directorioGuardarXML = "/home/server/Documents/GuiaRemision"
+        val directorioGuardarXMLFirmados = "/home/server/Documents/GuiaRemision"
+        val nombreArchivoXML = "guia-remision-01.xml"
+        val nombreArchivoXMLFirmado = "guia-remision-01-firmado.xml"
+        val clave = "LuisPadilla2115"
+        val directorioYNombreArchivoRegistroCivilP12 =
+            "/home/server/Documents/Github/facturacion-electronica/documentacion/luis_alfredo_padilla_camuendo.p12"
+
+        val guiaRemisionEstructuraString = """
+               {
+                   "directorioGuardarXML":"${directorioGuardarXML}",
+                   "directorioGuardarXMLFirmados":"${directorioGuardarXMLFirmados}",
+                   "nombreArchivoXML":"${nombreArchivoXML}",
+                   "nombreArchivoXMLFirmado":"${nombreArchivoXMLFirmado}",
+                   "clave":"${clave}",
+                   "directorioYNombreArchivoRegistroCivilP12":"${directorioYNombreArchivoRegistroCivilP12}",
+                   "debug": true
+                   "infoTributario": {
+                       "ambiente": "1",
+                       "tipoEmision": "1",
+                       "razonSocial": "PADILLA CAMUENDO LUIS ALFREDO",
+                       "nombreComercial": "COMERCIAL BRENDA",
+                       "ruc": "1710361658001",
+                       "claveAcceso": null,
+                       "codDoc": "01",
+                       "estab": "001",
+                       "ptoEmision": "001",
+                       "secuencial": "000000016",
+                       "dirMatriz": "PICHINCHA / QUITO / QUITO/ LLANO CHICO"
+                   },
+                   "infoGuiaRemision": {
+                       "dirEstablecimiento": "GRAL. VEINTIMILLA E8-30 Y AV. 6 DE DICIEMBRE",
+                       "dirPartida": "GRAL. VEINTIMILLA E8-30 Y AV. 6 DE DICIEMBRE",
+                       "razonSocialTransportista": "OÑA PACHACAMA VICTOR HUGO",
+                       "tipoIdentificacionTransportista": "05",
+                       "rucTransportista": "1710733120001",
+                       "obligadoContabilidad": "SI",
+                       "fechaIniTransporte": "14/02/2019",
+                       "fechaFinTransporte": "16/02/2019",
+                       "placa": "XXXXXX"
+                   },
+                   "destinatarios": [
+                       {
+                           "identificacionDestinatario": "1709444812",
+                           "razonSocialDestinatario": "RICARDO MUENALA",
+                           "dirDestinatario": "ANTONIO JERVEZ OE9-231 Y COLONCHE",
+                           "motivoTraslado": "Venta de Mercaderia",
+                           "codEstabDestino": "001",
+                           "ruta": "1",
+                           "codDocSustento": "01",
+                           "numDocSustento": "001-020-000000008",
+                           "numAutDocSustento": "1402201901179130423300120010200000000080",
+                           "fechaEmisionDocSustento": "14/02/2019",
+                           "numAutDocSustento": [
+                                {
+                                
+                                }
+                           ]
+                       },
+                       {
+                           "codigo": "1",
+                           "codigoRetencion": "304",
+                           "baseImponible": "1000.00",
+                           "porcentajeRetener": "8.00",
+                           "valorRetenido": "80.00"
+                           "codDocSustento": "01"
+                           "numDocSustento": "003005021421211"
+                           "fechaEmisionDocSustento": "14/02/2019"
+                       }
+                   ],
+                   "infoAdicional": [
+                       {
+                           "nombre": "ConceptoRetencion",
+                           "valor": "MANTENIMIENTO PREVENTIVO DEL CIR"
+                       },
+                       {
+                           "nombre": "Direccion",
+                           "valor": "LEONARDO MURIALDO Y HUACAMAYOS"
+                       },
+                       {
+                           "nombre": "Telefono",
+                           "valor": "2071425 0998786306"
+                       }
+                   ]
+               }
+               """
+
+        val result = Klaxon()
+            .parse<ComprobanteRetencion?>(
+                guiaRemisionEstructuraString
+            )
+
+        val resultadoEnvioComprobanteRetencion =
+            result?.enviarComprobanteRetencion(guiaRemisionEstructuraString)
+
+        println(resultadoEnvioComprobanteRetencion)
+
+
+    } catch (e: KlaxonException) {
+        println(e)
+        println("ERROR")
+    }
 
 }
