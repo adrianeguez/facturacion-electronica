@@ -404,6 +404,7 @@ try {
     }
     */
 
+    /*
     try {
         val directorioGuardarXML = "C:/Users/Adrian/Documents/guiaremision"
         val directorioGuardarXMLFirmados = "C:/Users/Adrian/Documents/guiaremision"
@@ -447,6 +448,120 @@ try {
                        "fechaIniTransporte": "14/02/2019",
                        "fechaFinTransporte": "16/02/2019",
                        "placa": "XXXXXX"
+                   },
+                   "destinatarios": [
+                       {
+                           "identificacionDestinatario": "1709444812",
+                           "razonSocialDestinatario": "RICARDO MUENALA",
+                           "dirDestinatario": "ANTONIO JERVEZ OE9-231 Y COLONCHE",
+                           "motivoTraslado": "Venta de Mercaderia",
+                           "docAduaneroUnico":null,
+                           "codEstabDestino": "001",
+                           "ruta": "1",
+                           "codDocSustento": "01",
+                           "numDocSustento": "001-020-000000008",
+                           "numAutDocSustento": "1402201901179130423300120010200000000080",
+                           "fechaEmisionDocSustento": "14/02/2019",
+                           "detalles": [
+                                {
+                                    "codigoInterno":"0200650557",
+                                    "codigoAdicional":"0200650557",
+                                    "descripcion":"OURO KRAFT 66X80 C/10 HJ VINO",
+                                    "cantidad":"4.00",
+                                    "detallesAdicionales":null
+                                },
+                                {
+                                    "codigoInterno":"0502526",
+                                    "codigoAdicional":"7453002445547",
+                                    "descripcion":"SILICON LIQUIDO MERLETTO 30ML",
+                                    "cantidad":"31.00",
+                                    "detallesAdicionales":null
+                                },
+                                {
+                                    "codigoInterno":"0507582",
+                                    "codigoAdicional":"7450007492019",
+                                    "descripcion":"SILICON LIQUIDO MERLETTO 60ML",
+                                    "cantidad":"15.00",
+                                    "detallesAdicionales":null
+                                }
+                           ]
+                        }
+                   ],
+                   "infoAdicional":null
+               }
+               """
+
+        val result = Klaxon()
+            .parse<GuiaRemision?>(
+                guiaRemisionEstructuraString
+            )
+
+        val resultadoEnvioComprobanteRetencion =
+            result?.enviarGuiaRemision(guiaRemisionEstructuraString)
+
+        println(resultadoEnvioComprobanteRetencion)
+
+
+    } catch (e: KlaxonException) {
+        println(e)
+        println("ERROR")
+    }
+
+    */
+
+    try {
+        val directorioGuardarXML = "/home/dev-08/Documents/NotaCredito"
+        val directorioGuardarXMLFirmados = "/home/dev-08/Documents/NotaCredito"
+        val nombreArchivoXML = "nota-credito-01.xml"
+        val nombreArchivoXMLFirmado = "nota-credito-01-firmado.xml"
+        val clave = "LuisPadilla2115"
+        val directorioYNombreArchivoRegistroCivilP12 =
+            "/home/dev-08/Documents/Github/adrianeguez/facturacion-electronica/documentacion/luis_alfredo_padilla_camuendo.p12"
+
+        val guiaRemisionEstructuraString = """
+               {
+                   "directorioGuardarXML":"${directorioGuardarXML}",
+                   "directorioGuardarXMLFirmados":"${directorioGuardarXMLFirmados}",
+                   "nombreArchivoXML":"${nombreArchivoXML}",
+                   "nombreArchivoXMLFirmado":"${nombreArchivoXMLFirmado}",
+                   "clave":"${clave}",
+                   "directorioYNombreArchivoRegistroCivilP12":"${directorioYNombreArchivoRegistroCivilP12}",
+                   "debug": true,
+                   "infoTributario": {
+                       "ambiente": "1",
+                       "tipoEmision": "1",
+                       "razonSocial": "PADILLA CAMUENDO LUIS ALFREDO",
+                       "nombreComercial": "COMERCIAL BRENDA",
+                       "ruc": "1710361658001",
+                       "claveAcceso": null,
+                       "codDoc": "01",
+                       "estab": "001",
+                       "ptoEmision": "001",
+                       "secuencial": "000000016",
+                       "dirMatriz": "PICHINCHA / QUITO / QUITO/ LLANO CHICO"
+                   },
+                   "infoGuiaRemision": {
+                       "fechaEmision": "14/02/2019",
+                       "dirEstablecimiento": "GRAL. VEINTIMILLA E8-30 Y AV. 6 DE DICIEMBRE",
+                       "tipoIdentificacionComprador": "04",
+                       "razonSocialComprador": "BAZAR Y PAPELERIA MEXICO",
+                       "identificacionComprador": "1800095612001",
+                       "obligadoContabilidad": "SI",
+                       "codDocModificado": "01",
+                       "numDocModificado": "001-020-000000007",
+                       "fechaEmisionDocSustento": "14/02/2019",
+                       "totalSinImpuestos": "161.79",
+                       "valorModificacion": "181.20",
+                       "moneda": "DOLAR",
+                       "totalConImpuestos":[
+                            {
+                                "codigo":"2",
+                                "codigoPorcentaje":"2",
+                                "baseImponible":"161.79",
+                                "valor":"19.41",
+                                "codigo":"",
+                            }
+                       ]
                    },
                    "destinatarios": [
                        {
