@@ -4,6 +4,7 @@ import com.beust.klaxon.KlaxonException
 import documentos.comprobanteretencion.ComprobanteRetencion
 import documentos.factura.Factura
 import documentos.guiaremision.GuiaRemision
+import documentos.notacredito.NotaCredito
 import org.apache.log4j.BasicConfigurator
 
 
@@ -540,7 +541,7 @@ try {
                        "secuencial": "000000016",
                        "dirMatriz": "PICHINCHA / QUITO / QUITO/ LLANO CHICO"
                    },
-                   "infoGuiaRemision": {
+                   "infoNotaCredito": {
                        "fechaEmision": "14/02/2019",
                        "dirEstablecimiento": "GRAL. VEINTIMILLA E8-30 Y AV. 6 DE DICIEMBRE",
                        "tipoIdentificacionComprador": "04",
@@ -559,44 +560,30 @@ try {
                                 "codigoPorcentaje":"2",
                                 "baseImponible":"161.79",
                                 "valor":"19.41",
-                                "codigo":"",
+                                "tarifa":"12.00",
                             }
-                       ]
+                       ],
+                       "motivo":"CLIENTE - NO HAY QUIEN RECIBA"
                    },
-                   "destinatarios": [
+                   "detalles": [
                        {
-                           "identificacionDestinatario": "1709444812",
-                           "razonSocialDestinatario": "RICARDO MUENALA",
-                           "dirDestinatario": "ANTONIO JERVEZ OE9-231 Y COLONCHE",
-                           "motivoTraslado": "Venta de Mercaderia",
-                           "docAduaneroUnico":null,
-                           "codEstabDestino": "001",
-                           "ruta": "1",
-                           "codDocSustento": "01",
-                           "numDocSustento": "001-020-000000008",
-                           "numAutDocSustento": "1402201901179130423300120010200000000080",
-                           "fechaEmisionDocSustento": "14/02/2019",
-                           "detalles": [
+                           "codigoInterno": "0152002",
+                           "codigoAdicional": "7450008864655",
+                           "codigoPrincipal": null,
+                           "codigoAuxiliar": null,
+                           "descripcion": "ASILICON BARRA MERLETTO 11.2X27 FUNDA/30 UNID",
+                           "cantidad": "8.00",
+                           "precioUnitario":"7.75",
+                           "descuento": "10.46",
+                           "precioTotalSinImpuesto": "51.54",
+                           "detallesAdicionales":"null",
+                           "impuestos": [
                                 {
-                                    "codigoInterno":"0200650557",
-                                    "codigoAdicional":"0200650557",
-                                    "descripcion":"OURO KRAFT 66X80 C/10 HJ VINO",
-                                    "cantidad":"4.00",
-                                    "detallesAdicionales":null
-                                },
-                                {
-                                    "codigoInterno":"0502526",
-                                    "codigoAdicional":"7453002445547",
-                                    "descripcion":"SILICON LIQUIDO MERLETTO 30ML",
-                                    "cantidad":"31.00",
-                                    "detallesAdicionales":null
-                                },
-                                {
-                                    "codigoInterno":"0507582",
-                                    "codigoAdicional":"7450007492019",
-                                    "descripcion":"SILICON LIQUIDO MERLETTO 60ML",
-                                    "cantidad":"15.00",
-                                    "detallesAdicionales":null
+                                    "codigo":"2",
+                                    "codigoPorcentaje":"2",
+                                    "tarifa":"12.00",
+                                    "baseImponible":"51.54",
+                                    "valor":"6.18"
                                 }
                            ]
                         }
@@ -606,7 +593,7 @@ try {
                """
 
         val result = Klaxon()
-            .parse<GuiaRemision?>(
+            .parse<NotaCredito?>(
                 guiaRemisionEstructuraString
             )
 
