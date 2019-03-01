@@ -78,7 +78,7 @@ class Destinatario {
     }
 
     @Pattern(
-        regexp = "([0-9]{49})|([0-9]{37})|([0-9]{10})",
+        regexp = "([0-9]{10,49})",
         message = "numAutDocSustento $mensajeValores de 10 digitos numericos, 37 digitos numeros o 49 digitos numericos"
     )
     var numAutDocSustento: String?
@@ -101,7 +101,7 @@ class Destinatario {
     var detalles: ArrayList<DetalleGuiaRemision>
 
     constructor(
-        placa: String,
+        identificacionDestinatario: String,
         razonSocialDestinatario: String,
         dirDestinatario: String,
         motivoTraslado: String,
@@ -114,7 +114,7 @@ class Destinatario {
         fechaEmisionDocSustento: String?,
         detalles: ArrayList<DetalleGuiaRemision>
     ) {
-        this.identificacionDestinatario = placa
+        this.identificacionDestinatario = identificacionDestinatario
         this.razonSocialDestinatario = GenerarDocumentos.removerCaracteresEspeciales(razonSocialDestinatario)
         this.dirDestinatario = GenerarDocumentos.removerCaracteresEspeciales(dirDestinatario)
         this.motivoTraslado = GenerarDocumentos.removerCaracteresEspeciales(motivoTraslado)

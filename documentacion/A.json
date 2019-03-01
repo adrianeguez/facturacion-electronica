@@ -1,0 +1,67 @@
+{
+  "directorioGuardarXML":"${directorioGuardarXML}",
+  "directorioGuardarXMLFirmados":"${directorioGuardarXMLFirmados}",
+  "nombreArchivoXML":"${nombreArchivoXML}",
+  "nombreArchivoXMLFirmado":"${nombreArchivoXMLFirmado}",
+  "clave":"${clave}",
+  "directorioYNombreArchivoRegistroCivilP12":"${directorioYNombreArchivoRegistroCivilP12}",
+  "debug": true,
+  "infoTributario": {
+    "ambiente": "1",
+    "tipoEmision": "1",
+    "razonSocial": "PADILLA CAMUENDO LUIS ALFREDO",
+    "nombreComercial": "COMERCIAL BRENDA",
+    "ruc": "1710361658001",
+    "claveAcceso": null,
+    "codDoc": "01",
+    "estab": "001",
+    "ptoEmision": "001",
+    "secuencial": "000000016",
+    "dirMatriz": "PICHINCHA / QUITO / QUITO/ LLANO CHICO"
+  },
+  "infoGuiaRemision": {
+    "dirEstablecimiento": "GRAL. VEINTIMILLA E8-30 Y AV. 6 DE DICIEMBRE",
+    "dirPartida": "GRAL. VEINTIMILLA E8-30 Y AV. 6 DE DICIEMBRE",
+    "razonSocialTransportista": "OÑA PACHACAMA VICTOR HUGO",
+    "tipoIdentificacionTransportista": "05",
+    "rucTransportista": "1710733120001",
+    "obligadoContabilidad": "SI",
+    "fechaIniTransporte": "14/02/2019",
+    "fechaFinTransporte": "16/02/2019",
+    "placa": "XXXXXX"
+  },
+  "destinatarios": [
+    {
+      "identificacionDestinatario": "1709444812",
+      "razonSocialDestinatario": "RICARDO MUENALA",
+      "dirDestinatario": "ANTONIO JERVEZ OE9-231 Y COLONCHE",
+      "motivoTraslado": "Venta de Mercaderia",
+      "codEstabDestino": "001",
+      "ruta": "1",
+      "codDocSustento": "01",
+      "numDocSustento": "001-020-000000008",
+      "numAutDocSustento": "1402201901179130423300120010200000000080",
+      "fechaEmisionDocSustento": "14/02/2019",
+      "detalles": [
+        {
+          "codigoInterno":"0200650557",
+          "codigoAdicional":"0200650557",
+          "descripcion":"OURO KRAFT 66X80 C/10 HJ VINO",
+          "cantidad":"4.00"
+        },
+        {
+          "codigoInterno":"0502526",
+          "codigoAdicional":"7453002445547",
+          "descripcion":"SILICON LIQUIDO MERLETTO 30ML",
+          "cantidad":"31.00"
+        },
+        {
+          "codigoInterno":"0507582",
+          "codigoAdicional":"7450007492019",
+          "descripcion":"SILICON LIQUIDO MERLETTO 60ML",
+          "cantidad":"15.00"
+        }
+      ]
+    }
+  ]
+}

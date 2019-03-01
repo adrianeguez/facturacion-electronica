@@ -3,6 +3,7 @@ import documentos.*
 import com.beust.klaxon.KlaxonException
 import documentos.comprobanteretencion.ComprobanteRetencion
 import documentos.factura.Factura
+import documentos.guiaremision.GuiaRemision
 import org.apache.log4j.BasicConfigurator
 
 
@@ -404,13 +405,13 @@ try {
     */
 
     try {
-        val directorioGuardarXML = "/home/server/Documents/GuiaRemision"
-        val directorioGuardarXMLFirmados = "/home/server/Documents/GuiaRemision"
+        val directorioGuardarXML = "C:/Users/Adrian/Documents/guiaremision"
+        val directorioGuardarXMLFirmados = "C:/Users/Adrian/Documents/guiaremision"
         val nombreArchivoXML = "guia-remision-01.xml"
         val nombreArchivoXMLFirmado = "guia-remision-01-firmado.xml"
         val clave = "LuisPadilla2115"
         val directorioYNombreArchivoRegistroCivilP12 =
-            "/home/server/Documents/Github/facturacion-electronica/documentacion/luis_alfredo_padilla_camuendo.p12"
+            "D:/Github/facturacion-electronica/documentacion/luis_alfredo_padilla_camuendo.p12"
 
         val guiaRemisionEstructuraString = """
                {
@@ -420,7 +421,7 @@ try {
                    "nombreArchivoXMLFirmado":"${nombreArchivoXMLFirmado}",
                    "clave":"${clave}",
                    "directorioYNombreArchivoRegistroCivilP12":"${directorioYNombreArchivoRegistroCivilP12}",
-                   "debug": true
+                   "debug": true,
                    "infoTributario": {
                        "ambiente": "1",
                        "tipoEmision": "1",
@@ -440,7 +441,9 @@ try {
                        "razonSocialTransportista": "OÑA PACHACAMA VICTOR HUGO",
                        "tipoIdentificacionTransportista": "05",
                        "rucTransportista": "1710733120001",
+                       "rise": null,
                        "obligadoContabilidad": "SI",
+                       "contribuyenteEspecial":null,
                        "fechaIniTransporte": "14/02/2019",
                        "fechaFinTransporte": "16/02/2019",
                        "placa": "XXXXXX"
@@ -451,53 +454,49 @@ try {
                            "razonSocialDestinatario": "RICARDO MUENALA",
                            "dirDestinatario": "ANTONIO JERVEZ OE9-231 Y COLONCHE",
                            "motivoTraslado": "Venta de Mercaderia",
+                           "docAduaneroUnico":null,
                            "codEstabDestino": "001",
                            "ruta": "1",
                            "codDocSustento": "01",
                            "numDocSustento": "001-020-000000008",
                            "numAutDocSustento": "1402201901179130423300120010200000000080",
                            "fechaEmisionDocSustento": "14/02/2019",
-                           "numAutDocSustento": [
+                           "detalles": [
                                 {
-                                
+                                    "codigoInterno":"0200650557",
+                                    "codigoAdicional":"0200650557",
+                                    "descripcion":"OURO KRAFT 66X80 C/10 HJ VINO",
+                                    "cantidad":"4.00",
+                                    "detallesAdicionales":null
+                                },
+                                {
+                                    "codigoInterno":"0502526",
+                                    "codigoAdicional":"7453002445547",
+                                    "descripcion":"SILICON LIQUIDO MERLETTO 30ML",
+                                    "cantidad":"31.00",
+                                    "detallesAdicionales":null
+                                },
+                                {
+                                    "codigoInterno":"0507582",
+                                    "codigoAdicional":"7450007492019",
+                                    "descripcion":"SILICON LIQUIDO MERLETTO 60ML",
+                                    "cantidad":"15.00",
+                                    "detallesAdicionales":null
                                 }
                            ]
-                       },
-                       {
-                           "codigo": "1",
-                           "codigoRetencion": "304",
-                           "baseImponible": "1000.00",
-                           "porcentajeRetener": "8.00",
-                           "valorRetenido": "80.00"
-                           "codDocSustento": "01"
-                           "numDocSustento": "003005021421211"
-                           "fechaEmisionDocSustento": "14/02/2019"
-                       }
+                        }
                    ],
-                   "infoAdicional": [
-                       {
-                           "nombre": "ConceptoRetencion",
-                           "valor": "MANTENIMIENTO PREVENTIVO DEL CIR"
-                       },
-                       {
-                           "nombre": "Direccion",
-                           "valor": "LEONARDO MURIALDO Y HUACAMAYOS"
-                       },
-                       {
-                           "nombre": "Telefono",
-                           "valor": "2071425 0998786306"
-                       }
-                   ]
+                   "infoAdicional":null
                }
                """
 
         val result = Klaxon()
-            .parse<ComprobanteRetencion?>(
+            .parse<GuiaRemision?>(
                 guiaRemisionEstructuraString
             )
 
         val resultadoEnvioComprobanteRetencion =
-            result?.enviarComprobanteRetencion(guiaRemisionEstructuraString)
+            result?.enviarGuiaRemision(guiaRemisionEstructuraString)
 
         println(resultadoEnvioComprobanteRetencion)
 

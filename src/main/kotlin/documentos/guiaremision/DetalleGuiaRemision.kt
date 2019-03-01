@@ -39,15 +39,16 @@ class DetalleGuiaRemision {
     )
     var cantidad: String
 
-    @NotNull(message = "detallesAdicionales $mensajeNulo")
-    var detallesAdicionales: ArrayList<DetalleAdicional>
+
+    var detallesAdicionales: ArrayList<DetalleAdicional>?
+
 
     constructor(
         codigoInterno: String?,
         codigoAdicional: String?,
         descripcion: String,
         cantidad: String,
-        detallesAdicionales: ArrayList<DetalleAdicional>
+        detallesAdicionales: ArrayList<DetalleAdicional>?
     ) {
         this.codigoInterno = codigoInterno
         this.codigoAdicional = codigoAdicional

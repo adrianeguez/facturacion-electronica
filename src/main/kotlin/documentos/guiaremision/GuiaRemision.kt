@@ -58,7 +58,6 @@ class GuiaRemision {
         infoTributario: InformacionTributaria,
         infoGuiaRemision: InformacionGuiaRemision,
         destinatarios: ArrayList<Destinatario>,
-
         infoAdicional: ArrayList<CampoAdicional>?,
         directorioGuardarXML: String,
         directorioGuardarXMLFirmados: String,
@@ -123,7 +122,7 @@ class GuiaRemision {
                 for (violation in violationsDetalle) {
                     errores.add(violation.message)
                 }
-                detalle.detallesAdicionales.forEach { detalleAdicional ->
+                detalle.detallesAdicionales?.forEach { detalleAdicional ->
                     val violationsDetalleAdicional = validator.validate(detalleAdicional)
                     for (violation in violationsDetalleAdicional) {
                         errores.add(violation.message)
@@ -153,7 +152,7 @@ class GuiaRemision {
         return xmlString
     }
 
-    fun generarArchivoFacturaXML(
+    fun generarArchivoGuiaRemisionXML(
         directorioAGuardarArchivo: String,
         nombreArchivoXMLAGuardar: String,
         stringGuiaRemisionXML: String? = null
@@ -194,7 +193,7 @@ class GuiaRemision {
     }
 
 
-    fun enviarFactura(json: String): String {
+    fun enviarGuiaRemision(json: String): String {
 
         val nombreDocumento = "Guia Remision"
 
@@ -227,7 +226,7 @@ class GuiaRemision {
             } else {
                 resultado?.generarGuiaRemisionXML()
 
-                val archivoGenerado = resultado?.generarArchivoFacturaXML(
+                val archivoGenerado = resultado?.generarArchivoGuiaRemisionXML(
                     resultado.directorioGuardarXML,
                     resultado.nombreArchivoXML
                 )
@@ -633,7 +632,7 @@ class GuiaRemision {
                     + codigoAdicional
                     + "                <descripcion>${it.descripcion}</descripcion>\n"
                     + "                <cantidad>${it.cantidad}</cantidad>\n"
-                    + generarDetallesAdicionales(it.detallesAdicionales)
+                    + generarDetallesAdicionales(it.detallesAdicionales?: arrayListOf())
                     + "             </$nombreEtiquetaDetalle>\n")
         }
         return totalDetalles
