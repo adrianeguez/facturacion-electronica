@@ -46,10 +46,7 @@ class InformacionGuiaRemision {
     var rucTransportista: String
 
 
-    @Pattern(
-        regexp = "SI|NO",
-        message = "obligadoContabilidad $mensajeValores SI|NO"
-    )
+    @Size(min = 1, max = 40, message = "razonSocialTransportista $mensajeValores de 1 a 40 caracteres")
     var rise: String?
 
     fun getRise(): Optional<String> {

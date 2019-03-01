@@ -1,4 +1,4 @@
-package documentos.guiaremision
+package documentos.notacredito
 
 import com.beust.klaxon.Klaxon
 import com.beust.klaxon.KlaxonException
@@ -19,7 +19,8 @@ import javax.validation.Validation
 import javax.validation.constraints.NotNull
 import kotlin.collections.ArrayList
 
-class GuiaRemision {
+class NotaCredito {
+
     private val factory = Validation.buildDefaultValidatorFactory()
     private val validator = factory.getValidator()
 
@@ -28,21 +29,20 @@ class GuiaRemision {
     var versionXML = "1.0"
     var encodingXML = "UTF-8"
     var standaloneXML = "yes"
-    var nombreEtiquetaGuiaRemision = "guiaRemision"
+    var nombreEtiquetaNotaCredito = "notaCredito"
     var idComprobante = "comprobante" // Codigo Quemado en guía del SRI
-    var versionGuiaRemisionXML = "1.0.0" // Codigo Quemado en guía del SRI
-    var stringGuiaRemisionXML = ""
+    var versionNotaCreditoXML = "1.0.0" // Codigo Quemado en guía del SRI
+    var stringNotaCreditoXML = ""
 
     @NotNull(message = "infoTributario $mensajeNulo")
     var infoTributario: InformacionTributaria
 
-    @NotNull(message = "infoTributario $mensajeNulo")
-    var infoGuiaRemision: InformacionGuiaRemision
+    @NotNull(message = "infoNotaCredito $mensajeNulo")
+    var infoNotaCredito: InformacionNotaCredito
 
-    @NotNull(message = "destinatario $mensajeNulo")
-    var destinatarios: ArrayList<Destinatario>
+    @NotNull(message = "detalles $mensajeNulo")
+    var detalles: ArrayList<DetalleNotaCredito>
 
-    @NotNull(message = "infoTributario $mensajeNulo")
     var infoAdicional: ArrayList<CampoAdicional>?
 
     var directorioGuardarXML: String
@@ -56,8 +56,8 @@ class GuiaRemision {
 
     constructor(
         infoTributario: InformacionTributaria,
-        infoGuiaRemision: InformacionGuiaRemision,
-        destinatarios: ArrayList<Destinatario>,
+        infoNotaCredito: InformacionNotaCredito,
+        detalles: ArrayList<DetalleNotaCredito>,
         infoAdicional: ArrayList<CampoAdicional>?,
         directorioGuardarXML: String,
         directorioGuardarXMLFirmados: String,
@@ -68,12 +68,12 @@ class GuiaRemision {
         debug: Boolean = true
     ) {
         this.infoTributario = infoTributario
-        this.infoGuiaRemision = infoGuiaRemision
-        this.destinatarios = destinatarios
+        this.infoNotaCredito = infoNotaCredito
+        this.detalles = detalles
         this.infoAdicional = infoAdicional
 
         val format = SimpleDateFormat("dd/MM/yyyy")
-        val fecha: Date = format.parse(this.infoGuiaRemision.fechaIniTransporte)
+        val fecha: Date = format.parse(this.infoNotaCredito.fechaEmision)
 
         this.infoTributario.claveAcceso = GenerarDocumentos.generarClave(
             fecha,
@@ -104,29 +104,39 @@ class GuiaRemision {
             errores.add(violation.message)
         }
 
-        val violationsInformacionGuiaRemision = validator.validate(this.infoGuiaRemision)
+        val violationsInformacionNotaCredito = validator.validate(this.infoNotaCredito)
 
-        for (violation in violationsInformacionGuiaRemision) {
+        for (violation in violationsInformacionNotaCredito) {
             errores.add(violation.message)
         }
 
 
-        this.destinatarios.forEach {
-            val violationsDestinatario = validator.validate(it)
+        this.infoNotaCredito.totalConImpuesto.forEach {
+            val violationsTotalConImpuesto = validator.validate(it)
 
-            for (violation in violationsDestinatario) {
+            for (violation in violationsTotalConImpuesto) {
                 errores.add(violation.message)
             }
-            it.detalles.forEach { detalle ->
-                val violationsDetalle = validator.validate(detalle)
-                for (violation in violationsDetalle) {
+        }
+
+        this.detalles.forEach {
+            val violationsDetalle = validator.validate(it)
+
+            for (violation in violationsDetalle) {
+                errores.add(violation.message)
+            }
+
+            it.detallesAdicionales?.forEach { detalleAdicional ->
+                val violationsDetalleAdicional = validator.validate(detalleAdicional)
+                for (violation in violationsDetalleAdicional) {
                     errores.add(violation.message)
                 }
-                detalle.detallesAdicionales?.forEach { detalleAdicional ->
-                    val violationsDetalleAdicional = validator.validate(detalleAdicional)
-                    for (violation in violationsDetalleAdicional) {
-                        errores.add(violation.message)
-                    }
+            }
+
+            it.impuestos.forEach { impuesto ->
+                val violationsImpuesto = validator.validate(impuesto)
+                for (violation in violationsImpuesto) {
+                    errores.add(violation.message)
                 }
             }
         }
@@ -142,22 +152,22 @@ class GuiaRemision {
 
     }
 
-    fun generarGuiaRemisionXML(): String {
+    fun generarNotaCreditoXML(): String {
         val xmlString: String =
             "<?xml version=\"$versionXML\" encoding=\"$encodingXML\" standalone=\"$standaloneXML\"?>\n" +
-                    "<$nombreEtiquetaGuiaRemision id=\"${idComprobante}\" version=\"$versionGuiaRemisionXML\">\n" +
-                    generarCuerpoGuiaRemision() +
-                    "</$nombreEtiquetaGuiaRemision>"
-        this.stringGuiaRemisionXML = xmlString
+                    "<$nombreEtiquetaNotaCredito id=\"${idComprobante}\" version=\"$versionNotaCreditoXML\">\n" +
+                    generarCuerpoNotaCredito() +
+                    "</$nombreEtiquetaNotaCredito>"
+        this.stringNotaCreditoXML = xmlString
         return xmlString
     }
 
-    fun generarArchivoGuiaRemisionXML(
+    fun generarArchivoNotaCreditoXML(
         directorioAGuardarArchivo: String,
         nombreArchivoXMLAGuardar: String,
         stringGuiaRemisionXML: String? = null
     ): String? {
-        val xml = stringGuiaRemisionXML ?: this.stringGuiaRemisionXML
+        val xml = stringGuiaRemisionXML ?: this.stringNotaCreditoXML
         var archivoPathNombre = directorioAGuardarArchivo + nombreArchivoXMLAGuardar
 
         try {
@@ -192,13 +202,12 @@ class GuiaRemision {
         return null
     }
 
-
     fun enviarGuiaRemision(json: String): String {
 
-        val nombreDocumento = "Guia Remision"
+        val nombreDocumento = "Nota Credito"
 
         val resultado = Klaxon()
-            .parse<GuiaRemision?>(
+            .parse<NotaCredito?>(
                 json
             )
         try {
@@ -224,9 +233,9 @@ class GuiaRemision {
                         }
                         """.trimIndent()
             } else {
-                resultado?.generarGuiaRemisionXML()
+                resultado?.generarNotaCreditoXML()
 
-                val archivoGenerado = resultado?.generarArchivoGuiaRemisionXML(
+                val archivoGenerado = resultado?.generarArchivoNotaCreditoXML(
                     resultado.directorioGuardarXML,
                     resultado.nombreArchivoXML
                 )
@@ -457,13 +466,11 @@ class GuiaRemision {
 
     }
 
-
-    private fun generarCuerpoGuiaRemision(): String {
+    private fun generarCuerpoNotaCredito(): String {
         val contenidoFactura = generarInformacionTributaria() +
-                generarInformacionGuiaRemision() +
-                generarDestinatarios() +
+                generarInformacionNotaCredito() +
+                generarDetalles() +
                 generarInformacionAdicional()
-
         return contenidoFactura
     }
 
@@ -490,169 +497,96 @@ class GuiaRemision {
         return informacionTributaria
     }
 
-    private fun generarInformacionGuiaRemision(): String {
-        val nombreEtiquetaInformacionGuiaRemision = "infoGuiaRemision"
+    private fun generarInformacionNotaCredito(): String {
+        val nombreEtiquetaInformacionNotaCredito = "infoNotaCredito"
 
         var dirEstablecimiento = ""
-        if (this.infoGuiaRemision.dirEstablecimiento != null) {
+        if (this.infoNotaCredito.dirEstablecimiento != null) {
             dirEstablecimiento =
-                    "        <dirEstablecimiento>${this.infoGuiaRemision.dirEstablecimiento}</dirEstablecimiento>\n"
-        }
-
-        var rise = ""
-        if (this.infoGuiaRemision.rise != null) {
-            rise =
-                    "        <rise>${this.infoGuiaRemision.rise}</rise>\n"
-        }
-
-        var obligadoContabilidad = ""
-        if (this.infoGuiaRemision.obligadoContabilidad != null) {
-            obligadoContabilidad =
-                    "        <obligadoContabilidad>${this.infoGuiaRemision.obligadoContabilidad}</obligadoContabilidad>\n"
+                    "        <dirEstablecimiento>${this.infoNotaCredito.dirEstablecimiento}</dirEstablecimiento>\n"
         }
 
         var contribuyenteEspecial = ""
-        if (this.infoGuiaRemision.contribuyenteEspecial != null) {
+        if (this.infoNotaCredito.contribuyenteEspecial != null) {
             contribuyenteEspecial =
-                    "        <contribuyenteEspecial>${this.infoGuiaRemision.contribuyenteEspecial}</contribuyenteEspecial>\n"
+                    "        <contribuyenteEspecial>${this.infoNotaCredito.contribuyenteEspecial}</contribuyenteEspecial>\n"
+        }
+
+        var obligadoContabilidad = ""
+        if (this.infoNotaCredito.obligadoContabilidad != null) {
+            obligadoContabilidad =
+                    "        <obligadoContabilidad>${this.infoNotaCredito.obligadoContabilidad}</obligadoContabilidad>\n"
+        }
+
+        var rise = ""
+        if (this.infoNotaCredito.rise != null) {
+            rise =
+                    "        <rise>${this.infoNotaCredito.rise}</rise>\n"
         }
 
 
-        val informacionFactura = ("<$nombreEtiquetaInformacionGuiaRemision>\n"
+        val informacionFactura = ("<$nombreEtiquetaInformacionNotaCredito>\n"
+                + "        <fechaEmision>${this.infoNotaCredito.fechaEmision}</fechaEmision>\n"
                 + dirEstablecimiento
-                + "        <dirPartida>${this.infoGuiaRemision.dirPartida}</dirPartida>\n"
-                + "        <razonSocialTransportista>${this.infoGuiaRemision.razonSocialTransportista}</razonSocialTransportista>\n"
-                + "        <tipoIdentificacionTransportista>${this.infoGuiaRemision.tipoIdentificacionTransportista}</tipoIdentificacionTransportista>\n"
-                + "        <rucTransportista>${this.infoGuiaRemision.rucTransportista}</rucTransportista>\n"
-                + rise
-                + obligadoContabilidad
+                + "        <tipoIdentificacionComprador>${this.infoNotaCredito.tipoIdentificacionComprador}</tipoIdentificacionComprador>\n"
+                + "        <razonSocialComprador>${this.infoNotaCredito.razonSocialComprador}</razonSocialComprador>\n"
+                + "        <identificacionComprador>${this.infoNotaCredito.identificacionComprador}</identificacionComprador>\n"
                 + contribuyenteEspecial
-                + "        <fechaIniTransporte>${this.infoGuiaRemision.fechaIniTransporte}</fechaIniTransporte>\n"
-                + "        <fechaFinTransporte>${this.infoGuiaRemision.fechaFinTransporte}</fechaFinTransporte>\n"
-                + "        <placa>${this.infoGuiaRemision.placa}</placa>\n"
-                + "</$nombreEtiquetaInformacionGuiaRemision>\n")
+                + obligadoContabilidad
+                + rise
+                + "        <codDocModificado>${this.infoNotaCredito.codDocModificado}</codDocModificado>\n"
+                + "        <numDocModificado>${this.infoNotaCredito.numDocModificado}</numDocModificado>\n"
+                + "        <fechaEmisionDocSustento>${this.infoNotaCredito.fechaEmisionDocSustento}</fechaEmisionDocSustento>\n"
+                + "        <totalSinImpuestos>${this.infoNotaCredito.totalSinImpuestos}</totalSinImpuestos>\n"
+                + "        <valorModificacion>${this.infoNotaCredito.valorModificacion}</valorModificacion>\n"
+                + "        <moneda>${this.infoNotaCredito.moneda}</moneda>\n"
+                + generarTotalConImpuestos()
+                + "</$nombreEtiquetaInformacionNotaCredito>\n")
         return informacionFactura
     }
 
-    private fun generarDestinatarios(): String {
-        val nombreEtiquetaDestinatarios = "destinatarios"
-        val totalDestinatarios = ("        <$nombreEtiquetaDestinatarios>\n"
-                + generarDestinatario(this.destinatarios)
-                + "         </$nombreEtiquetaDestinatarios>\n")
-        return totalDestinatarios
+    private fun generarTotalConImpuestos(): String {
+        val nombreEtiquetaTotalConImpuestos = "totalConImpuestos"
+        val totalConImpuestos = ("        <$nombreEtiquetaTotalConImpuestos>\n"
+                + generarTotalImpuesto(this.infoNotaCredito.totalConImpuesto)
+                + "         </$nombreEtiquetaTotalConImpuestos>\n")
+        return totalConImpuestos
     }
 
-    private fun generarDestinatario(destinatarios: ArrayList<Destinatario>): String {
-        val nombreEtiquetaDestinatario = "destinatario"
-        var totalDestinatarios = ""
-        destinatarios.forEach {
-            var docAduaneroUnico = ""
-            if (it.docAduaneroUnico != null) {
-                docAduaneroUnico = "                <docAduaneroUnico>${it.docAduaneroUnico}</docAduaneroUnico>\n"
+    private fun generarTotalImpuesto(totalImpuestosArreglo: ArrayList<TotalImpuesto>): String {
+        val nombreEtiquetaTotalImpuestos = "totalImpuesto"
+        var totalImpuestos = ""
+        totalImpuestosArreglo.forEach {
+
+            var descuentoAdicional = ""
+            if (it.descuentoAdicional != null) {
+                descuentoAdicional =
+                        "                <descuentoAdicional>${it.descuentoAdicional}</descuentoAdicional>\n"
             }
 
-            var codEstabDestino = ""
-            if (it.codEstabDestino != null) {
-                codEstabDestino = "                <codEstabDestino>${it.codEstabDestino}</codEstabDestino>\n"
+            var tarifa = ""
+            if (it.tarifa != null) {
+                tarifa =
+                        "                <tarifa>${it.tarifa}</tarifa>\n"
             }
 
-            var ruta = ""
-            if (it.ruta != null) {
-                ruta = "                <ruta>${it.ruta}</ruta>\n"
+            var valorDevolucionIva = ""
+            if (it.valorDevolucionIva != null) {
+                valorDevolucionIva =
+                        "                <valorDevolucionIva>${it.valorDevolucionIva}</valorDevolucionIva>\n"
             }
 
-            var codDocSustento = ""
-            if (it.codDocSustento != null) {
-                codDocSustento = "                <codDocSustento>${it.codDocSustento}</codDocSustento>\n"
-            }
-
-            var numDocSustento = ""
-            if (it.numDocSustento != null) {
-                codDocSustento = "                <numDocSustento>${it.numDocSustento}</numDocSustento>\n"
-            }
-
-            var numAutDocSustento = ""
-            if (it.numAutDocSustento != null) {
-                numAutDocSustento = "                <numAutDocSustento>${it.numAutDocSustento}</numAutDocSustento>\n"
-            }
-
-            var fechaEmisionDocSustento = ""
-            if (it.fechaEmisionDocSustento != null) {
-                fechaEmisionDocSustento =
-                        "                <fechaEmisionDocSustento>${it.fechaEmisionDocSustento}</fechaEmisionDocSustento>\n"
-            }
-
-
-
-
-            totalDestinatarios += ("            <$nombreEtiquetaDestinatario>\n"
-                    + "                <identificacionDestinatario>${it.identificacionDestinatario}</identificacionDestinatario>\n"
-                    + "                <razonSocialDestinatario>${it.razonSocialDestinatario}</razonSocialDestinatario>\n"
-                    + "                <dirDestinatario>${it.dirDestinatario}</dirDestinatario>\n"
-                    + "                <motivoTraslado>${it.motivoTraslado}</motivoTraslado>\n"
-                    + docAduaneroUnico
-                    + codEstabDestino
-                    + ruta
-                    + codDocSustento
-                    + numAutDocSustento
-                    + fechaEmisionDocSustento
-                    + generarDetalles(it.detalles)
-                    + "             </$nombreEtiquetaDestinatario>\n")
+            totalImpuestos += ("            <$nombreEtiquetaTotalImpuestos>\n"
+                    + "                <codigo>${it.codigo}</codigo>\n"
+                    + "                <codigoPorcentaje>${it.codigoPorcentaje}</codigoPorcentaje>\n"
+                    + descuentoAdicional
+                    + tarifa
+                    + "                <baseImponible>${it.baseImponible}</baseImponible>\n"
+                    + "                <valor>${it.valor}</valor>\n"
+                    + valorDevolucionIva
+                    + "             </$nombreEtiquetaTotalImpuestos>\n")
         }
-        return totalDestinatarios
-    }
-
-
-    private fun generarDetalles(detalles: ArrayList<DetalleGuiaRemision>): String {
-        val nombreEtiquetaDetalles = "detalles"
-        val totalDetalles = ("        <$nombreEtiquetaDetalles>\n"
-                + generarDetalle(detalles)
-                + "         </$nombreEtiquetaDetalles>\n")
-        return totalDetalles
-    }
-
-    private fun generarDetalle(detalles: ArrayList<DetalleGuiaRemision>): String {
-        val nombreEtiquetaDetalle = "detalle"
-        var totalDetalles = ""
-        detalles.forEach {
-
-            var codigoInterno = ""
-            if (it.codigoInterno != null) {
-                codigoInterno = "                <codigoInterno>${it.codigoInterno}</codigoInterno>\n"
-            }
-
-            var codigoAdicional = ""
-            if (it.codigoAdicional != null) {
-                codigoAdicional = "                <codigoAdicional>${it.codigoAdicional}</codigoAdicional>\n"
-            }
-
-
-            totalDetalles += ("            <$nombreEtiquetaDetalle>\n"
-                    + codigoInterno
-                    + codigoAdicional
-                    + "                <descripcion>${it.descripcion}</descripcion>\n"
-                    + "                <cantidad>${it.cantidad}</cantidad>\n"
-                    + generarDetallesAdicionales(it.detallesAdicionales?: arrayListOf())
-                    + "             </$nombreEtiquetaDetalle>\n")
-        }
-        return totalDetalles
-    }
-
-    private fun generarDetallesAdicionales(detallesAdicionales: ArrayList<DetalleAdicional>): String {
-        val nombreEtiquetaDetallesAdicionales = "detallesAdicionales"
-        val totalDetallesAdicionales = ("        <$nombreEtiquetaDetallesAdicionales>\n"
-                + generarDetalleAdicional(detallesAdicionales)
-                + "         </$nombreEtiquetaDetallesAdicionales>\n")
-        return totalDetallesAdicionales
-    }
-
-    private fun generarDetalleAdicional(detallesAdicionales: ArrayList<DetalleAdicional>): String {
-        val nombreEtiquetaDetalle = "detAdicional"
-        var totalDetallesAdicionales = ""
-        detallesAdicionales.forEach {
-            totalDetallesAdicionales += ("                <$nombreEtiquetaDetalle nombre=\"${it.nombre}\" valor=\"${it.valor}\">\n")
-        }
-        return totalDetallesAdicionales
+        return totalImpuestos
     }
 
     private fun generarInformacionAdicional(): String {
@@ -673,6 +607,89 @@ class GuiaRemision {
             totalCamposAdicionales += ("         <campoAdicional nombre=\"${it.nombre}\">${it.valor}</campoAdicional>\n")
         }
         return totalCamposAdicionales
+    }
+
+    private fun generarDetalles(): String {
+        val nombreEtiquetaDetalles = "detalles"
+        val totalConImpuestos = ("<$nombreEtiquetaDetalles>\n"
+                + generarDetalle(this.detalles)
+                + "</$nombreEtiquetaDetalles>\n")
+        return totalConImpuestos
+
+    }
+
+    private fun generarDetalle(detalles: ArrayList<DetalleNotaCredito>): String {
+        val nombreEtiquetaDetalle = "detalle"
+        var totalDetalles = ""
+        detalles.forEach {
+
+            var codigoInterno = ""
+            if (it.codigoInterno != null) {
+                codigoInterno = "                <codigoInterno>${it.codigoInterno}</codigoInterno>\n"
+            }
+
+            var codigoAdicional = ""
+            if (it.codigoAdicional != null) {
+                codigoAdicional = "                <codigoAdicional>${it.codigoAdicional}</codigoAdicional>\n"
+            }
+
+
+            totalDetalles += ("            <$nombreEtiquetaDetalle>\n"
+                    + codigoInterno
+                    + codigoAdicional
+                    + "                <descripcion>${it.descripcion}</descripcion>\n"
+                    + "                <cantidad>${it.cantidad}</cantidad>\n"
+                    + "                <precioUnitario>${it.precioUnitario}</precioUnitario>\n"
+                    + "                <descuento>${it.descuento}</descuento>\n"
+                    + "                <precioTotalSinImpuesto>${it.precioTotalSinImpuesto}</precioTotalSinImpuesto>\n"
+                    + generarDetallesAdicionales(it.detallesAdicionales ?: arrayListOf())
+                    + generarImpuestos(it.impuestos)
+                    + "             </$nombreEtiquetaDetalle>\n")
+        }
+        return totalDetalles
+    }
+
+    private fun generarImpuestos(totalImpuestos: ArrayList<Impuesto>): String {
+        val nombreEtiquetaImpuestos = "impuestos"
+        val totalConImpuestos = ("        <$nombreEtiquetaImpuestos>\n"
+                + generarImpuesto(totalImpuestos)
+                + "         </$nombreEtiquetaImpuestos>\n")
+        return totalConImpuestos
+    }
+
+    private fun generarImpuesto(totalImpuestos: ArrayList<Impuesto>): String {
+        val nombreEtiquetaImpuesto = "impuesto"
+        var totalImpuesto = ""
+        totalImpuestos.forEach {
+            totalImpuesto += ("            <$nombreEtiquetaImpuesto>\n"
+                    + "                <codigo>${it.codigo}</codigo>\n"
+                    + "                <codigoPorcentaje>${it.codigoPorcentaje}</codigoPorcentaje>\n"
+                    + "                <tarifa>${it.tarifa}</tarifa>\n"
+                    + "                <baseImponible>${it.baseImponible}</baseImponible>\n"
+                    + "                <valor>${it.valor}</valor>\n"
+                    + "             </$nombreEtiquetaImpuesto>\n")
+        }
+        return totalImpuesto
+    }
+
+    private fun generarDetallesAdicionales(detallesAdicionales: ArrayList<DetalleAdicional>?): String {
+        val nombreEtiquetaDetallesAdicionales = "detallesAdicionales"
+        if (detallesAdicionales != null) {
+            val totalDetallesAdicionales = ("         <$nombreEtiquetaDetallesAdicionales>\n"
+                    + generarDetalleAdicional(detallesAdicionales)
+                    + "         </$nombreEtiquetaDetallesAdicionales>\n")
+            return totalDetallesAdicionales
+        } else {
+            return ""
+        }
+    }
+
+    private fun generarDetalleAdicional(detallesAdicionales: ArrayList<DetalleAdicional>?): String {
+        var totalDetalle = ""
+        detallesAdicionales?.forEach {
+            totalDetalle += ("            <detAdicional nombre=\"${it.nombre}\" valor=\"${it.valor}\"/>\n")
+        }
+        return totalDetalle
     }
 
     private fun eliminarCaracteresEspeciales(texto: String): String {

@@ -117,10 +117,8 @@ class InformacionFactura {
     )
     var importeTotal: String
 
-    @Pattern(
-        regexp = "DOLAR",
-        message = "moneda $mensajeValores de DOLAR"
-    )
+    @NotNull(message = "moneda $mensajeNulo")
+    @Size(min = 1, max = 15, message = "moneda $mensajeValores de 1 a 300 caracteres")
     var moneda: String
 
     @NotNull(message = "pagos $mensajeNulo")
