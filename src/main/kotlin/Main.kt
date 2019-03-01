@@ -510,6 +510,7 @@ try {
 
     */
 
+    /*
     try {
         val directorioGuardarXML = "/home/dev-08/Documents/NotaCredito"
         val directorioGuardarXMLFirmados = "/home/dev-08/Documents/NotaCredito"
@@ -611,5 +612,9 @@ try {
         println(e)
         println("ERROR")
     }
+    */
+
+    
+
 
 }
