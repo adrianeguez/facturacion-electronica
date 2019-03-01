@@ -547,20 +547,24 @@ try {
                        "tipoIdentificacionComprador": "04",
                        "razonSocialComprador": "BAZAR Y PAPELERIA MEXICO",
                        "identificacionComprador": "1800095612001",
+                       "contribuyenteEspecial":null,
                        "obligadoContabilidad": "SI",
+                       "rise":null,
                        "codDocModificado": "01",
                        "numDocModificado": "001-020-000000007",
                        "fechaEmisionDocSustento": "14/02/2019",
                        "totalSinImpuestos": "161.79",
                        "valorModificacion": "181.20",
                        "moneda": "DOLAR",
-                       "totalConImpuestos":[
+                       "totalConImpuesto":[
                             {
                                 "codigo":"2",
                                 "codigoPorcentaje":"2",
+                                "descuentoAdicional":null,
                                 "baseImponible":"161.79",
                                 "valor":"19.41",
                                 "tarifa":"12.00",
+                                "valorDevolucionIva":null
                             }
                        ],
                        "motivo":"CLIENTE - NO HAY QUIEN RECIBA"
@@ -576,7 +580,7 @@ try {
                            "precioUnitario":"7.75",
                            "descuento": "10.46",
                            "precioTotalSinImpuesto": "51.54",
-                           "detallesAdicionales":"null",
+                           "detallesAdicionales": null,
                            "impuestos": [
                                 {
                                     "codigo":"2",
