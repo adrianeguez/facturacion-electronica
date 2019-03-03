@@ -1,7 +1,8 @@
-package documentos.notacredito
+package documentos.notadebito
 
-import documentos.Detalle
 import documentos.GenerarDocumentos
+import documentos.Impuesto
+import documentos.Pago
 import documentos.TotalImpuesto
 import utils.mensajeNulo
 import utils.mensajeVacio
@@ -12,7 +13,8 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 
-class InformacionNotaCredito {
+class InformacionNotaDebito {
+
     @NotNull(message = "fechaEmision $mensajeNulo")
     @Pattern(
         regexp = "^([0-2][0-9]|(3)[0-1])(\\/)(((0)[0-9])|((1)[0-2]))(\\/)\\d{4}\$",
@@ -64,20 +66,12 @@ class InformacionNotaCredito {
         return Optional.of(obligadoContabilidad!!)
     }
 
-    @Size(min = 1, max = 40, message = "rise $mensajeValores de 1 a 40 caracteres")
-    var rise: String?
-
-    fun getRise(): Optional<String> {
-        return Optional.of(rise!!)
-    }
-
     @NotNull(message = "codDocModificado $mensajeNulo")
     @Pattern(
         regexp = "01|04|05|06|07",
         message = "codDocModificado $mensajeValores 01|04|05|06|07"
     )
     var codDocModificado: String
-
 
     @Pattern(
         regexp = "^[0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]\$",
@@ -99,24 +93,19 @@ class InformacionNotaCredito {
     )
     var totalSinImpuestos: String
 
-    @NotNull(message = "valorModificacion $mensajeNulo")
+    @NotNull(message = "totalConImpuesto $mensajeNulo")
+    var impuestos: ArrayList<Impuesto>
+
+    @NotNull(message = "valorTotal $mensajeNulo")
     @Pattern(
         regexp = "^[0-9]{1,14}(\\.[0-9]{2})?\$",
-        message = "valorModificacion $mensajeValores de 1 a 14 enteros y hasta 2 decimales separados por punto"
+        message = "valorTotal $mensajeValores de 1 a 14 enteros y hasta 2 decimales separados por punto"
     )
-    var valorModificacion: String
+    var valorTotal: String
 
-    @NotNull(message = "moneda $mensajeNulo")
-    @Size(min = 1, max = 15, message = "moneda $mensajeValores de 1 a 300 caracteres")
-    var moneda: String
+    @NotNull(message = "pagos $mensajeNulo")
+    var pagos: ArrayList<Pago>
 
-    @NotNull(message = "totalConImpuesto $mensajeNulo")
-    var totalConImpuesto: ArrayList<TotalImpuesto>
-
-    @NotNull(message = "motivo $mensajeNulo")
-    @NotEmpty(message = "motivo $mensajeVacio")
-    @Size(min = 1, max = 300, message = "motivo $mensajeValores de 1 a 300 caracteres")
-    var motivo: String
 
     constructor(
         fechaEmision: String,
@@ -126,32 +115,30 @@ class InformacionNotaCredito {
         identificacionComprador: String,
         contribuyenteEspecial: String?,
         obligadoContabilidad: String?,
-        rise: String?,
         codDocModificado: String,
         numDocModificado: String,
         fechaEmisionDocSustento: String,
         totalSinImpuestos: String,
-        valorModificacion: String,
-        moneda: String,
-        totalConImpuesto: ArrayList<TotalImpuesto>,
-        motivo: String
+        impuestos: ArrayList<Impuesto>,
+        valorTotal: String,
+        pagos: ArrayList<Pago>
     ) {
         this.fechaEmision = fechaEmision
         this.dirEstablecimiento = if (dirEstablecimiento == null) null else GenerarDocumentos
             .removerCaracteresEspeciales(dirEstablecimiento)
         this.tipoIdentificacionComprador = tipoIdentificacionComprador
-        this.razonSocialComprador = GenerarDocumentos.removerCaracteresEspeciales(razonSocialComprador)
+        this.razonSocialComprador = GenerarDocumentos
+            .removerCaracteresEspeciales(razonSocialComprador)
         this.identificacionComprador = identificacionComprador
         this.contribuyenteEspecial = contribuyenteEspecial
         this.obligadoContabilidad = obligadoContabilidad
-        this.rise = rise
         this.codDocModificado = codDocModificado
         this.numDocModificado = numDocModificado
         this.fechaEmisionDocSustento = fechaEmisionDocSustento
         this.totalSinImpuestos = totalSinImpuestos
-        this.valorModificacion = valorModificacion
-        this.moneda = moneda
-        this.totalConImpuesto = totalConImpuesto
-        this.motivo = motivo
+        this.impuestos = impuestos
+        this.valorTotal = valorTotal
+        this.pagos = pagos
     }
+
 }

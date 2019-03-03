@@ -1,8 +1,9 @@
-package documentos.notacredito
+package documentos.notadebito
 
 import com.beust.klaxon.Klaxon
 import com.beust.klaxon.KlaxonException
 import documentos.*
+import documentos.notacredito.NotaCredito
 import ec.gob.sri.comprobantes.exception.RespuestaAutorizacionException
 import ec.gob.sri.comprobantes.util.ArchivoUtils
 import firma.XAdESBESSignature
@@ -17,9 +18,8 @@ import java.util.logging.Level
 import java.util.logging.Logger
 import javax.validation.Validation
 import javax.validation.constraints.NotNull
-import kotlin.collections.ArrayList
 
-class NotaCredito {
+class NotaDebito {
 
     private val factory = Validation.buildDefaultValidatorFactory()
     private val validator = factory.getValidator()
@@ -29,21 +29,23 @@ class NotaCredito {
     var versionXML = "1.0"
     var encodingXML = "UTF-8"
     var standaloneXML = "yes"
-    var nombreEtiquetaNotaCredito = "notaCredito"
+    var nombreEtiquetaNotaDebito = "notaDebito"
     var idComprobante = "comprobante" // Codigo Quemado en guía del SRI
-    var versionNotaCreditoXML = "1.0.0" // Codigo Quemado en guía del SRI
-    var stringNotaCreditoXML = ""
+    var versionNotaDebitoXML = "1.0.0" // Codigo Quemado en guía del SRI
+    var stringNotaDebitoXML = ""
 
     @NotNull(message = "infoTributario $mensajeNulo")
     var infoTributario: InformacionTributaria
 
-    @NotNull(message = "infoNotaCredito $mensajeNulo")
-    var infoNotaCredito: InformacionNotaCredito
+    @NotNull(message = "infoNotaDebito $mensajeNulo")
+    var infoNotaDebito: InformacionNotaDebito
 
-    @NotNull(message = "detalles $mensajeNulo")
-    var detalles: ArrayList<DetalleNotaCredito>
+    @NotNull(message = "motivos $mensajeNulo")
+    var motivos: ArrayList<Motivo>
 
-    var infoAdicional: ArrayList<CampoAdicional>?
+    @NotNull(message = "motivos $mensajeNulo")
+    var infoAdicional: ArrayList<CampoAdicional>
+
 
     var directorioGuardarXML: String
     var directorioGuardarXMLFirmados: String
@@ -56,9 +58,9 @@ class NotaCredito {
 
     constructor(
         infoTributario: InformacionTributaria,
-        infoNotaCredito: InformacionNotaCredito,
-        detalles: ArrayList<DetalleNotaCredito>,
-        infoAdicional: ArrayList<CampoAdicional>?,
+        infoNotaDebito: InformacionNotaDebito,
+        motivos: ArrayList<Motivo>,
+        infoAdicional: ArrayList<CampoAdicional>,
         directorioGuardarXML: String,
         directorioGuardarXMLFirmados: String,
         nombreArchivoXML: String,
@@ -68,12 +70,12 @@ class NotaCredito {
         debug: Boolean = true
     ) {
         this.infoTributario = infoTributario
-        this.infoNotaCredito = infoNotaCredito
-        this.detalles = detalles
+        this.infoNotaDebito = infoNotaDebito
+        this.motivos = motivos
         this.infoAdicional = infoAdicional
 
         val format = SimpleDateFormat("dd/MM/yyyy")
-        val fecha: Date = format.parse(this.infoNotaCredito.fechaEmision)
+        val fecha: Date = format.parse(this.infoNotaDebito.fechaEmision)
 
         this.infoTributario.claveAcceso = GenerarDocumentos.generarClave(
             fecha,
@@ -95,6 +97,7 @@ class NotaCredito {
         this.debug = debug
     }
 
+
     fun validar(): ArrayList<String> {
         val errores = arrayListOf<String>()
 
@@ -104,70 +107,80 @@ class NotaCredito {
             errores.add(violation.message)
         }
 
-        val violationsInformacionNotaCredito = validator.validate(this.infoNotaCredito)
+        val violationsInformacionNotaDebito = validator.validate(this.infoNotaDebito)
 
-        for (violation in violationsInformacionNotaCredito) {
+        for (violation in violationsInformacionNotaDebito) {
             errores.add(violation.message)
         }
 
 
-        this.infoNotaCredito.totalConImpuesto.forEach {
-            val violationsTotalConImpuesto = validator.validate(it)
+        this.infoNotaDebito.impuestos.forEach {
+            val violationsImpuestos = validator.validate(it)
 
-            for (violation in violationsTotalConImpuesto) {
+            for (violation in violationsImpuestos) {
                 errores.add(violation.message)
             }
         }
 
-        this.detalles.forEach {
-            val violationsDetalle = validator.validate(it)
+        this.infoNotaDebito.pagos.forEach {
+            val violationsPagos = validator.validate(it)
 
-            for (violation in violationsDetalle) {
-                errores.add(violation.message)
-            }
-
-            it.detallesAdicionales?.forEach { detalleAdicional ->
-                val violationsDetalleAdicional = validator.validate(detalleAdicional)
-                for (violation in violationsDetalleAdicional) {
-                    errores.add(violation.message)
-                }
-            }
-
-            it.impuestos.forEach { impuesto ->
-                val violationsImpuesto = validator.validate(impuesto)
-                for (violation in violationsImpuesto) {
-                    errores.add(violation.message)
-                }
-            }
-        }
-
-        this.infoAdicional?.forEach {
-            val violationsInfoAdicional = validator.validate(it)
-
-            for (violation in violationsInfoAdicional) {
+            for (violation in violationsPagos) {
                 errores.add(violation.message)
             }
         }
+
+        val violationsMotivos = validator.validate(this.motivos)
+
+        for (violation in violationsMotivos) {
+            errores.add(violation.message)
+        }
+
+        this.motivos.forEach {
+            val violationsMotivo = validator.validate(it)
+
+            for (violation in violationsMotivo) {
+                errores.add(violation.message)
+            }
+
+        }
+
+        val violationsInfoAdicional = validator.validate(this.infoAdicional)
+
+        for (violation in violationsInfoAdicional) {
+            errores.add(violation.message)
+        }
+
+        this.infoAdicional.forEach {
+            val violationsCampoAdicional = validator.validate(it)
+
+            for (violation in violationsCampoAdicional) {
+                errores.add(violation.message)
+            }
+
+        }
+
         return errores
 
     }
 
-    fun generarNotaCreditoXML(): String {
+
+    fun generarNotaDebitoXML(): String {
         val xmlString: String =
             "<?xml version=\"$versionXML\" encoding=\"$encodingXML\" standalone=\"$standaloneXML\"?>\n" +
-                    "<$nombreEtiquetaNotaCredito id=\"${idComprobante}\" version=\"$versionNotaCreditoXML\">\n" +
-                    generarCuerpoNotaCredito() +
-                    "</$nombreEtiquetaNotaCredito>"
-        this.stringNotaCreditoXML = xmlString
+                    "<$nombreEtiquetaNotaDebito id=\"${idComprobante}\" version=\"$versionNotaDebitoXML\">\n" +
+                    generarCuerpoNotaDebito() +
+                    "</$nombreEtiquetaNotaDebito>"
+        this.stringNotaDebitoXML = xmlString
         return xmlString
     }
 
-    fun generarArchivoNotaCreditoXML(
+    fun generarArchivoNotaDebitoXML(
         directorioAGuardarArchivo: String,
         nombreArchivoXMLAGuardar: String,
         stringGuiaRemisionXML: String? = null
     ): String? {
-        val xml = stringGuiaRemisionXML ?: this.stringNotaCreditoXML
+        val xml = stringGuiaRemisionXML ?: this.stringNotaDebitoXML
         var archivoPathNombre = directorioAGuardarArchivo + nombreArchivoXMLAGuardar
 
         try {
@@ -202,9 +215,10 @@ class NotaCredito {
         return null
     }
 
+
     fun enviarNotaCredito(json: String): String {
 
-        val nombreDocumento = "Nota Credito"
+        val nombreDocumento = "Nota Debito"
 
         val resultado = Klaxon()
             .parse<NotaCredito?>(
@@ -466,10 +480,13 @@ class NotaCredito {
 
     }
 
-    private fun generarCuerpoNotaCredito(): String {
+
+
+
+    private fun generarCuerpoNotaDebito(): String {
         val contenidoFactura = generarInformacionTributaria() +
-                generarInformacionNotaCredito() +
-                generarDetalles() +
+                generarInformacionNotaDebito() +
+                generarMotivos() +
                 generarInformacionAdicional()
         return contenidoFactura
     }
@@ -497,72 +514,58 @@ class NotaCredito {
         return informacionTributaria
     }
 
-    private fun generarInformacionNotaCredito(): String {
-        val nombreEtiquetaInformacionNotaCredito = "infoNotaCredito"
+    private fun generarInformacionNotaDebito(): String {
+        val nombreEtiquetaInformacionNotaDebito = "infoNotaCredito"
 
         var dirEstablecimiento = ""
-        if (this.infoNotaCredito.dirEstablecimiento != null) {
+        if (this.infoNotaDebito.dirEstablecimiento != null) {
             dirEstablecimiento =
-                    "        <dirEstablecimiento>${this.infoNotaCredito.dirEstablecimiento}</dirEstablecimiento>\n"
+                    "        <dirEstablecimiento>${this.infoNotaDebito.dirEstablecimiento}</dirEstablecimiento>\n"
         }
 
         var contribuyenteEspecial = ""
-        if (this.infoNotaCredito.contribuyenteEspecial != null) {
+        if (this.infoNotaDebito.contribuyenteEspecial != null) {
             contribuyenteEspecial =
-                    "        <contribuyenteEspecial>${this.infoNotaCredito.contribuyenteEspecial}</contribuyenteEspecial>\n"
+                    "        <contribuyenteEspecial>${this.infoNotaDebito.contribuyenteEspecial}</contribuyenteEspecial>\n"
         }
 
         var obligadoContabilidad = ""
-        if (this.infoNotaCredito.obligadoContabilidad != null) {
+        if (this.infoNotaDebito.obligadoContabilidad != null) {
             obligadoContabilidad =
-                    "        <obligadoContabilidad>${this.infoNotaCredito.obligadoContabilidad}</obligadoContabilidad>\n"
-        }
-
-        var rise = ""
-        if (this.infoNotaCredito.rise != null) {
-            rise =
-                    "        <rise>${this.infoNotaCredito.rise}</rise>\n"
+                    "        <obligadoContabilidad>${this.infoNotaDebito.obligadoContabilidad}</obligadoContabilidad>\n"
         }
 
 
-        val informacionFactura = ("<$nombreEtiquetaInformacionNotaCredito>\n"
-                + "        <fechaEmision>${this.infoNotaCredito.fechaEmision}</fechaEmision>\n"
+        val informacionFactura = ("<$nombreEtiquetaInformacionNotaDebito>\n"
+                + "        <fechaEmision>${this.infoNotaDebito.fechaEmision}</fechaEmision>\n"
                 + dirEstablecimiento
-                + "        <tipoIdentificacionComprador>${this.infoNotaCredito.tipoIdentificacionComprador}</tipoIdentificacionComprador>\n"
-                + "        <razonSocialComprador>${this.infoNotaCredito.razonSocialComprador}</razonSocialComprador>\n"
-                + "        <identificacionComprador>${this.infoNotaCredito.identificacionComprador}</identificacionComprador>\n"
+                + "        <tipoIdentificacionComprador>${this.infoNotaDebito.tipoIdentificacionComprador}</tipoIdentificacionComprador>\n"
+                + "        <razonSocialComprador>${this.infoNotaDebito.razonSocialComprador}</razonSocialComprador>\n"
+                + "        <identificacionComprador>${this.infoNotaDebito.identificacionComprador}</identificacionComprador>\n"
                 + contribuyenteEspecial
                 + obligadoContabilidad
-                + rise
-                + "        <codDocModificado>${this.infoNotaCredito.codDocModificado}</codDocModificado>\n"
-                + "        <numDocModificado>${this.infoNotaCredito.numDocModificado}</numDocModificado>\n"
-                + "        <fechaEmisionDocSustento>${this.infoNotaCredito.fechaEmisionDocSustento}</fechaEmisionDocSustento>\n"
-                + "        <totalSinImpuestos>${this.infoNotaCredito.totalSinImpuestos}</totalSinImpuestos>\n"
-                + "        <valorModificacion>${this.infoNotaCredito.valorModificacion}</valorModificacion>\n"
-                + "        <moneda>${this.infoNotaCredito.moneda}</moneda>\n"
-                + generarTotalConImpuestos()
-                + "</$nombreEtiquetaInformacionNotaCredito>\n")
+                + "        <codDocModificado>${this.infoNotaDebito.codDocModificado}</codDocModificado>\n"
+                + "        <numDocModificado>${this.infoNotaDebito.numDocModificado}</numDocModificado>\n"
+                + "        <fechaEmisionDocSustento>${this.infoNotaDebito.fechaEmisionDocSustento}</fechaEmisionDocSustento>\n"
+                + "        <totalSinImpuestos>${this.infoNotaDebito.totalSinImpuestos}</totalSinImpuestos>\n"
+                + generarImpuestos()
+                + generarPagos()
+                + "</$nombreEtiquetaInformacionNotaDebito>\n")
         return informacionFactura
     }
 
-    private fun generarTotalConImpuestos(): String {
-        val nombreEtiquetaTotalConImpuestos = "totalConImpuestos"
-        val totalConImpuestos = ("        <$nombreEtiquetaTotalConImpuestos>\n"
-                + generarTotalImpuesto(this.infoNotaCredito.totalConImpuesto)
-                + "         </$nombreEtiquetaTotalConImpuestos>\n")
+    private fun generarImpuestos(): String {
+        val nombreEtiquetaImpuestos = "impuestos"
+        val totalConImpuestos = ("        <$nombreEtiquetaImpuestos>\n"
+                + generarImpuesto(this.infoNotaDebito.impuestos)
+                + "         </$nombreEtiquetaImpuestos>\n")
         return totalConImpuestos
     }
 
-    private fun generarTotalImpuesto(totalImpuestosArreglo: ArrayList<TotalImpuesto>): String {
-        val nombreEtiquetaTotalImpuestos = "totalImpuesto"
+    private fun generarImpuesto(totalImpuestosArreglo: ArrayList<Impuesto>): String {
+        val nombreEtiquetaImpuesto = "impuesto"
         var totalImpuestos = ""
         totalImpuestosArreglo.forEach {
-
-            var descuentoAdicional = ""
-            if (it.descuentoAdicional != null) {
-                descuentoAdicional =
-                        "                <descuentoAdicional>${it.descuentoAdicional}</descuentoAdicional>\n"
-            }
 
             var tarifa = ""
             if (it.tarifa != null) {
@@ -570,23 +573,70 @@ class NotaCredito {
                         "                <tarifa>${it.tarifa}</tarifa>\n"
             }
 
-            var valorDevolucionIva = ""
-            if (it.valorDevolucionIva != null) {
-                valorDevolucionIva =
-                        "                <valorDevolucionIva>${it.valorDevolucionIva}</valorDevolucionIva>\n"
-            }
-
-            totalImpuestos += ("            <$nombreEtiquetaTotalImpuestos>\n"
+            totalImpuestos += ("            <$nombreEtiquetaImpuesto>\n"
                     + "                <codigo>${it.codigo}</codigo>\n"
                     + "                <codigoPorcentaje>${it.codigoPorcentaje}</codigoPorcentaje>\n"
-                    + descuentoAdicional
                     + tarifa
                     + "                <baseImponible>${it.baseImponible}</baseImponible>\n"
                     + "                <valor>${it.valor}</valor>\n"
-                    + valorDevolucionIva
-                    + "             </$nombreEtiquetaTotalImpuestos>\n")
+                    + "             </$nombreEtiquetaImpuesto>\n")
         }
         return totalImpuestos
+    }
+
+    private fun generarPagos(): String {
+        val nombreEtiquetaPagos = "pagos"
+        val totalPagos = ("        <$nombreEtiquetaPagos>\n"
+                + generarPago(this.infoNotaDebito.pagos)
+                + "         </$nombreEtiquetaPagos>\n")
+        return totalPagos
+    }
+
+    private fun generarPago(totalPagosArreglo: ArrayList<Pago>): String {
+        val nombreEtiquetaPago = "pago"
+        var totalPagos = ""
+        totalPagosArreglo.forEach {
+
+            var plazo = ""
+            if (it.plazo != null) {
+                plazo =
+                        "                <plazo>${it.plazo}</plazo>\n"
+            }
+
+            var unidadTiempo = ""
+            if (it.unidadTiempo!= null) {
+                unidadTiempo =
+                        "                <unidadTiempo>${it.unidadTiempo}</unidadTiempo>\n"
+            }
+
+            totalPagos += ("            <$nombreEtiquetaPago>\n"
+                    + "                <formaPago>${it.formaPago}</formaPago>\n"
+                    + "                <total>${it.total}</total>\n"
+                    + plazo
+                    + unidadTiempo
+                    + "             </$nombreEtiquetaPago>\n")
+        }
+        return totalPagos
+    }
+
+    private fun generarMotivos(): String {
+        val nombreEtiquetaMotivos = "motivos"
+        val totalMotivos = ("        <$nombreEtiquetaMotivos>\n"
+                + generarMotivo(this.motivos)
+                + "         </$nombreEtiquetaMotivos>\n")
+        return totalMotivos
+    }
+
+    private fun generarMotivo(totalMotivosArreglo: ArrayList<Motivo>): String {
+        val nombreEtiquetaMotivo = "motivo"
+        var totalMotivos = ""
+        totalMotivosArreglo.forEach {
+            totalMotivos += ("            <$nombreEtiquetaMotivo>\n"
+                    + "                <razon>${it.razon}</razon>\n"
+                    + "                <valor>${it.valor}</valor>\n"
+                    + "             </$nombreEtiquetaMotivo>\n")
+        }
+        return totalMotivos
     }
 
     private fun generarInformacionAdicional(): String {
@@ -609,93 +659,9 @@ class NotaCredito {
         return totalCamposAdicionales
     }
 
-    private fun generarDetalles(): String {
-        val nombreEtiquetaDetalles = "detalles"
-        val totalConImpuestos = ("<$nombreEtiquetaDetalles>\n"
-                + generarDetalle(this.detalles)
-                + "</$nombreEtiquetaDetalles>\n")
-        return totalConImpuestos
-
-    }
-
-    private fun generarDetalle(detalles: ArrayList<DetalleNotaCredito>): String {
-        val nombreEtiquetaDetalle = "detalle"
-        var totalDetalles = ""
-        detalles.forEach {
-
-            var codigoInterno = ""
-            if (it.codigoInterno != null) {
-                codigoInterno = "                <codigoInterno>${it.codigoInterno}</codigoInterno>\n"
-            }
-
-            var codigoAdicional = ""
-            if (it.codigoAdicional != null) {
-                codigoAdicional = "                <codigoAdicional>${it.codigoAdicional}</codigoAdicional>\n"
-            }
-
-
-            totalDetalles += ("            <$nombreEtiquetaDetalle>\n"
-                    + codigoInterno
-                    + codigoAdicional
-                    + "                <descripcion>${it.descripcion}</descripcion>\n"
-                    + "                <cantidad>${it.cantidad}</cantidad>\n"
-                    + "                <precioUnitario>${it.precioUnitario}</precioUnitario>\n"
-                    + "                <descuento>${it.descuento}</descuento>\n"
-                    + "                <precioTotalSinImpuesto>${it.precioTotalSinImpuesto}</precioTotalSinImpuesto>\n"
-                    + generarDetallesAdicionales(it.detallesAdicionales ?: arrayListOf())
-                    + generarImpuestos(it.impuestos)
-                    + "             </$nombreEtiquetaDetalle>\n")
-        }
-        return totalDetalles
-    }
-
-    private fun generarImpuestos(totalImpuestos: ArrayList<Impuesto>): String {
-        val nombreEtiquetaImpuestos = "impuestos"
-        val totalConImpuestos = ("        <$nombreEtiquetaImpuestos>\n"
-                + generarImpuesto(totalImpuestos)
-                + "         </$nombreEtiquetaImpuestos>\n")
-        return totalConImpuestos
-    }
-
-    private fun generarImpuesto(totalImpuestos: ArrayList<Impuesto>): String {
-        val nombreEtiquetaImpuesto = "impuesto"
-        var totalImpuesto = ""
-        totalImpuestos.forEach {
-            totalImpuesto += ("            <$nombreEtiquetaImpuesto>\n"
-                    + "                <codigo>${it.codigo}</codigo>\n"
-                    + "                <codigoPorcentaje>${it.codigoPorcentaje}</codigoPorcentaje>\n"
-                    + "                <tarifa>${it.tarifa}</tarifa>\n"
-                    + "                <baseImponible>${it.baseImponible}</baseImponible>\n"
-                    + "                <valor>${it.valor}</valor>\n"
-                    + "             </$nombreEtiquetaImpuesto>\n")
-        }
-        return totalImpuesto
-    }
-
-    private fun generarDetallesAdicionales(detallesAdicionales: ArrayList<DetalleAdicional>?): String {
-        val nombreEtiquetaDetallesAdicionales = "detallesAdicionales"
-        if (detallesAdicionales != null) {
-            val totalDetallesAdicionales = ("         <$nombreEtiquetaDetallesAdicionales>\n"
-                    + generarDetalleAdicional(detallesAdicionales)
-                    + "         </$nombreEtiquetaDetallesAdicionales>\n")
-            return totalDetallesAdicionales
-        } else {
-            return ""
-        }
-    }
-
-    private fun generarDetalleAdicional(detallesAdicionales: ArrayList<DetalleAdicional>?): String {
-        var totalDetalle = ""
-        detallesAdicionales?.forEach {
-            totalDetalle += ("            <detAdicional nombre=\"${it.nombre}\" valor=\"${it.valor}\"/>\n")
-        }
-        return totalDetalle
-    }
-
     private fun eliminarCaracteresEspeciales(texto: String): String {
         return texto.replace("\"", "\\\"").replace("\n", "")
             .replace("\r", "")
     }
-
 
 }
