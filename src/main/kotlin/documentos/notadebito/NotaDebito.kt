@@ -216,7 +216,7 @@ class NotaDebito {
     }
 
 
-    fun enviarNotaCredito(json: String): String {
+    fun enviarNotaDebito(json: String): String {
 
         val nombreDocumento = "Nota Debito"
 

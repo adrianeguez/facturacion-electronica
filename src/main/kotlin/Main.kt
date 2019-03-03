@@ -5,6 +5,7 @@ import documentos.comprobanteretencion.ComprobanteRetencion
 import documentos.factura.Factura
 import documentos.guiaremision.GuiaRemision
 import documentos.notacredito.NotaCredito
+import documentos.notadebito.NotaDebito
 import org.apache.log4j.BasicConfigurator
 
 
@@ -614,7 +615,106 @@ try {
     }
     */
 
-    
+    try {
+        val directorioGuardarXML = "/home/server/Documents/NotaDebito"
+        val directorioGuardarXMLFirmados = "/home/server/Documents/NotaDebito"
+        val nombreArchivoXML = "nota-debito-01.xml"
+        val nombreArchivoXMLFirmado = "nota-debito-01-firmado.xml"
+        val clave = "LuisPadilla2115"
+        val directorioYNombreArchivoRegistroCivilP12 =
+            "/home/server/Documents/Github/facturacion-electronica/documentacion/luis_alfredo_padilla_camuendo.p12"
+
+        val notaDebitoEstructuraString = """
+               {
+                   "directorioGuardarXML":"${directorioGuardarXML}",
+                   "directorioGuardarXMLFirmados":"${directorioGuardarXMLFirmados}",
+                   "nombreArchivoXML":"${nombreArchivoXML}",
+                   "nombreArchivoXMLFirmado":"${nombreArchivoXMLFirmado}",
+                   "clave":"${clave}",
+                   "directorioYNombreArchivoRegistroCivilP12":"${directorioYNombreArchivoRegistroCivilP12}",
+                   "debug": true,
+                   "infoTributario": {
+                       "ambiente": "1",
+                       "tipoEmision": "1",
+                       "razonSocial": "PADILLA CAMUENDO LUIS ALFREDO",
+                       "nombreComercial": "COMERCIAL BRENDA",
+                       "ruc": "1710361658001",
+                       "claveAcceso": null,
+                       "codDoc": "01",
+                       "estab": "001",
+                       "ptoEmision": "001",
+                       "secuencial": "000000016",
+                       "dirMatriz": "PICHINCHA / QUITO / QUITO/ LLANO CHICO"
+                   },
+                   "infoNotaDebito": {
+                       "fechaEmision": "14/02/2019",
+                       "dirEstablecimiento": "GRAL. VEINTIMILLA E8-30 Y AV. 6 DE DICIEMBRE",
+                       "tipoIdentificacionComprador": "04",
+                       "razonSocialComprador": "BAZAR Y PAPELERIA MEXICO",
+                       "identificacionComprador": "1800095612001",
+                       "contribuyenteEspecial":null,
+                       "obligadoContabilidad": "SI",
+                       "codDocModificado": "01",
+                       "numDocModificado": "001-020-000000007",
+                       "fechaEmisionDocSustento": "14/02/2019",
+                       "totalSinImpuestos": "50.00",
+                       "impuestos":[
+                            {
+                                "codigo":"2",
+                                "codigoPorcentaje":"2",
+                                "baseImponible":"50.00",
+                                "valor":"6.00",
+                                "tarifa":"12.00"
+                            }
+                       ],
+                       "valorTotal": "56.00",
+                       "pagos":[
+                            {
+                                "formaPago":"17",
+                                "total":"56.00",
+                                "plazo":"15",
+                                "unidadTiempo":"dias"
+                            }
+                       ]
+                   },
+                   "motivos": [
+                       {
+                           "razon": "Interés por mora",
+                           "valor": "50.00"
+                        }
+                   ],
+                   "infoAdicional":[
+                        {
+                            "nombre":"Dirección",
+                            "valor":"AMAZONAS S/N ROCA"
+                        },
+                        {
+                            "nombre":"Email",
+                            "valor":"prueba@sri.gob.ec"
+                        },
+                        {
+                            "nombre":"Teléfono",
+                            "valor":"0222222222222 ext. 3322"
+                        }
+                   ]
+               }
+               """
+
+        val result = Klaxon()
+            .parse<NotaDebito?>(
+                notaDebitoEstructuraString
+            )
+
+        val resultadoEnvioComprobanteRetencion =
+            result?.enviarNotaDebito(notaDebitoEstructuraString)
+
+        println(resultadoEnvioComprobanteRetencion)
+
+
+    } catch (e: KlaxonException) {
+        println(e)
+        println("ERROR")
+    }
 
 
 }
