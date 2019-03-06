@@ -308,15 +308,15 @@ try {
 
 // Comprobante de Retencion
 
-    /*
+
     try {
-        val directorioGuardarXML = "/home/server/Documents/Comprobante Retencion"
-        val directorioGuardarXMLFirmados = "/home/server/Documents/Comprobante Retencion"
+        val directorioGuardarXML = "/home/work/Documents/factura/NotaCredito"
+        val directorioGuardarXMLFirmados = "/home/work/Documents/factura/NotaCredito"
         val nombreArchivoXML = "comprobante-retencion-01.xml"
         val nombreArchivoXMLFirmado = "comprobante-retencion-01-firmado.xml"
         val clave = "LuisPadilla2115"
         val directorioYNombreArchivoRegistroCivilP12 =
-            "/home/server/Documents/Github/facturacion-electronica/documentacion/luis_alfredo_padilla_camuendo.p12"
+            "/home/work/Documents/Github/facturacion-electronica/documentacion/luis_alfredo_padilla_camuendo.p12"
 
         val comprobanteRetencionEstructuraString = """
                {
@@ -334,14 +334,14 @@ try {
                        "nombreComercial": "COMERCIAL BRENDA",
                        "ruc": "1710361658001",
                        "claveAcceso": null,
-                       "codDoc": "01",
+                       "codDoc": "07",
                        "estab": "001",
                        "ptoEmision": "001",
                        "secuencial": "000000016",
                        "dirMatriz": "PICHINCHA / QUITO / QUITO/ LLANO CHICO"
                    },
                    "infoCompRetencion": {
-                       "fechaEmision": "10/12/2018",
+                       "fechaEmision": "15/02/2019",
                        "dirEstablecimiento": "GRAL. VEINTIMILLA E8-30 Y AV. 6 DE DICIEMBRE",
                        "obligadoContabilidad": "SI",
                        "contribuyenteEspecial":null,
@@ -356,9 +356,9 @@ try {
                            "codigoRetencion": "2",
                            "baseImponible": "120.00",
                            "porcentajeRetener": "70.00",
-                           "valorRetenido": "84.00"
-                           "codDocSustento": "01"
-                           "numDocSustento": "003005021421211"
+                           "valorRetenido": "84.00",
+                           "codDocSustento": "01",
+                           "numDocSustento": "003005021421211",
                            "fechaEmisionDocSustento": "14/02/2019"
                        },
                        {
@@ -366,9 +366,9 @@ try {
                            "codigoRetencion": "304",
                            "baseImponible": "1000.00",
                            "porcentajeRetener": "8.00",
-                           "valorRetenido": "80.00"
-                           "codDocSustento": "01"
-                           "numDocSustento": "003005021421211"
+                           "valorRetenido": "80.00",
+                           "codDocSustento": "01",
+                           "numDocSustento": "003005021421211",
                            "fechaEmisionDocSustento": "14/02/2019"
                        }
                    ],
@@ -404,17 +404,17 @@ try {
         println(e)
         println("ERROR")
     }
-    */
+
 
     /*
     try {
-        val directorioGuardarXML = "C:/Users/Adrian/Documents/guiaremision"
-        val directorioGuardarXMLFirmados = "C:/Users/Adrian/Documents/guiaremision"
+        val directorioGuardarXML = "/home/work/Documents/factura/"
+        val directorioGuardarXMLFirmados = "/home/work/Documents/factura/"
         val nombreArchivoXML = "guia-remision-01.xml"
         val nombreArchivoXMLFirmado = "guia-remision-01-firmado.xml"
         val clave = "LuisPadilla2115"
         val directorioYNombreArchivoRegistroCivilP12 =
-            "D:/Github/facturacion-electronica/documentacion/luis_alfredo_padilla_camuendo.p12"
+            "/home/work/Documents/Github/facturacion-electronica/documentacion/luis_alfredo_padilla_camuendo.p12"
 
         val guiaRemisionEstructuraString = """
                {
@@ -432,7 +432,7 @@ try {
                        "nombreComercial": "COMERCIAL BRENDA",
                        "ruc": "1710361658001",
                        "claveAcceso": null,
-                       "codDoc": "01",
+                       "codDoc": "06",
                        "estab": "001",
                        "ptoEmision": "001",
                        "secuencial": "000000016",
@@ -513,13 +513,13 @@ try {
 
     /*
     try {
-        val directorioGuardarXML = "/home/dev-08/Documents/NotaCredito"
-        val directorioGuardarXMLFirmados = "/home/dev-08/Documents/NotaCredito"
+        val directorioGuardarXML = "/home/work/Documents/factura/NotaCredito"
+        val directorioGuardarXMLFirmados = "/home/work/Documents/factura/NotaCredito"
         val nombreArchivoXML = "nota-credito-01.xml"
         val nombreArchivoXMLFirmado = "nota-credito-01-firmado.xml"
         val clave = "LuisPadilla2115"
         val directorioYNombreArchivoRegistroCivilP12 =
-            "/home/dev-08/Documents/Github/adrianeguez/facturacion-electronica/documentacion/luis_alfredo_padilla_camuendo.p12"
+            "/home/work/Documents/Github/facturacion-electronica/documentacion/luis_alfredo_padilla_camuendo.p12"
 
         val guiaRemisionEstructuraString = """
                {
@@ -537,7 +537,7 @@ try {
                        "nombreComercial": "COMERCIAL BRENDA",
                        "ruc": "1710361658001",
                        "claveAcceso": null,
-                       "codDoc": "01",
+                       "codDoc": "04",
                        "estab": "001",
                        "ptoEmision": "001",
                        "secuencial": "000000016",
@@ -549,9 +549,9 @@ try {
                        "tipoIdentificacionComprador": "04",
                        "razonSocialComprador": "BAZAR Y PAPELERIA MEXICO",
                        "identificacionComprador": "1800095612001",
-                       "contribuyenteEspecial":null,
+                       "contribuyenteEspecial":"5368",
                        "obligadoContabilidad": "SI",
-                       "rise":null,
+                       "rise":"Contribuyente Régimen Simplificado RISE",
                        "codDocModificado": "01",
                        "numDocModificado": "001-020-000000007",
                        "fechaEmisionDocSustento": "14/02/2019",
@@ -565,7 +565,7 @@ try {
                                 "descuentoAdicional":null,
                                 "baseImponible":"161.79",
                                 "valor":"19.41",
-                                "tarifa":"12.00",
+                                "tarifa":null,
                                 "valorDevolucionIva":null
                             }
                        ],
@@ -604,7 +604,7 @@ try {
             )
 
         val resultadoEnvioComprobanteRetencion =
-            result?.enviarGuiaRemision(guiaRemisionEstructuraString)
+            result?.enviarNotaCredito(guiaRemisionEstructuraString)
 
         println(resultadoEnvioComprobanteRetencion)
 
@@ -614,15 +614,15 @@ try {
         println("ERROR")
     }
     */
-
+     /*
     try {
-        val directorioGuardarXML = "/home/server/Documents/NotaDebito"
-        val directorioGuardarXMLFirmados = "/home/server/Documents/NotaDebito"
+        val directorioGuardarXML = "/home/work/Documents/factura"
+        val directorioGuardarXMLFirmados = "/home/work/Documents/factura"
         val nombreArchivoXML = "nota-debito-01.xml"
         val nombreArchivoXMLFirmado = "nota-debito-01-firmado.xml"
         val clave = "LuisPadilla2115"
         val directorioYNombreArchivoRegistroCivilP12 =
-            "/home/server/Documents/Github/facturacion-electronica/documentacion/luis_alfredo_padilla_camuendo.p12"
+            "/home/work/Documents/Github/facturacion-electronica/documentacion/luis_alfredo_padilla_camuendo.p12"
 
         val notaDebitoEstructuraString = """
                {
@@ -640,14 +640,14 @@ try {
                        "nombreComercial": "COMERCIAL BRENDA",
                        "ruc": "1710361658001",
                        "claveAcceso": null,
-                       "codDoc": "01",
+                       "codDoc": "05",
                        "estab": "001",
                        "ptoEmision": "001",
                        "secuencial": "000000016",
                        "dirMatriz": "PICHINCHA / QUITO / QUITO/ LLANO CHICO"
                    },
                    "infoNotaDebito": {
-                       "fechaEmision": "14/02/2019",
+                       "fechaEmision": "01/03/2019",
                        "dirEstablecimiento": "GRAL. VEINTIMILLA E8-30 Y AV. 6 DE DICIEMBRE",
                        "tipoIdentificacionComprador": "04",
                        "razonSocialComprador": "BAZAR Y PAPELERIA MEXICO",
@@ -715,6 +715,6 @@ try {
         println(e)
         println("ERROR")
     }
-
+        */
 
 }

@@ -221,7 +221,7 @@ class NotaDebito {
         val nombreDocumento = "Nota Debito"
 
         val resultado = Klaxon()
-            .parse<NotaCredito?>(
+            .parse<NotaDebito?>(
                 json
             )
         try {
@@ -247,9 +247,9 @@ class NotaDebito {
                         }
                         """.trimIndent()
             } else {
-                resultado?.generarNotaCreditoXML()
+                resultado?.generarNotaDebitoXML()
 
-                val archivoGenerado = resultado?.generarArchivoNotaCreditoXML(
+                val archivoGenerado = resultado?.generarArchivoNotaDebitoXML(
                     resultado.directorioGuardarXML,
                     resultado.nombreArchivoXML
                 )
@@ -515,7 +515,7 @@ class NotaDebito {
     }
 
     private fun generarInformacionNotaDebito(): String {
-        val nombreEtiquetaInformacionNotaDebito = "infoNotaCredito"
+        val nombreEtiquetaInformacionNotaDebito = "infoNotaDebito"
 
         var dirEstablecimiento = ""
         if (this.infoNotaDebito.dirEstablecimiento != null) {

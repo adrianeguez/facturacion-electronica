@@ -503,25 +503,25 @@ class NotaCredito {
         var dirEstablecimiento = ""
         if (this.infoNotaCredito.dirEstablecimiento != null) {
             dirEstablecimiento =
-                    "        <dirEstablecimiento>${this.infoNotaCredito.dirEstablecimiento}</dirEstablecimiento>\n"
+                "        <dirEstablecimiento>${this.infoNotaCredito.dirEstablecimiento}</dirEstablecimiento>\n"
         }
 
         var contribuyenteEspecial = ""
         if (this.infoNotaCredito.contribuyenteEspecial != null) {
             contribuyenteEspecial =
-                    "        <contribuyenteEspecial>${this.infoNotaCredito.contribuyenteEspecial}</contribuyenteEspecial>\n"
+                "        <contribuyenteEspecial>${this.infoNotaCredito.contribuyenteEspecial}</contribuyenteEspecial>\n"
         }
 
         var obligadoContabilidad = ""
         if (this.infoNotaCredito.obligadoContabilidad != null) {
             obligadoContabilidad =
-                    "        <obligadoContabilidad>${this.infoNotaCredito.obligadoContabilidad}</obligadoContabilidad>\n"
+                "        <obligadoContabilidad>${this.infoNotaCredito.obligadoContabilidad}</obligadoContabilidad>\n"
         }
 
         var rise = ""
         if (this.infoNotaCredito.rise != null) {
             rise =
-                    "        <rise>${this.infoNotaCredito.rise}</rise>\n"
+                "        <rise>${this.infoNotaCredito.rise}</rise>\n"
         }
 
 
@@ -541,6 +541,7 @@ class NotaCredito {
                 + "        <valorModificacion>${this.infoNotaCredito.valorModificacion}</valorModificacion>\n"
                 + "        <moneda>${this.infoNotaCredito.moneda}</moneda>\n"
                 + generarTotalConImpuestos()
+                + "        <motivo>${this.infoNotaCredito.motivo}</motivo>\n"
                 + "</$nombreEtiquetaInformacionNotaCredito>\n")
         return informacionFactura
     }
@@ -561,19 +562,19 @@ class NotaCredito {
             var descuentoAdicional = ""
             if (it.descuentoAdicional != null) {
                 descuentoAdicional =
-                        "                <descuentoAdicional>${it.descuentoAdicional}</descuentoAdicional>\n"
+                    "                <descuentoAdicional>${it.descuentoAdicional}</descuentoAdicional>\n"
             }
 
             var tarifa = ""
             if (it.tarifa != null) {
                 tarifa =
-                        "                <tarifa>${it.tarifa}</tarifa>\n"
+                    "                <tarifa>${it.tarifa}</tarifa>\n"
             }
 
             var valorDevolucionIva = ""
             if (it.valorDevolucionIva != null) {
                 valorDevolucionIva =
-                        "                <valorDevolucionIva>${it.valorDevolucionIva}</valorDevolucionIva>\n"
+                    "                <valorDevolucionIva>${it.valorDevolucionIva}</valorDevolucionIva>\n"
             }
 
             totalImpuestos += ("            <$nombreEtiquetaTotalImpuestos>\n"
@@ -632,7 +633,10 @@ class NotaCredito {
             if (it.codigoAdicional != null) {
                 codigoAdicional = "                <codigoAdicional>${it.codigoAdicional}</codigoAdicional>\n"
             }
-
+            var detallesAdicionales = ""
+            if (it.detallesAdicionales != null) {
+                detallesAdicionales = generarDetallesAdicionales(it.detallesAdicionales)
+            }
 
             totalDetalles += ("            <$nombreEtiquetaDetalle>\n"
                     + codigoInterno
@@ -642,7 +646,7 @@ class NotaCredito {
                     + "                <precioUnitario>${it.precioUnitario}</precioUnitario>\n"
                     + "                <descuento>${it.descuento}</descuento>\n"
                     + "                <precioTotalSinImpuesto>${it.precioTotalSinImpuesto}</precioTotalSinImpuesto>\n"
-                    + generarDetallesAdicionales(it.detallesAdicionales ?: arrayListOf())
+                    + detallesAdicionales
                     + generarImpuestos(it.impuestos)
                     + "             </$nombreEtiquetaDetalle>\n")
         }
