@@ -1,0 +1,68 @@
+{
+  "directorioGuardarXML":"${directorioGuardarXML}",
+  "directorioGuardarXMLFirmados":"${directorioGuardarXMLFirmados}",
+  "nombreArchivoXML":"${nombreArchivoXML}",
+  "nombreArchivoXMLFirmado":"${nombreArchivoXMLFirmado}",
+  "clave":"${clave}",
+  "directorioYNombreArchivoRegistroCivilP12":"${directorioYNombreArchivoRegistroCivilP12}",
+  "debug": true,
+  "infoTributario": {
+    "ambiente": "1",
+    "tipoEmision": "1",
+    "razonSocial": "PADILLA CAMUENDO LUIS ALFREDO",
+    "nombreComercial": "COMERCIAL BRENDA",
+    "ruc": "1710361658001",
+    "claveAcceso": null,
+    "codDoc": "07",
+    "estab": "001",
+    "ptoEmision": "001",
+    "secuencial": "000000016",
+    "dirMatriz": "PICHINCHA / QUITO / QUITO/ LLANO CHICO"
+  },
+  "infoCompRetencion": {
+    "fechaEmision": "15/02/2019",
+    "dirEstablecimiento": "GRAL. VEINTIMILLA E8-30 Y AV. 6 DE DICIEMBRE",
+    "obligadoContabilidad": "SI",
+    "contribuyenteEspecial":null,
+    "tipoIdentificacionSujetoRetenido": "04",
+    "razonSocialSujetoRetenido": "EGUEZ VASQUEZ FRANCISCO IVAN",
+    "identificacionSujetoRetenido": "1707075493001",
+    "periodoFiscal": "02/2019"
+  },
+  "impuestos": [
+    {
+      "codigo": "2",
+      "codigoRetencion": "2",
+      "baseImponible": "120.00",
+      "porcentajeRetener": "70.00",
+      "valorRetenido": "84.00",
+      "codDocSustento": "01",
+      "numDocSustento": "003005021421211",
+      "fechaEmisionDocSustento": "14/02/2019"
+    },
+    {
+      "codigo": "1",
+      "codigoRetencion": "304",
+      "baseImponible": "1000.00",
+      "porcentajeRetener": "8.00",
+      "valorRetenido": "80.00",
+      "codDocSustento": "01",
+      "numDocSustento": "003005021421211",
+      "fechaEmisionDocSustento": "14/02/2019"
+    }
+  ],
+  "infoAdicional": [
+    {
+      "nombre": "ConceptoRetencion",
+      "valor": "MANTENIMIENTO PREVENTIVO DEL CIR"
+    },
+    {
+      "nombre": "Direccion",
+      "valor": "LEONARDO MURIALDO Y HUACAMAYOS"
+    },
+    {
+      "nombre": "Telefono",
+      "valor": "2071425 0998786306"
+    }
+  ]
+}

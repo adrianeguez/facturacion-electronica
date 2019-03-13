@@ -1,0 +1,145 @@
+{
+  "directorioGuardarXML":"${directorioGuardarXML}",
+  "directorioGuardarXMLFirmados":"${directorioGuardarXMLFirmados}",
+  "nombreArchivoXML":"${nombreArchivoXML}",
+  "nombreArchivoXMLFirmado":"${nombreArchivoXMLFirmado}",
+  "clave":"${clave}",
+  "directorioYNombreArchivoRegistroCivilP12":"${directorioYNombreArchivoRegistroCivilP12}",
+  "debug": true,
+  "infoTributario": {
+    "ambiente": "1",
+    "tipoEmision": "1",
+    "razonSocial": "PADILLA CAMUENDO LUIS ALFREDO",
+    "nombreComercial": "COMERCIAL BRENDA",
+    "ruc": "1710361658001",
+    "claveAcceso": null,
+    "codDoc": "01",
+    "estab": "001",
+    "ptoEmision": "001",
+    "secuencial": "000000016",
+    "dirMatriz": "PICHINCHA / QUITO / QUITO/ LLANO CHICO"
+  },
+  "infoFactura": {
+    "fechaEmision": "13/02/2019",
+    "dirEstablecimiento": "PICHINCHA / CAYAMBE / CAYAMBE / ROCAFUERTE N0-45 Y LIBERTAD",
+    "contribuyenteEspecial": "0047",
+    "obligadoContabilidad": "SI",
+    "tipoIdentificacionComprador": "04",
+    "guiaRemision": null,
+    "razonSocialComprador": "BAZAR Y PAPELERIA MEXICO",
+    "identificacionComprador": "1800095612001",
+    "direccionComprador": "CHAMBO 1067 Y GUAYLLABAMBA",
+    "totalSinImpuestos": "161.79",
+    "totalDescuento": "20.48",
+    "totalConImpuestos": [
+      {
+        "codigo": "2",
+        "codigoPorcentaje": "2",
+        "descuentoAdicional" : null,
+        "baseImponible": "161.79",
+        "tarifa": null,
+        "valor": "19.41",
+        "valorDevolucionIva": null
+      }
+    ],
+    "propina": "0.00",
+    "importeTotal": "181.20",
+    "moneda": "DOLAR",
+    "pagos": [
+      {
+        "formaPago": "20",
+        "total": "181.20",
+        "plazo": "30.00",
+        "unidadTiempo": "dias"
+      }
+    ],
+    "valorRetIva": "0.00",
+    "valorRetRenta": "0.00"
+  },
+  "detalles": [
+    {
+      "codigoPrincipal": "679_73",
+      "codigoAuxiliar": null,
+      "descripcion": "ABRIGO IMPERMIABLE PESADO",
+      "cantidad": "8.00",
+      "precioUnitario": "7.75",
+      "descuento": "10.46",
+      "precioTotalSinImpuesto": "51.54",
+      "detallesAdicionales":null,
+      "impuestos": [
+        {
+          "codigo": "2",
+          "codigoPorcentaje": "2",
+          "tarifa": "12.00",
+          "baseImponible": "51.54",
+          "valor": "6.18"
+        }
+      ]
+    },
+    {
+      "codigoPrincipal": "A25-32",
+      "codigoAuxiliar": null,
+      "descripcion": "ABRAZADERAS 25/32",
+      "cantidad": "17.00",
+      "precioUnitario": "2.11",
+      "descuento": "5.80",
+      "precioTotalSinImpuesto": "30.07",
+      "detallesAdicionales":null,
+      "impuestos": [
+        {
+          "codigo": "2",
+          "codigoPorcentaje": "2",
+          "tarifa": "12.00",
+          "baseImponible": "30.07",
+          "valor": "3.61"
+        }
+      ]
+    }
+  ],
+  "infoAdicional": [
+    {
+      "nombre": "DIRECCION",
+      "valor": "LLANO CHICO"
+    },
+    {
+      "nombre": "E-MAIL",
+      "valor": "asetemp@hotmail.com"
+    },
+    {
+      "nombre": "APELLIDO",
+      "valor": "HINOJOSA"
+    },
+    {
+      "nombre": "NOMBRE",
+      "valor": "WASHINGTON"
+    },
+    {
+      "nombre": "NOMBRECOMERCIAL",
+      "valor": "BESTSYSTEM"
+    },
+    {
+      "nombre": "CIUDAD",
+      "valor": "QUITO"
+    },
+    {
+      "nombre": "TELEFONO",
+      "valor": "0993530018"
+    },
+    {
+      "nombre": "CELULAR",
+      "valor": "0987654321"
+    },
+    {
+      "nombre": "PLAZO",
+      "valor": "1.00"
+    },
+    {
+      "nombre": "DIAS",
+      "valor": "30.00"
+    },
+    {
+      "nombre": "TARIFAIMP",
+      "valor": "12.00"
+    }
+  ]
+}

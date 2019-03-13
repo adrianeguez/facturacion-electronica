@@ -310,13 +310,13 @@ try {
 
 
     try {
-        val directorioGuardarXML = "/home/work/Documents/factura/NotaCredito"
-        val directorioGuardarXMLFirmados = "/home/work/Documents/factura/NotaCredito"
+        val directorioGuardarXML = "/Users/adrianeguez/Documents/Gitlab/manticore-labs/pagina-web/docs"
+        val directorioGuardarXMLFirmados = "/Users/adrianeguez/Documents/Gitlab/manticore-labs/pagina-web/docs"
         val nombreArchivoXML = "comprobante-retencion-01.xml"
         val nombreArchivoXMLFirmado = "comprobante-retencion-01-firmado.xml"
         val clave = "LuisPadilla2115"
         val directorioYNombreArchivoRegistroCivilP12 =
-            "/home/work/Documents/Github/facturacion-electronica/documentacion/luis_alfredo_padilla_camuendo.p12"
+            "/Users/adrianeguez/Documents/Gitlab/manticore-labs/pagina-web/facturacion-electronica/documentacion/luis_alfredo_padilla_camuendo.p12"
 
         val comprobanteRetencionEstructuraString = """
                {
