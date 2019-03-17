@@ -3,6 +3,7 @@ package documentos.guiaremision
 import com.beust.klaxon.Klaxon
 import com.beust.klaxon.KlaxonException
 import documentos.*
+import documentos.factura.Factura
 import ec.gob.sri.comprobantes.exception.RespuestaAutorizacionException
 import ec.gob.sri.comprobantes.util.ArchivoUtils
 import firma.XAdESBESSignature
@@ -65,7 +66,8 @@ class GuiaRemision {
         nombreArchivoXMLFirmado: String,
         clave: String,
         directorioYNombreArchivoRegistroCivilP12: String,
-        debug: Boolean = true
+        debug: Boolean = true,
+        versionXML: String?
     ) {
         this.infoTributario = infoTributario
         this.infoGuiaRemision = infoGuiaRemision
@@ -93,6 +95,9 @@ class GuiaRemision {
         this.clave = clave
         this.directorioYNombreArchivoRegistroCivilP12 = directorioYNombreArchivoRegistroCivilP12
         this.debug = debug
+        if (versionXML != null) {
+            this.versionXML = versionXML
+        }
     }
 
     fun validar(): ArrayList<String> {
@@ -207,24 +212,35 @@ class GuiaRemision {
                 if (debug) {
                     println("Error")
                 }
-                var erroresAEnviar = "["
-                errores?.forEach {
+                var erroresObjeto = ""
+                errores?.forEachIndexed { indice, mensajeError ->
                     if (debug) {
-                        println(it)
+                        println(mensajeError)
                     }
-                    erroresAEnviar += erroresAEnviar + "\"mensaje\":\"${it}\""
+                    erroresObjeto += erroresObjeto + """
+                        {
+                            "mensaje": "${this.eliminarCaracteresEspeciales(mensajeError)}"
+                        }${if (indice != (errores.size - 1)) "," else ""}
+                    """.trimIndent()
                 }
-                erroresAEnviar += "]"
+                val erroresAEnviar = "[" + erroresObjeto + "]"
 
                 return """
                         {
                             "mensaje":"Errores en parseo de $nombreDocumento.",
                             "error": 400,
-                            "data":${erroresAEnviar}
+                            "data": {
+                                "errores":${erroresAEnviar}
+                            }
                         }
                         """.trimIndent()
             } else {
                 resultado?.generarGuiaRemisionXML()
+                resultado?.generarArchivoGuiaRemisionXML(
+                    resultado.directorioGuardarXML + "/",
+                    resultado.nombreArchivoXML,
+                    resultado.stringGuiaRemisionXML
+                )
 
                 val archivoGenerado = resultado?.generarArchivoGuiaRemisionXML(
                     resultado.directorioGuardarXML,
@@ -274,7 +290,7 @@ class GuiaRemision {
                                             println("recibimos respuesta")
                                             println("numeroComprobantes ${respuestaComprobante?.numeroComprobantes}")
                                         }
-                                        var autorizaciones = "["
+                                        var autorizaciones = ""
                                         respuestaComprobante?.autorizaciones?.autorizacion?.forEachIndexed { index, it ->
 
                                             if (debug) {
@@ -294,7 +310,7 @@ class GuiaRemision {
                                             """.trimIndent()
 
 
-                                            var mensajeString = "["
+                                            var mensajeString = ""
                                             it.mensajes.mensaje.forEachIndexed { indiceMensaje, mensaje ->
                                                 if (debug) {
                                                     println("identificador ${mensaje.identificador}")
@@ -311,17 +327,17 @@ class GuiaRemision {
                                                     }${if (indiceMensaje != (it.mensajes.mensaje.size - 1)) "," else ""}
                                                 """.trimIndent()
                                             }
-                                            mensajeString += "]"
+                                            val mensajeArreglo = "[" + mensajeString + "]"
                                             autorizacion += """
-                                                "mensajes":${mensajeString}
+                                                "mensajes": ${mensajeArreglo}
                                                 }${if (index != ((respuestaComprobante.autorizaciones?.autorizacion?.size
                                                     ?: 1) - 1)
                                             ) "," else ""}
                                             """.trimIndent()
 
-                                            autorizaciones += "${autorizacion}"
+                                            autorizaciones += autorizacion
                                         }
-                                        autorizaciones += "]"
+                                        val autorizacionCompleta = "[" + autorizaciones + "]"
                                         return """
                                             {
                                                 "mensaje":"Se recibieron autorizaciones",
@@ -330,7 +346,7 @@ class GuiaRemision {
                                                     "estadoSolicitud":"RECIBIDA",
                                                     "claveAccesoConsultada":"${respuestaComprobante?.claveAccesoConsultada}",
                                                     "numeroComprobantes":"${respuestaComprobante?.numeroComprobantes}",
-                                                    "autorizaciones":${autorizaciones}
+                                                    "autorizaciones":${autorizacionCompleta}
                                                 }
                                             }
                                         """.trimIndent()
@@ -347,7 +363,7 @@ class GuiaRemision {
                                                 """
                                     }
                                 } else {
-                                    var mensajesRespuestaSolicitudNoRecibida = "["
+                                    var mensajes = ""
                                     respuestaSolicitud.comprobantes.comprobante.forEach {
                                         it.mensajes.mensaje.forEachIndexed { index, mensaje ->
                                             if (debug) {
@@ -356,24 +372,25 @@ class GuiaRemision {
                                                 println(mensaje.informacionAdicional)
                                                 println(mensaje.mensaje)
                                             }
-                                            mensajesRespuestaSolicitudNoRecibida += """
+                                            mensajes += """
                                                 {
                                                     "tipo":"${mensaje.tipo}",
                                                     "identificador":"${mensaje.identificador}",
                                                     "informacionAdicional":"${eliminarCaracteresEspeciales(mensaje.informacionAdicional)}",
-                                                    "mensaje":"${mensaje.mensaje}"
+                                                    "mensaje":"${eliminarCaracteresEspeciales(mensaje.mensaje)}"
                                                 }${if (index != (it.mensajes.mensaje.size - 1)) "," else ""}
                                             """.trimIndent()
 
                                         }
                                     }
-                                    mensajesRespuestaSolicitudNoRecibida += "]"
+                                    var mensajesRespuestaSolicitudNoRecibida = "[" + mensajes + "]"
                                     return """
                                         {
                                             "mensaje": "Estado diferente a recibido",
                                             "error": 400,
                                             "data": {
-                                                "estadoSolicitud", "${respuestaSolicitud.estado}"
+                                                "comprobante": "${this.eliminarCaracteresEspeciales(resultado.stringGuiaRemisionXML)}",
+                                                "estadoSolicitud": "${respuestaSolicitud.estado}",
                                                 "mensajes": ${mensajesRespuestaSolicitudNoRecibida}
                                             }
                                         }
@@ -434,8 +451,8 @@ class GuiaRemision {
                 "mensaje":"Errores en parseo de $nombreDocumento.",
                 "error": 400,
                 "data": {
-                    "message":"${e.message}",
-                    "cause":"${e.cause}"
+                    "message":"${this.eliminarCaracteresEspeciales(e.message.toString())}",
+                    "cause":"${this.eliminarCaracteresEspeciales(e.cause.toString())}"
                 }
             }
             """.trimIndent()
@@ -446,10 +463,10 @@ class GuiaRemision {
             return """
             {
                 "mensaje":"Error del servidor.",
-                "error": 400,
+                "error": "400",
                 "data": {
-                    "message":"${e.message}",
-                    "cause":"${e.cause}"
+                    "message":"${this.eliminarCaracteresEspeciales(e.message.toString())}",
+                    "cause":"${this.eliminarCaracteresEspeciales(e.cause.toString())}"
                 }
             }
             """.trimIndent()
@@ -632,7 +649,7 @@ class GuiaRemision {
                     + codigoAdicional
                     + "                <descripcion>${it.descripcion}</descripcion>\n"
                     + "                <cantidad>${it.cantidad}</cantidad>\n"
-                    + generarDetallesAdicionales(it.detallesAdicionales?: arrayListOf())
+                    + generarDetallesAdicionales(it.detallesAdicionales ?: arrayListOf())
                     + "             </$nombreEtiquetaDetalle>\n")
         }
         return totalDetalles

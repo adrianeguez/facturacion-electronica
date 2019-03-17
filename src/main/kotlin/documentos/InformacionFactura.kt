@@ -60,7 +60,7 @@ class InformacionFactura {
     @Pattern(
         regexp = "^[0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]\$",
         flags = [CASE_INSENSITIVE],
-        message = "tipoIdentificacionComprador $mensajeValores de este formato 001-001-000000001"
+        message = "guiaRemision $mensajeValores de este formato 001-001-000000001"
     )
     var guiaRemision: String?
 

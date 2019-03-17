@@ -79,7 +79,7 @@ class InformacionTributaria {
     @Pattern(
         regexp = "^[0-9]{9}\$",
         message = "secuencial $mensajeValores de numeros 0-9"
-    )
+    ) // 9 o 10 digitos!
     @Size(min = 9, max = 9, message = "secuencial $mensajeTamano 9 caracteres")
     var secuencial: String
 

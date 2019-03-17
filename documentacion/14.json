@@ -1,0 +1,67 @@
+{
+  "factura": {
+    "infoTributaria": {
+      "ambiente": "2",
+      "tipoEmision": "1",
+      "razonSocial":"R.MERCANTILES \" "
+    },
+    "infoFactura":{
+      "fechaEmision":"14/02/2019",
+      "totalConImpuestos": [
+        {
+          "codigo": "2",
+          "codigoPorcentaje": "2",
+          "baseImponible": "161,79",
+          "valor": "19.41"
+        },
+        {
+          "codigo": "3",
+          "codigoPorcentaje": "5",
+          "baseImponible": "333,12",
+          "valor": "22.33"
+        }
+      ],
+      "propina": "0.00",
+      "importeTotal": "181.20",
+      "moneda": "DOLAR",
+      "pagos": [
+        {
+          "formaPago": "20",
+          "total": "181.20",
+          "plazo": "30",
+          "unidadTiempo": "dias"
+        },
+        {
+          "formaPago": "20",
+          "total": "181.20",
+          "plazo": "30",
+          "unidadTiempo": "dias"
+        }
+      ]
+    },
+    "detalles": [
+      {
+        "codigoPrincipal": "0152002",
+        "impuestos": [
+          {
+            "codigo": "2",
+            "codigoPorcentaje": "2",
+            "tarifa": "12.00",
+            "baseImponible": "161,79",
+            "valor": "19.41"
+          }
+        ]
+      }
+    ],
+    "infoAdicional": [
+      {
+        "nombre": "emailCliente",
+        "valor": "_@_.com"
+      },
+      {
+        "nombre": "emailCliente",
+        "valor": "_@_.com"
+      }
+    ]
+  }
+}

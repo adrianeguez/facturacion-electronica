@@ -34,7 +34,7 @@ class DetalleGuiaRemision {
 
     @NotNull(message = "cantidad $mensajeNulo")
     @Pattern(
-        regexp = "^[0-9]{1,14}(\\.[0]{2})?\$",
+        regexp = "^([0-9]{1,14}(\\.[0-9]{4}))|[0-9]{1,14}(\\.[0-9]{2})?\$",
         message = "cantidad $mensajeValores de 1 a 14 enteros y 2 decimales con valor 00 separados por punto"
     )
     var cantidad: String

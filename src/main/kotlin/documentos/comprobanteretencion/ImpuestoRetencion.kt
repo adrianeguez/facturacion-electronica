@@ -42,8 +42,8 @@ class ImpuestoRetencion : ImpuestoBase {
 
     @NotNull(message = "porcentajeRetener $mensajeNulo")
     @Pattern(
-        regexp = "(?:\\b|-)([1-9]{1,2}[0]?|100).[0-9]{2}\\b",
-        message = "porcentajeRetener $mensajeValores de 1 a 100"
+        regexp = "([1-9]{1,2}[0]?|100).[0-9]{2}",
+        message = "porcentajeRetener $mensajeValores de 0.00 a 100.00"
     )
     var porcentajeRetener: String
 
@@ -57,14 +57,14 @@ class ImpuestoRetencion : ImpuestoBase {
 
     @NotNull(message = "codDocSustento $mensajeNulo")
     @Pattern(
-        regexp = "([0-9]{2})",
+        regexp = "^([0-9]{2})\$",
         message = "codDocSustento $mensajeValores 2 digitos"
     )
     var codDocSustento: String
 
     @Pattern(
-        regexp = "([0-9]{15})",
-        message = "numDocSustento $mensajeValores de 15 digitos"
+        regexp = "^([0-9]{15,16})\$",
+        message = "numDocSustento $mensajeValores de 15 - 16 digitos"
     )
     var numDocSustento: String?
 

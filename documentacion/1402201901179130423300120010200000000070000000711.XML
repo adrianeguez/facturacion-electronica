@@ -30,11 +30,23 @@
                 <baseImponible>161.79</baseImponible>
                 <valor>19.41</valor>
             </totalImpuesto>
+            <totalImpuesto>
+                <codigo>2</codigo>
+                <codigoPorcentaje>2</codigoPorcentaje>
+                <baseImponible>161.79</baseImponible>
+                <valor>19.41</valor>
+            </totalImpuesto>
         </totalConImpuestos>
         <propina>0.00</propina>
         <importeTotal>181.20</importeTotal>
         <moneda>DOLAR</moneda>
         <pagos>
+            <pago>
+                <formaPago>20</formaPago>
+                <total>181.20</total>
+                <plazo>30</plazo>
+                <unidadTiempo>dias</unidadTiempo>
+            </pago>
             <pago>
                 <formaPago>20</formaPago>
                 <total>181.20</total>

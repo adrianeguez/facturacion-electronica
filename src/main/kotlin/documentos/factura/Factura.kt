@@ -66,7 +66,8 @@ class Factura {
         nombreArchivoXMLFirmado: String,
         clave: String,
         directorioYNombreArchivoRegistroCivilP12: String,
-        debug: Boolean = true
+        debug: Boolean = true,
+        versionXML: String?
     ) {
 
         this.infoTributario = infoTributario
@@ -97,6 +98,9 @@ class Factura {
 
 
         this.debug = debug
+        if (versionXML != null) {
+            this.versionXML = versionXML
+        }
     }
 
     fun validar(): ArrayList<String> {
@@ -231,24 +235,35 @@ class Factura {
                 if (debug) {
                     println("Error")
                 }
-                var erroresAEnviar = "["
-                errores?.forEach {
+                var erroresObjeto = ""
+                errores?.forEachIndexed { indice, mensajeError ->
                     if (debug) {
-                        println(it)
+                        println(mensajeError)
                     }
-                    erroresAEnviar += erroresAEnviar + "\"mensaje\":\"${it}\""
+                    erroresObjeto += erroresObjeto + """
+                        {
+                            "mensaje": "${this.eliminarCaracteresEspeciales(mensajeError)}"
+                        }${if (indice != (errores.size - 1)) "," else ""}
+                    """.trimIndent()
                 }
-                erroresAEnviar += "]"
+                val erroresAEnviar = "[" + erroresObjeto + "]"
 
                 return """
                         {
                             "mensaje":"Errores en parseo de $nombreDocumento.",
                             "error": 400,
-                            "data":${erroresAEnviar}
+                            "data": {
+                                "errores":${erroresAEnviar}
+                            }
                         }
                         """.trimIndent()
             } else {
                 resultado?.generarFacturaXML()
+                resultado?.generarArchivoFacturaXML(
+                    resultado.directorioGuardarXML + "/",
+                    resultado.nombreArchivoXML,
+                    resultado.stringFacturaXML
+                )
 
                 val archivoGenerado = resultado?.generarArchivoFacturaXML(
                     resultado.directorioGuardarXML,
@@ -298,7 +313,7 @@ class Factura {
                                             println("recibimos respuesta")
                                             println("numeroComprobantes ${respuestaComprobante?.numeroComprobantes}")
                                         }
-                                        var autorizaciones = "["
+                                        var autorizaciones = ""
                                         respuestaComprobante?.autorizaciones?.autorizacion?.forEachIndexed { index, it ->
 
                                             if (debug) {
@@ -318,7 +333,7 @@ class Factura {
                                             """.trimIndent()
 
 
-                                            var mensajeString = "["
+                                            var mensajeString = ""
                                             it.mensajes.mensaje.forEachIndexed { indiceMensaje, mensaje ->
                                                 if (debug) {
                                                     println("identificador ${mensaje.identificador}")
@@ -335,17 +350,17 @@ class Factura {
                                                     }${if (indiceMensaje != (it.mensajes.mensaje.size - 1)) "," else ""}
                                                 """.trimIndent()
                                             }
-                                            mensajeString += "]"
+                                            val mensajeArreglo = "[" + mensajeString + "]"
                                             autorizacion += """
-                                                "mensajes":${mensajeString}
+                                                "mensajes": ${mensajeArreglo}
                                                 }${if (index != ((respuestaComprobante.autorizaciones?.autorizacion?.size
                                                     ?: 1) - 1)
                                             ) "," else ""}
                                             """.trimIndent()
 
-                                            autorizaciones += "${autorizacion}"
+                                            autorizaciones += autorizacion
                                         }
-                                        autorizaciones += "]"
+                                        val autorizacionCompleta = "[" + autorizaciones + "]"
                                         return """
                                             {
                                                 "mensaje":"Se recibieron autorizaciones",
@@ -354,7 +369,7 @@ class Factura {
                                                     "estadoSolicitud":"RECIBIDA",
                                                     "claveAccesoConsultada":"${respuestaComprobante?.claveAccesoConsultada}",
                                                     "numeroComprobantes":"${respuestaComprobante?.numeroComprobantes}",
-                                                    "autorizaciones":${autorizaciones}
+                                                    "autorizaciones":${autorizacionCompleta}
                                                 }
                                             }
                                         """.trimIndent()
@@ -371,7 +386,7 @@ class Factura {
                                                 """
                                     }
                                 } else {
-                                    var mensajesRespuestaSolicitudNoRecibida = "["
+                                    var mensajes = ""
                                     respuestaSolicitud.comprobantes.comprobante.forEach {
                                         it.mensajes.mensaje.forEachIndexed { index, mensaje ->
                                             if (debug) {
@@ -380,24 +395,25 @@ class Factura {
                                                 println(mensaje.informacionAdicional)
                                                 println(mensaje.mensaje)
                                             }
-                                            mensajesRespuestaSolicitudNoRecibida += """
+                                            mensajes += """
                                                 {
                                                     "tipo":"${mensaje.tipo}",
                                                     "identificador":"${mensaje.identificador}",
                                                     "informacionAdicional":"${eliminarCaracteresEspeciales(mensaje.informacionAdicional)}",
-                                                    "mensaje":"${mensaje.mensaje}"
+                                                    "mensaje":"${eliminarCaracteresEspeciales(mensaje.mensaje)}"
                                                 }${if (index != (it.mensajes.mensaje.size - 1)) "," else ""}
                                             """.trimIndent()
 
                                         }
                                     }
-                                    mensajesRespuestaSolicitudNoRecibida += "]"
+                                    var mensajesRespuestaSolicitudNoRecibida = "[" + mensajes + "]"
                                     return """
                                         {
                                             "mensaje": "Estado diferente a recibido",
                                             "error": 400,
                                             "data": {
-                                                "estadoSolicitud", "${respuestaSolicitud.estado}"
+                                                "comprobante": "${this.eliminarCaracteresEspeciales(resultado.stringFacturaXML)}",
+                                                "estadoSolicitud": "${respuestaSolicitud.estado}",
                                                 "mensajes": ${mensajesRespuestaSolicitudNoRecibida}
                                             }
                                         }
@@ -458,8 +474,8 @@ class Factura {
                 "mensaje":"Errores en parseo de $nombreDocumento.",
                 "error": 400,
                 "data": {
-                    "message":"${e.message}",
-                    "cause":"${e.cause}"
+                    "message":"${this.eliminarCaracteresEspeciales(e.message.toString())}",
+                    "cause":"${this.eliminarCaracteresEspeciales(e.cause.toString())}"
                 }
             }
             """.trimIndent()
@@ -470,10 +486,10 @@ class Factura {
             return """
             {
                 "mensaje":"Error del servidor.",
-                "error": 400,
+                "error": "400",
                 "data": {
-                    "message":"${e.message}",
-                    "cause":"${e.cause}"
+                    "message":"${this.eliminarCaracteresEspeciales(e.message.toString())}",
+                    "cause":"${this.eliminarCaracteresEspeciales(e.cause.toString())}"
                 }
             }
             """.trimIndent()
@@ -521,19 +537,19 @@ class Factura {
         var obligadoContabilidad = ""
         if (this.infoFactura.obligadoContabilidad != null) {
             obligadoContabilidad =
-                "        <obligadoContabilidad>${this.infoFactura.obligadoContabilidad}</obligadoContabilidad>\n"
+                    "        <obligadoContabilidad>${this.infoFactura.obligadoContabilidad}</obligadoContabilidad>\n"
         }
 
         var contribuyenteEspecial = ""
         if (this.infoFactura.contribuyenteEspecial != null) {
             contribuyenteEspecial =
-                "        <contribuyenteEspecial>${this.infoFactura.contribuyenteEspecial}</contribuyenteEspecial>\n"
+                    "        <contribuyenteEspecial>${this.infoFactura.contribuyenteEspecial}</contribuyenteEspecial>\n"
         }
 
         var direccionEstablecimiento = ""
         if (this.infoFactura.dirEstablecimiento != null) {
             direccionEstablecimiento =
-                "        <dirEstablecimiento>${this.infoFactura.dirEstablecimiento ?: ""}</dirEstablecimiento>\n"
+                    "        <dirEstablecimiento>${this.infoFactura.dirEstablecimiento ?: ""}</dirEstablecimiento>\n"
         }
 
         val informacionFactura = ("<$nombreEtiquetaInformacionFactura>\n"
@@ -573,19 +589,19 @@ class Factura {
             var descuentoAdicional = ""
             if (it.descuentoAdicional != null) {
                 descuentoAdicional =
-                    "                <descuentoAdicional>${it.descuentoAdicional}</descuentoAdicional>\n"
+                        "                <descuentoAdicional>${it.descuentoAdicional}</descuentoAdicional>\n"
             }
 
             var tarifa = ""
             if (it.tarifa != null) {
                 tarifa =
-                    "                <tarifa>${it.tarifa}</tarifa>\n"
+                        "                <tarifa>${it.tarifa}</tarifa>\n"
             }
 
             var valorDevolucionIva = ""
             if (it.valorDevolucionIva != null) {
                 valorDevolucionIva =
-                    "                <valorDevolucionIva>${it.valorDevolucionIva}</valorDevolucionIva>\n"
+                        "                <valorDevolucionIva>${it.valorDevolucionIva}</valorDevolucionIva>\n"
             }
 
             totalImpuestos += ("            <$nombreEtiquetaTotalImpuestos>\n"

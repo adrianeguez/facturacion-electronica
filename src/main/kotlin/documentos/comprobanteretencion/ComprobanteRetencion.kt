@@ -66,7 +66,8 @@ class ComprobanteRetencion {
         nombreArchivoXMLFirmado: String,
         clave: String,
         directorioYNombreArchivoRegistroCivilP12: String,
-        debug: Boolean = true
+        debug: Boolean = true,
+        versionXML: String?
     ) {
         this.infoTributario = infoTributario
         this.infoCompRetencion = infoCompRetencion
@@ -97,6 +98,10 @@ class ComprobanteRetencion {
         this.directorioYNombreArchivoRegistroCivilP12 = directorioYNombreArchivoRegistroCivilP12
 
         this.debug = debug
+
+        if (versionXML != null) {
+            this.versionXML = versionXML
+        }
     }
 
     fun validar(): ArrayList<String> {
@@ -285,7 +290,6 @@ class ComprobanteRetencion {
                     + "                <porcentajeRetener>${it.porcentajeRetener}</porcentajeRetener>\n"
                     + "                <valorRetenido>${it.valorRetenido}</valorRetenido>\n"
                     + "                <codDocSustento>${it.codDocSustento}</codDocSustento>\n"
-                    + "                <valorRetenido>${it.valorRetenido}</valorRetenido>\n"
                     + numDocSustento
                     + fechaEmisionDocSustento
                     + "             </$nombreEtiquetaImpuesto>\n")
@@ -317,6 +321,7 @@ class ComprobanteRetencion {
     fun enviarComprobanteRetencion(json: String): String {
 
         val nombreDocumento = "Comprobante de Retencion"
+
         val resultado = Klaxon()
             .parse<ComprobanteRetencion?>(
                 json
@@ -327,29 +332,41 @@ class ComprobanteRetencion {
                 if (debug) {
                     println("Error")
                 }
-                var erroresAEnviar = "["
-                errores?.forEach {
+                var erroresObjeto = ""
+                errores?.forEachIndexed { indice, mensajeError ->
                     if (debug) {
-                        println(it)
+                        println(mensajeError)
                     }
-                    erroresAEnviar += erroresAEnviar + "\"mensaje\":\"${it}\""
+                    erroresObjeto += erroresObjeto + """
+                        {
+                            "mensaje": "${this.eliminarCaracteresEspeciales(mensajeError)}"
+                        }${if (indice != (errores.size - 1)) "," else ""}
+                    """.trimIndent()
                 }
-                erroresAEnviar += "]"
+                val erroresAEnviar = "[" + erroresObjeto + "]"
 
                 return """
                         {
                             "mensaje":"Errores en parseo de $nombreDocumento.",
                             "error": 400,
-                            "data":${erroresAEnviar}
+                            "data": {
+                                "errores":${erroresAEnviar}
+                            }
                         }
                         """.trimIndent()
             } else {
                 resultado?.generarComprobanteRetencionXML()
+                resultado?.generarArchivoComprobanteRetencionXML(
+                    resultado.directorioGuardarXML + "/",
+                    resultado.nombreArchivoXML,
+                    resultado.stringComprobanteRetencionXML
+                )
 
                 val archivoGenerado = resultado?.generarArchivoComprobanteRetencionXML(
                     resultado.directorioGuardarXML,
                     resultado.nombreArchivoXML
                 )
+                println("archivo generado: $archivoGenerado")
 
                 if (archivoGenerado != null) {
                     val archivoFirmado = XAdESBESSignature
@@ -393,7 +410,7 @@ class ComprobanteRetencion {
                                             println("recibimos respuesta")
                                             println("numeroComprobantes ${respuestaComprobante?.numeroComprobantes}")
                                         }
-                                        var autorizaciones = "["
+                                        var autorizaciones = ""
                                         respuestaComprobante?.autorizaciones?.autorizacion?.forEachIndexed { index, it ->
 
                                             if (debug) {
@@ -403,8 +420,7 @@ class ComprobanteRetencion {
                                                 println("fechaAutorizacion ${it.fechaAutorizacion}")
                                                 println("Mensajes:")
                                             }
-                                            val comprobanteString =
-                                                eliminarCaracteresEspeciales(it.comprobante)
+                                            val comprobanteString = eliminarCaracteresEspeciales(it.comprobante)
                                             var autorizacion = """
                                                 {
                                                     "numeroAutorizacion" : "${it.numeroAutorizacion}",
@@ -414,7 +430,7 @@ class ComprobanteRetencion {
                                             """.trimIndent()
 
 
-                                            var mensajeString = "["
+                                            var mensajeString = ""
                                             it.mensajes.mensaje.forEachIndexed { indiceMensaje, mensaje ->
                                                 if (debug) {
                                                     println("identificador ${mensaje.identificador}")
@@ -431,17 +447,17 @@ class ComprobanteRetencion {
                                                     }${if (indiceMensaje != (it.mensajes.mensaje.size - 1)) "," else ""}
                                                 """.trimIndent()
                                             }
-                                            mensajeString += "]"
+                                            val mensajeArreglo = "[" + mensajeString + "]"
                                             autorizacion += """
-                                                "mensajes":${mensajeString}
+                                                "mensajes": ${mensajeArreglo}
                                                 }${if (index != ((respuestaComprobante.autorizaciones?.autorizacion?.size
                                                     ?: 1) - 1)
                                             ) "," else ""}
                                             """.trimIndent()
 
-                                            autorizaciones += "${autorizacion}"
+                                            autorizaciones += autorizacion
                                         }
-                                        autorizaciones += "]"
+                                        val autorizacionCompleta = "[" + autorizaciones + "]"
                                         return """
                                             {
                                                 "mensaje":"Se recibieron autorizaciones",
@@ -450,7 +466,7 @@ class ComprobanteRetencion {
                                                     "estadoSolicitud":"RECIBIDA",
                                                     "claveAccesoConsultada":"${respuestaComprobante?.claveAccesoConsultada}",
                                                     "numeroComprobantes":"${respuestaComprobante?.numeroComprobantes}",
-                                                    "autorizaciones":${autorizaciones}
+                                                    "autorizaciones":${autorizacionCompleta}
                                                 }
                                             }
                                         """.trimIndent()
@@ -467,7 +483,7 @@ class ComprobanteRetencion {
                                                 """
                                     }
                                 } else {
-                                    var mensajesRespuestaSolicitudNoRecibida = "["
+                                    var mensajes = ""
                                     respuestaSolicitud.comprobantes.comprobante.forEach {
                                         it.mensajes.mensaje.forEachIndexed { index, mensaje ->
                                             if (debug) {
@@ -476,24 +492,25 @@ class ComprobanteRetencion {
                                                 println(mensaje.informacionAdicional)
                                                 println(mensaje.mensaje)
                                             }
-                                            mensajesRespuestaSolicitudNoRecibida += """
+                                            mensajes += """
                                                 {
                                                     "tipo":"${mensaje.tipo}",
                                                     "identificador":"${mensaje.identificador}",
                                                     "informacionAdicional":"${eliminarCaracteresEspeciales(mensaje.informacionAdicional)}",
-                                                    "mensaje":"${mensaje.mensaje}"
+                                                    "mensaje":"${eliminarCaracteresEspeciales(mensaje.mensaje)}"
                                                 }${if (index != (it.mensajes.mensaje.size - 1)) "," else ""}
                                             """.trimIndent()
 
                                         }
                                     }
-                                    mensajesRespuestaSolicitudNoRecibida += "]"
+                                    var mensajesRespuestaSolicitudNoRecibida = "[" + mensajes + "]"
                                     return """
                                         {
                                             "mensaje": "Estado diferente a recibido",
                                             "error": 400,
                                             "data": {
-                                                "estadoSolicitud", "${respuestaSolicitud.estado}"
+                                                "comprobante": "${this.eliminarCaracteresEspeciales(resultado.stringComprobanteRetencionXML)}",
+                                                "estadoSolicitud": "${respuestaSolicitud.estado}",
                                                 "mensajes": ${mensajesRespuestaSolicitudNoRecibida}
                                             }
                                         }
@@ -554,8 +571,8 @@ class ComprobanteRetencion {
                 "mensaje":"Errores en parseo de $nombreDocumento.",
                 "error": 400,
                 "data": {
-                    "message":"${e.message}",
-                    "cause":"${e.cause}"
+                    "message":"${this.eliminarCaracteresEspeciales(e.message.toString())}",
+                    "cause":"${this.eliminarCaracteresEspeciales(e.cause.toString())}"
                 }
             }
             """.trimIndent()
@@ -566,14 +583,15 @@ class ComprobanteRetencion {
             return """
             {
                 "mensaje":"Error del servidor.",
-                "error": 400,
+                "error": "400",
                 "data": {
-                    "message":"${e.message}",
-                    "cause":"${e.cause}"
+                    "message":"${this.eliminarCaracteresEspeciales(e.message.toString())}",
+                    "cause":"${this.eliminarCaracteresEspeciales(e.cause.toString())}"
                 }
             }
             """.trimIndent()
         }
+
 
     }
 

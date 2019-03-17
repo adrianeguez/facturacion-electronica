@@ -68,8 +68,8 @@ class Destinatario {
     }
 
     @Pattern(
-        regexp = "^[0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]\$",
-        message = "numDocSustento $mensajeValores de este formato 001-001-000000001"
+        regexp = "^(([0-9]{3}-[0-9]{3}-[0-9]{9})|([0-9]{3}-[0-9]{3}-[0-9]{10}))\$",
+        message = "numDocSustento $mensajeValores de este formato 001-001-000000001 o 10 al final"
     )
     var numDocSustento: String?
 
