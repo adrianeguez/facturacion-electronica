@@ -40,8 +40,8 @@ class InformacionGuiaRemision {
 
     @NotNull(message = "rucTransportista $mensajeNulo")
     @Pattern(
-        regexp = "^[0-9]{13}\$",
-        message = "rucTransportista $mensajeValores de 13 digitos de numeros del 0-9"
+        regexp = "^([0-9]{13}|[0-9]{10})\$",
+        message = "rucTransportista $mensajeValores de 13 digitos o 10 de numeros del 0-9"
     )
     var rucTransportista: String
 
