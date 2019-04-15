@@ -88,15 +88,15 @@ class InformacionFactura {
 
     @NotNull(message = "totalSinImpuestos $mensajeNulo")
     @Pattern(
-        regexp = "^[0-9]{1,14}(\\.[0-9]{2})?\$",
-        message = "totalSinImpuestos $mensajeValores de 1 a 14 enteros y hasta 2 decimales separados por punto"
+        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        message = "totalSinImpuestos $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var totalSinImpuestos: String
 
     @NotNull(message = "totalDescuento $mensajeNulo")
     @Pattern(
-        regexp = "^[0-9]{1,14}(\\.[0-9]{2})?\$",
-        message = "totalDescuento $mensajeValores de 1 a 14 enteros y hasta 2 decimales separados por punto"
+        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        message = "totalDescuento $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var totalDescuento: String
 
@@ -105,15 +105,15 @@ class InformacionFactura {
 
     @NotNull(message = "propina $mensajeNulo")
     @Pattern(
-        regexp = "^[0-9]{1,14}(\\.[0-9]{2})?\$",
-        message = "propina $mensajeValores de 1 a 14 enteros y hasta 2 decimales separados por punto"
+        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        message = "propina $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var propina: String
 
     @NotNull(message = "importeTotal $mensajeNulo")
     @Pattern(
-        regexp = "^[0-9]{1,14}(\\.[0-9]{2})?\$",
-        message = "importeTotal $mensajeValores de 1 a 14 enteros y hasta 2 decimales separados por punto"
+        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        message = "importeTotal $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var importeTotal: String
 
@@ -126,8 +126,8 @@ class InformacionFactura {
 
 
     @Pattern(
-        regexp = "^[0-9]{1,14}(\\.[0-9]{2})?\$",
-        message = "valorRetIva $mensajeValores de 1 a 14 enteros y hasta 2 decimales separados por punto"
+        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        message = "valorRetIva $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var valorRetIva: String?
 
@@ -137,8 +137,8 @@ class InformacionFactura {
 
 
     @Pattern(
-        regexp = "^[0-9]{1,14}(\\.[0-9]{2})?\$",
-        message = "valorRetRenta $mensajeValores de 1 a 14 enteros y hasta 2 decimales separados por punto"
+        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        message = "valorRetRenta $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var valorRetRenta: String?
 

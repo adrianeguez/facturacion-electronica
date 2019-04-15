@@ -88,8 +88,8 @@ class InformacionNotaDebito {
 
     @NotNull(message = "totalSinImpuestos $mensajeNulo")
     @Pattern(
-        regexp = "^[0-9]{1,14}(\\.[0-9]{2})?\$",
-        message = "totalSinImpuestos $mensajeValores de 1 a 14 enteros y hasta 2 decimales separados por punto"
+        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        message = "totalSinImpuestos $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var totalSinImpuestos: String
 
@@ -98,8 +98,8 @@ class InformacionNotaDebito {
 
     @NotNull(message = "valorTotal $mensajeNulo")
     @Pattern(
-        regexp = "^[0-9]{1,14}(\\.[0-9]{2})?\$",
-        message = "valorTotal $mensajeValores de 1 a 14 enteros y hasta 2 decimales separados por punto"
+        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        message = "valorTotal $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var valorTotal: String
 

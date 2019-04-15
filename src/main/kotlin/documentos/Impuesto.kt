@@ -19,8 +19,8 @@ open class Impuesto : ImpuestoBase {
 
     @NotNull(message = "valor $mensajeNulo")
     @Pattern(
-        regexp = "^[0-9]{1,14}(\\.[0-9]{2})?\$",
-        message = "valor $mensajeValores de 1 a 14 enteros y hasta 2 decimales separados por punto"
+        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        message = "valor $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var valor: String
 
@@ -32,8 +32,8 @@ open class Impuesto : ImpuestoBase {
     var codigoPorcentaje: String
 
     @Pattern(
-        regexp = "^[0-9]{1,14}(\\.[0-9]{2})?\$",
-        message = "tarifa $mensajeValores de 1 a 14 enteros y hasta 2 decimales separados por punto"
+        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        message = "tarifa $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var tarifa: String?
 

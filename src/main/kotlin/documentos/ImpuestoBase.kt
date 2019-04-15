@@ -13,8 +13,8 @@ abstract class ImpuestoBase {
 
     @NotNull(message = "baseImponible $mensajeNulo")
     @Pattern(
-        regexp = "^[0-9]{1,14}(\\.[0-9]{2})?\$",
-        message = "baseImponible $mensajeValores de 1 a 14 enteros y hasta 2 decimales separados por punto"
+        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        message = "baseImponible $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var baseImponible: String
 
