@@ -177,7 +177,8 @@ class Factura {
                     "<$nombreEtiquetaFactura id=\"${idComprobante}\" version=\"$versionFacturaXML\">\n" +
                     generarCuerpoFactura() +
                     "</$nombreEtiquetaFactura>"
-        this.stringFacturaXML = xmlString
+        this.stringFacturaXML = GenerarDocumentos.removerCaracteresEspeciales(xmlString)
+
         return xmlString
     }
 
@@ -258,6 +259,7 @@ class Factura {
                         }
                         """.trimIndent()
             } else {
+
                 resultado?.generarFacturaXML()
                 resultado?.generarArchivoFacturaXML(
                     resultado.directorioGuardarXML + "/",

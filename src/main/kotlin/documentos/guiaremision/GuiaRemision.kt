@@ -153,7 +153,7 @@ class GuiaRemision {
                     "<$nombreEtiquetaGuiaRemision id=\"${idComprobante}\" version=\"$versionGuiaRemisionXML\">\n" +
                     generarCuerpoGuiaRemision() +
                     "</$nombreEtiquetaGuiaRemision>"
-        this.stringGuiaRemisionXML = xmlString
+        this.stringGuiaRemisionXML = GenerarDocumentos.removerCaracteresEspeciales(xmlString)
         return xmlString
     }
 

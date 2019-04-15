@@ -147,7 +147,7 @@ class ComprobanteRetencion {
                     "<$nombreEtiquetaComprobante id=\"${idComprobante}\" version=\"$versionComprobanteRetencionXML\">\n" +
                     generarCuerpoComprobanteRetencion() +
                     "</$nombreEtiquetaComprobante>"
-        this.stringComprobanteRetencionXML = xmlString
+        this.stringComprobanteRetencionXML = GenerarDocumentos.removerCaracteresEspeciales(xmlString)
         return xmlString
     }
 

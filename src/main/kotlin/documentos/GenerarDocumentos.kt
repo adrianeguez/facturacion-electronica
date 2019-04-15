@@ -47,10 +47,12 @@ class GenerarDocumentos {
             val cadenaDeCaracteresASustituir = "áàäéèëíìïóòöúùuñÁÀÄÉÈËÍÌÏÓÒÖÚÙÜÑçÇ$&¨"
             val cadenaDeCaracteresAReemplazar = "aaaeeeiiiooouuunAAAEEEIIIOOOUUUNcCxy'"
             var caracteresADevolver: String = caracteresARemover
+            println(caracteresARemover)
             for (i in 0 until cadenaDeCaracteresASustituir.length) {
                 caracteresADevolver =
-                        caracteresADevolver.replace(cadenaDeCaracteresAReemplazar[i], cadenaDeCaracteresAReemplazar[i])
+                        caracteresADevolver.replace(cadenaDeCaracteresASustituir[i], cadenaDeCaracteresAReemplazar[i])
             }
+            println(caracteresADevolver)
             return caracteresADevolver
         }
 

@@ -171,7 +171,7 @@ class NotaDebito {
                     "<$nombreEtiquetaNotaDebito id=\"${idComprobante}\" version=\"$versionNotaDebitoXML\">\n" +
                     generarCuerpoNotaDebito() +
                     "</$nombreEtiquetaNotaDebito>"
-        this.stringNotaDebitoXML = xmlString
+        this.stringNotaDebitoXML = GenerarDocumentos.removerCaracteresEspeciales(xmlString)
         return xmlString
     }
 

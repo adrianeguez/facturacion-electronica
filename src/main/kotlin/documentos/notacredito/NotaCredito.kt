@@ -163,7 +163,7 @@ class NotaCredito {
                     "<$nombreEtiquetaNotaCredito id=\"${idComprobante}\" version=\"$versionNotaCreditoXML\">\n" +
                     generarCuerpoNotaCredito() +
                     "</$nombreEtiquetaNotaCredito>"
-        this.stringNotaCreditoXML = xmlString
+        this.stringNotaCreditoXML = GenerarDocumentos.removerCaracteresEspeciales(xmlString)
         return xmlString
     }
 
