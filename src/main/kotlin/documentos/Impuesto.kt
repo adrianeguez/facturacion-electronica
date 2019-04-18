@@ -1,5 +1,6 @@
 package documentos
 
+import utils.expresionRegularMoneda
 import utils.mensajeNulo
 import utils.mensajeValores
 import utils.tarifaICE
@@ -19,7 +20,7 @@ open class Impuesto : ImpuestoBase {
 
     @NotNull(message = "valor $mensajeNulo")
     @Pattern(
-        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        regexp = expresionRegularMoneda,
         message = "valor $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var valor: String
@@ -32,7 +33,7 @@ open class Impuesto : ImpuestoBase {
     var codigoPorcentaje: String
 
     @Pattern(
-        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        regexp = expresionRegularMoneda,
         message = "tarifa $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var tarifa: String?

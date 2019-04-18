@@ -1,5 +1,6 @@
 package documentos
 
+import utils.expresionRegularMoneda
 import utils.mensajeValores
 import java.util.*
 import javax.validation.constraints.Pattern
@@ -7,7 +8,7 @@ import javax.validation.constraints.Pattern
 class TotalImpuesto : Impuesto {
 
     @Pattern(
-        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        regexp = expresionRegularMoneda,
         message = "descuentoAdicional $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var descuentoAdicional: String?
@@ -17,7 +18,7 @@ class TotalImpuesto : Impuesto {
     }
 
     @Pattern(
-        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        regexp = expresionRegularMoneda,
         message = "valorDevolucionIva $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var valorDevolucionIva: String?

@@ -1,5 +1,6 @@
 package documentos
 
+import utils.expresionRegularMoneda
 import utils.mensajeNulo
 import utils.mensajeVacio
 import utils.mensajeValores
@@ -22,7 +23,7 @@ class Pago {
 
     @NotNull(message = "total $mensajeNulo")
     @Pattern(
-        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        regexp = expresionRegularMoneda,
         message = "total $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     val total: String

@@ -1,5 +1,6 @@
 package documentos
 
+import utils.expresionRegularMoneda
 import utils.mensajeNulo
 import utils.mensajeVacio
 import utils.mensajeValores
@@ -35,28 +36,28 @@ open class Detalle {
 
     @NotNull(message = "cantidad $mensajeNulo")
     @Pattern(
-        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        regexp = expresionRegularMoneda,
         message = "cantidad $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var cantidad: String
 
     @NotNull(message = "precioUnitario $mensajeNulo")
     @Pattern(
-        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        regexp = expresionRegularMoneda,
         message = "precioUnitario $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var precioUnitario: String
 
     @NotNull(message = "descuento $mensajeNulo")
     @Pattern(
-        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        regexp = expresionRegularMoneda,
         message = "descuento $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var descuento: String
 
     @NotNull(message = "precioTotalSinImpuesto $mensajeNulo")
     @Pattern(
-        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        regexp = expresionRegularMoneda,
         message = "precioTotalSinImpuesto $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var precioTotalSinImpuesto: String

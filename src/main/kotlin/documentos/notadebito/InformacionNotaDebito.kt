@@ -4,6 +4,7 @@ import documentos.GenerarDocumentos
 import documentos.Impuesto
 import documentos.Pago
 import documentos.TotalImpuesto
+import utils.expresionRegularMoneda
 import utils.mensajeNulo
 import utils.mensajeVacio
 import utils.mensajeValores
@@ -88,7 +89,7 @@ class InformacionNotaDebito {
 
     @NotNull(message = "totalSinImpuestos $mensajeNulo")
     @Pattern(
-        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        regexp = expresionRegularMoneda,
         message = "totalSinImpuestos $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var totalSinImpuestos: String
@@ -98,7 +99,7 @@ class InformacionNotaDebito {
 
     @NotNull(message = "valorTotal $mensajeNulo")
     @Pattern(
-        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        regexp = expresionRegularMoneda,
         message = "valorTotal $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var valorTotal: String

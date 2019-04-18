@@ -1,9 +1,6 @@
 package documentos
 
-import utils.mensajeNulo
-import utils.mensajeTamano
-import utils.mensajeVacio
-import utils.mensajeValores
+import utils.*
 import java.util.*
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
@@ -88,14 +85,14 @@ class InformacionFactura {
 
     @NotNull(message = "totalSinImpuestos $mensajeNulo")
     @Pattern(
-        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        regexp = expresionRegularMoneda,
         message = "totalSinImpuestos $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var totalSinImpuestos: String
 
     @NotNull(message = "totalDescuento $mensajeNulo")
     @Pattern(
-        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        regexp = expresionRegularMoneda,
         message = "totalDescuento $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var totalDescuento: String
@@ -105,14 +102,14 @@ class InformacionFactura {
 
     @NotNull(message = "propina $mensajeNulo")
     @Pattern(
-        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        regexp = expresionRegularMoneda,
         message = "propina $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var propina: String
 
     @NotNull(message = "importeTotal $mensajeNulo")
     @Pattern(
-        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        regexp = expresionRegularMoneda,
         message = "importeTotal $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var importeTotal: String
@@ -126,7 +123,7 @@ class InformacionFactura {
 
 
     @Pattern(
-        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        regexp = expresionRegularMoneda,
         message = "valorRetIva $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var valorRetIva: String?
@@ -137,7 +134,7 @@ class InformacionFactura {
 
 
     @Pattern(
-        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        regexp = expresionRegularMoneda,
         message = "valorRetRenta $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
     )
     var valorRetRenta: String?

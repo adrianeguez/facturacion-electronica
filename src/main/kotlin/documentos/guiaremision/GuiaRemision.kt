@@ -43,7 +43,6 @@ class GuiaRemision {
     @NotNull(message = "destinatario $mensajeNulo")
     var destinatarios: ArrayList<Destinatario>
 
-    @NotNull(message = "infoTributario $mensajeNulo")
     var infoAdicional: ArrayList<CampoAdicional>?
 
     var directorioGuardarXML: String

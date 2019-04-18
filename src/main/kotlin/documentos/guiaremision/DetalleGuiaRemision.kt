@@ -2,6 +2,7 @@ package documentos.guiaremision
 
 import documentos.DetalleAdicional
 import documentos.GenerarDocumentos
+import utils.expresionRegularMoneda
 import utils.mensajeNulo
 import utils.mensajeVacio
 import utils.mensajeValores
@@ -34,7 +35,7 @@ class DetalleGuiaRemision {
 
     @NotNull(message = "cantidad $mensajeNulo")
     @Pattern(
-        regexp = "^([0-9]{1,14}(\\.[0-9]{1,6}))?\$",
+        regexp = expresionRegularMoneda,
         message = "cantidad $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 con valor 00 separados por punto"
     )
     var cantidad: String

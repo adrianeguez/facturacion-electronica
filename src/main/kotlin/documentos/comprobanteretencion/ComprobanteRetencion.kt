@@ -59,7 +59,7 @@ class ComprobanteRetencion {
         infoTributario: InformacionTributaria,
         infoCompRetencion: InformacionComprobanteRetencion,
         impuestos: ArrayList<ImpuestoRetencion>,
-        infoAdicional: ArrayList<CampoAdicional>,
+        infoAdicional: ArrayList<CampoAdicional>?,
         directorioGuardarXML: String,
         directorioGuardarXMLFirmados: String,
         nombreArchivoXML: String,
