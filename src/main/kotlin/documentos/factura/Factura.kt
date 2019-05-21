@@ -371,7 +371,8 @@ class Factura {
                                                     "estadoSolicitud":"RECIBIDA",
                                                     "claveAccesoConsultada":"${respuestaComprobante?.claveAccesoConsultada}",
                                                     "numeroComprobantes":"${respuestaComprobante?.numeroComprobantes}",
-                                                    "autorizaciones":${autorizacionCompleta}
+                                                    "autorizaciones":${autorizacionCompleta},
+                                                    "claveAcceso": "${resultado.infoTributario.claveAcceso}"
                                                 }
                                             }
                                         """.trimIndent()
