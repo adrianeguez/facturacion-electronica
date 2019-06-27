@@ -288,7 +288,9 @@ class NotaDebito {
 
                             val respuestaSolicitud = AutorizarDocumentos.validar(datos)
                             if (debug) {
-                                println("Validando Datos")
+                                println("Validando Datos, URLS de envio")
+                                println("${AutorizarDocumentos.host}${AutorizarDocumentos.segmentoURLComprobantesElectronicosRecepcion}${AutorizarDocumentos.queryParamsComprobantesElectronicosRecepcion}")
+                                println("${AutorizarDocumentos.host}${AutorizarDocumentos.segmentoURLComprobantesElectronicosAutorizacion}${AutorizarDocumentos.queryParamsComprobantesElectronicosAutorizacion}")
                             }
                             if (respuestaSolicitud != null && (respuestaSolicitud.comprobantes != null ?: false)) {
                                 if (debug) {
@@ -383,6 +385,8 @@ class NotaDebito {
                                     respuestaSolicitud.comprobantes.comprobante.forEach {
                                         it.mensajes.mensaje.forEachIndexed { index, mensaje ->
                                             if (debug) {
+                                                mensaje.informacionAdicional =
+                                                    if (mensaje.informacionAdicional == null) "ninguno" else mensaje.informacionAdicional
                                                 println(mensaje.tipo)
                                                 println(mensaje.identificador)
                                                 println(mensaje.informacionAdicional)
@@ -417,7 +421,7 @@ class NotaDebito {
                                 }
                                 return """
                                     {
-                                        "mensaje":"Error convirtiendo archivo a bytes.",
+                                        "mensaje":"Error en respuesta de solicitud. Puede ser error del servidor del SRI intentelo de nuevo. Revise los logs.",
                                         "error": 500
                                     }
                                     """.trimIndent()
@@ -490,8 +494,6 @@ class NotaDebito {
     }
 
 
-
-
     private fun generarCuerpoNotaDebito(): String {
         val contenidoFactura = generarInformacionTributaria() +
                 generarInformacionNotaDebito() +
@@ -529,19 +531,19 @@ class NotaDebito {
         var dirEstablecimiento = ""
         if (this.infoNotaDebito.dirEstablecimiento != null) {
             dirEstablecimiento =
-                    "        <dirEstablecimiento>${this.infoNotaDebito.dirEstablecimiento}</dirEstablecimiento>\n"
+                "        <dirEstablecimiento>${this.infoNotaDebito.dirEstablecimiento}</dirEstablecimiento>\n"
         }
 
         var contribuyenteEspecial = ""
         if (this.infoNotaDebito.contribuyenteEspecial != null) {
             contribuyenteEspecial =
-                    "        <contribuyenteEspecial>${this.infoNotaDebito.contribuyenteEspecial}</contribuyenteEspecial>\n"
+                "        <contribuyenteEspecial>${this.infoNotaDebito.contribuyenteEspecial}</contribuyenteEspecial>\n"
         }
 
         var obligadoContabilidad = ""
         if (this.infoNotaDebito.obligadoContabilidad != null) {
             obligadoContabilidad =
-                    "        <obligadoContabilidad>${this.infoNotaDebito.obligadoContabilidad}</obligadoContabilidad>\n"
+                "        <obligadoContabilidad>${this.infoNotaDebito.obligadoContabilidad}</obligadoContabilidad>\n"
         }
 
 
@@ -579,7 +581,7 @@ class NotaDebito {
             var tarifa = ""
             if (it.tarifa != null) {
                 tarifa =
-                        "                <tarifa>${it.tarifa}</tarifa>\n"
+                    "                <tarifa>${it.tarifa}</tarifa>\n"
             }
 
             totalImpuestos += ("            <$nombreEtiquetaImpuesto>\n"
@@ -609,13 +611,13 @@ class NotaDebito {
             var plazo = ""
             if (it.plazo != null) {
                 plazo =
-                        "                <plazo>${it.plazo}</plazo>\n"
+                    "                <plazo>${it.plazo}</plazo>\n"
             }
 
             var unidadTiempo = ""
-            if (it.unidadTiempo!= null) {
+            if (it.unidadTiempo != null) {
                 unidadTiempo =
-                        "                <unidadTiempo>${it.unidadTiempo}</unidadTiempo>\n"
+                    "                <unidadTiempo>${it.unidadTiempo}</unidadTiempo>\n"
             }
 
             totalPagos += ("            <$nombreEtiquetaPago>\n"

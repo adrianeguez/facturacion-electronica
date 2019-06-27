@@ -18,6 +18,7 @@ import java.util.logging.Level
 import java.util.logging.Logger
 import javax.validation.Validation
 import javax.validation.constraints.NotNull
+import kotlin.Any as Any1
 
 class ComprobanteRetencion {
 
@@ -229,19 +230,19 @@ class ComprobanteRetencion {
         var obligadoContabilidad = ""
         if (this.infoCompRetencion.obligadoContabilidad != null) {
             obligadoContabilidad =
-                    "        <obligadoContabilidad>${this.infoCompRetencion.obligadoContabilidad}</obligadoContabilidad>\n"
+                "        <obligadoContabilidad>${this.infoCompRetencion.obligadoContabilidad}</obligadoContabilidad>\n"
         }
 
         var contribuyenteEspecial = ""
         if (this.infoCompRetencion.contribuyenteEspecial != null) {
             contribuyenteEspecial =
-                    "        <contribuyenteEspecial>${this.infoCompRetencion.contribuyenteEspecial}</contribuyenteEspecial>\n"
+                "        <contribuyenteEspecial>${this.infoCompRetencion.contribuyenteEspecial}</contribuyenteEspecial>\n"
         }
         var direccionEstablecimiento = ""
         if (this.infoCompRetencion.dirEstablecimiento != null) {
             direccionEstablecimiento =
-                    "        <dirEstablecimiento>${this.infoCompRetencion.dirEstablecimiento
-                        ?: ""}</dirEstablecimiento>\n"
+                "        <dirEstablecimiento>${this.infoCompRetencion.dirEstablecimiento
+                    ?: ""}</dirEstablecimiento>\n"
         }
 
         val informacionComprobanteRetencion = ("<$nombreEtiquetaInformacionComprobanteretencion>\n"
@@ -273,13 +274,13 @@ class ComprobanteRetencion {
             var numDocSustento = ""
             if (it.numDocSustento != null) {
                 numDocSustento =
-                        "        <numDocSustento>${it.numDocSustento}</numDocSustento>\n"
+                    "        <numDocSustento>${it.numDocSustento}</numDocSustento>\n"
             }
 
             var fechaEmisionDocSustento = ""
             if (it.fechaEmisionDocSustento != null) {
                 fechaEmisionDocSustento =
-                        "        <fechaEmisionDocSustento>${it.fechaEmisionDocSustento}</fechaEmisionDocSustento>\n"
+                    "        <fechaEmisionDocSustento>${it.fechaEmisionDocSustento}</fechaEmisionDocSustento>\n"
             }
 
 
@@ -476,7 +477,8 @@ class ComprobanteRetencion {
                                                     "estadoSolicitud":"RECIBIDA",
                                                     "claveAccesoConsultada":"${respuestaComprobante?.claveAccesoConsultada}",
                                                     "numeroComprobantes":"${respuestaComprobante?.numeroComprobantes}",
-                                                    "autorizaciones":${autorizacionCompleta}
+                                                    "autorizaciones":${autorizacionCompleta},
+                                                    "claveAcceso": "${resultado.infoTributario.claveAcceso}"
                                                 }
                                             }
                                         """.trimIndent()
@@ -497,6 +499,8 @@ class ComprobanteRetencion {
                                     respuestaSolicitud.comprobantes.comprobante.forEach {
                                         it.mensajes.mensaje.forEachIndexed { index, mensaje ->
                                             if (debug) {
+                                                mensaje.informacionAdicional =
+                                                    if (mensaje.informacionAdicional == null) "ninguno" else mensaje.informacionAdicional
                                                 println(mensaje.tipo)
                                                 println(mensaje.identificador)
                                                 println(mensaje.informacionAdicional)
@@ -532,7 +536,7 @@ class ComprobanteRetencion {
                                 }
                                 return """
                                     {
-                                        "mensaje":"Error convirtiendo archivo a bytes.",
+                                        "mensaje":"Error en respuesta de solicitud. Puede ser error del servidor del SRI intentelo de nuevo. Revise los logs.",
                                         "error": 500
                                     }
                                     """.trimIndent()

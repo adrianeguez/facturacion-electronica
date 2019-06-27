@@ -402,10 +402,13 @@ class Factura {
                                     respuestaSolicitud.comprobantes.comprobante.forEach {
                                         it.mensajes.mensaje.forEachIndexed { index, mensaje ->
                                             if (debug) {
+                                                mensaje.informacionAdicional =
+                                                    if (mensaje.informacionAdicional == null) "ninguno" else mensaje.informacionAdicional
                                                 println(mensaje.tipo)
                                                 println(mensaje.identificador)
                                                 println(mensaje.informacionAdicional)
                                                 println(mensaje.mensaje)
+
                                             }
                                             mensajes += """
                                                 {
@@ -437,7 +440,7 @@ class Factura {
                                 }
                                 return """
                                     {
-                                        "mensaje":"Error convirtiendo archivo a bytes.",
+                                        "mensaje":"Error en respuesta de solicitud. Puede ser error del servidor del SRI intentelo de nuevo. Revise los logs.",
                                         "error": 500
                                     }
                                     """.trimIndent()

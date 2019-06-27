@@ -31,13 +31,21 @@ class AutorizarDocumentos {
                 //cel.sri.gob.ec
                 val url =
                     URL("$host$segmentoURLComprobantesElectronicosRecepcion$queryParamsComprobantesElectronicosRecepcion")
+
+                println("Validar Comprobante")
+                println("$host$segmentoURLComprobantesElectronicosRecepcion$queryParamsComprobantesElectronicosRecepcion")
+
+
                 val qname = QName(namespaceURIRecepcion, localPartRecepcion)
                 val service = RecepcionComprobantesOfflineService(url, qname)
                 val portRec = service.recepcionComprobantesOfflinePort
                 return portRec.validarComprobante(datos)
 
             } catch (ex: Exception) {
+                println("Error validando comprobante")
                 val response = RespuestaSolicitud()
+                println(ex.message)
+                println(ex.toString())
                 response.estado = ex.message
                 return response
             }

@@ -375,6 +375,9 @@ class GuiaRemision {
                                     respuestaSolicitud.comprobantes.comprobante.forEach {
                                         it.mensajes.mensaje.forEachIndexed { index, mensaje ->
                                             if (debug) {
+                                                mensaje.informacionAdicional =
+                                                    if (mensaje.informacionAdicional == null) "ninguno" else mensaje.informacionAdicional
+
                                                 println(mensaje.tipo)
                                                 println(mensaje.identificador)
                                                 println(mensaje.informacionAdicional)
@@ -410,7 +413,7 @@ class GuiaRemision {
                                 }
                                 return """
                                     {
-                                        "mensaje":"Error convirtiendo archivo a bytes.",
+                                        "mensaje":"Error en respuesta de solicitud. Puede ser error del servidor del SRI intentelo de nuevo. Revise los logs.",
                                         "error": 500
                                     }
                                     """.trimIndent()
@@ -521,25 +524,25 @@ class GuiaRemision {
         var dirEstablecimiento = ""
         if (this.infoGuiaRemision.dirEstablecimiento != null) {
             dirEstablecimiento =
-                    "        <dirEstablecimiento>${this.infoGuiaRemision.dirEstablecimiento}</dirEstablecimiento>\n"
+                "        <dirEstablecimiento>${this.infoGuiaRemision.dirEstablecimiento}</dirEstablecimiento>\n"
         }
 
         var rise = ""
         if (this.infoGuiaRemision.rise != null) {
             rise =
-                    "        <rise>${this.infoGuiaRemision.rise}</rise>\n"
+                "        <rise>${this.infoGuiaRemision.rise}</rise>\n"
         }
 
         var obligadoContabilidad = ""
         if (this.infoGuiaRemision.obligadoContabilidad != null) {
             obligadoContabilidad =
-                    "        <obligadoContabilidad>${this.infoGuiaRemision.obligadoContabilidad}</obligadoContabilidad>\n"
+                "        <obligadoContabilidad>${this.infoGuiaRemision.obligadoContabilidad}</obligadoContabilidad>\n"
         }
 
         var contribuyenteEspecial = ""
         if (this.infoGuiaRemision.contribuyenteEspecial != null) {
             contribuyenteEspecial =
-                    "        <contribuyenteEspecial>${this.infoGuiaRemision.contribuyenteEspecial}</contribuyenteEspecial>\n"
+                "        <contribuyenteEspecial>${this.infoGuiaRemision.contribuyenteEspecial}</contribuyenteEspecial>\n"
         }
 
 
@@ -604,7 +607,7 @@ class GuiaRemision {
             var fechaEmisionDocSustento = ""
             if (it.fechaEmisionDocSustento != null) {
                 fechaEmisionDocSustento =
-                        "                <fechaEmisionDocSustento>${it.fechaEmisionDocSustento}</fechaEmisionDocSustento>\n"
+                    "                <fechaEmisionDocSustento>${it.fechaEmisionDocSustento}</fechaEmisionDocSustento>\n"
             }
 
 
