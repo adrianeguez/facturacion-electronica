@@ -295,6 +295,15 @@ class Factura {
                         }
 
                         if (datos != null) {
+
+                            if (resultado.infoTributario.ambiente == "2") {
+                                AutorizarDocumentos.host = "https://cel.sri.gob.ec"
+                            }
+
+                            if (resultado.infoTributario.ambiente == "1") {
+                                AutorizarDocumentos.host = "https://celcer.sri.gob.ec"
+                            }
+
                             val respuestaSolicitud = AutorizarDocumentos.validar(datos)
                             if (debug) {
                                 println("Validando Datos")
@@ -540,19 +549,19 @@ class Factura {
         var obligadoContabilidad = ""
         if (this.infoFactura.obligadoContabilidad != null) {
             obligadoContabilidad =
-                    "        <obligadoContabilidad>${this.infoFactura.obligadoContabilidad}</obligadoContabilidad>\n"
+                "        <obligadoContabilidad>${this.infoFactura.obligadoContabilidad}</obligadoContabilidad>\n"
         }
 
         var contribuyenteEspecial = ""
         if (this.infoFactura.contribuyenteEspecial != null) {
             contribuyenteEspecial =
-                    "        <contribuyenteEspecial>${this.infoFactura.contribuyenteEspecial}</contribuyenteEspecial>\n"
+                "        <contribuyenteEspecial>${this.infoFactura.contribuyenteEspecial}</contribuyenteEspecial>\n"
         }
 
         var direccionEstablecimiento = ""
         if (this.infoFactura.dirEstablecimiento != null) {
             direccionEstablecimiento =
-                    "        <dirEstablecimiento>${this.infoFactura.dirEstablecimiento ?: ""}</dirEstablecimiento>\n"
+                "        <dirEstablecimiento>${this.infoFactura.dirEstablecimiento ?: ""}</dirEstablecimiento>\n"
         }
 
         val informacionFactura = ("<$nombreEtiquetaInformacionFactura>\n"
@@ -592,19 +601,19 @@ class Factura {
             var descuentoAdicional = ""
             if (it.descuentoAdicional != null) {
                 descuentoAdicional =
-                        "                <descuentoAdicional>${it.descuentoAdicional}</descuentoAdicional>\n"
+                    "                <descuentoAdicional>${it.descuentoAdicional}</descuentoAdicional>\n"
             }
 
             var tarifa = ""
             if (it.tarifa != null) {
                 tarifa =
-                        "                <tarifa>${it.tarifa}</tarifa>\n"
+                    "                <tarifa>${it.tarifa}</tarifa>\n"
             }
 
             var valorDevolucionIva = ""
             if (it.valorDevolucionIva != null) {
                 valorDevolucionIva =
-                        "                <valorDevolucionIva>${it.valorDevolucionIva}</valorDevolucionIva>\n"
+                    "                <valorDevolucionIva>${it.valorDevolucionIva}</valorDevolucionIva>\n"
             }
 
             totalImpuestos += ("            <$nombreEtiquetaTotalImpuestos>\n"

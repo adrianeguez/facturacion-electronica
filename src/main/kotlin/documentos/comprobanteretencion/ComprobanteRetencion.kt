@@ -390,6 +390,16 @@ class ComprobanteRetencion {
                         }
 
                         if (datos != null) {
+
+                            if (resultado.infoTributario.ambiente == "2") {
+                                AutorizarDocumentos.host = "https://cel.sri.gob.ec"
+                            }
+
+                            if (resultado.infoTributario.ambiente == "1") {
+                                AutorizarDocumentos.host = "https://celcer.sri.gob.ec"
+                            }
+
+
                             val respuestaSolicitud = AutorizarDocumentos.validar(datos)
                             if (debug) {
                                 println("Validando Datos")
