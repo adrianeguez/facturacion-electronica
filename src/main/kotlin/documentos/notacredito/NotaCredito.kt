@@ -31,7 +31,7 @@ class NotaCredito {
     var standaloneXML = "yes"
     var nombreEtiquetaNotaCredito = "notaCredito"
     var idComprobante = "comprobante" // Codigo Quemado en guía del SRI
-    var versionNotaCreditoXML = "1.0.0" // Codigo Quemado en guía del SRI
+    var versionNotaCreditoXML = "1.1.0" // Codigo Quemado en guía del SRI
     var stringNotaCreditoXML = ""
 
     @NotNull(message = "infoTributario $mensajeNulo")
@@ -76,16 +76,20 @@ class NotaCredito {
         val format = SimpleDateFormat("dd/MM/yyyy")
         val fecha: Date = format.parse(this.infoNotaCredito.fechaEmision)
 
-        this.infoTributario.claveAcceso = GenerarDocumentos.generarClave(
-            fecha,
-            this.infoTributario.codDoc,
-            this.infoTributario.ruc,
-            this.infoTributario.ambiente,
-            (this.infoTributario.estab + this.infoTributario.ptoEmision),
-            this.infoTributario.secuencial,
-            this.codigoNumerico,
-            this.infoTributario.tipoEmision
-        )
+        if (this.infoTributario.claveAcceso == null) {
+            this.infoTributario.claveAcceso = GenerarDocumentos.generarClave(
+                fecha,
+                this.infoTributario.codDoc,
+                this.infoTributario.ruc,
+                this.infoTributario.ambiente,
+                (this.infoTributario.estab + this.infoTributario.ptoEmision),
+                this.infoTributario.secuencial,
+                this.codigoNumerico,
+                this.infoTributario.tipoEmision
+            )
+        } else {
+            this.infoTributario.claveAcceso = infoTributario.claveAcceso
+        }
 
         this.directorioGuardarXML = directorioGuardarXML
         this.directorioGuardarXMLFirmados = directorioGuardarXMLFirmados

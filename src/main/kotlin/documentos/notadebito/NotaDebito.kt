@@ -77,16 +77,23 @@ class NotaDebito {
         val format = SimpleDateFormat("dd/MM/yyyy")
         val fecha: Date = format.parse(this.infoNotaDebito.fechaEmision)
 
-        this.infoTributario.claveAcceso = GenerarDocumentos.generarClave(
-            fecha,
-            this.infoTributario.codDoc,
-            this.infoTributario.ruc,
-            this.infoTributario.ambiente,
-            (this.infoTributario.estab + this.infoTributario.ptoEmision),
-            this.infoTributario.secuencial,
-            this.codigoNumerico,
-            this.infoTributario.tipoEmision
-        )
+
+        if (this.infoTributario.claveAcceso == null) {
+            this.infoTributario.claveAcceso = GenerarDocumentos.generarClave(
+                fecha,
+                this.infoTributario.codDoc,
+                this.infoTributario.ruc,
+                this.infoTributario.ambiente,
+                (this.infoTributario.estab + this.infoTributario.ptoEmision),
+                this.infoTributario.secuencial,
+                this.codigoNumerico,
+                this.infoTributario.tipoEmision
+            )
+        } else {
+            this.infoTributario.claveAcceso = infoTributario.claveAcceso
+        }
+
+
 
         this.directorioGuardarXML = directorioGuardarXML
         this.directorioGuardarXMLFirmados = directorioGuardarXMLFirmados
