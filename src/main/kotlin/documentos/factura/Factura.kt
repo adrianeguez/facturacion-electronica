@@ -6,6 +6,7 @@ import documentos.*
 import documentos.GenerarDocumentos.Companion.generarClave
 import ec.gob.sri.comprobantes.exception.RespuestaAutorizacionException
 import ec.gob.sri.comprobantes.util.ArchivoUtils
+import ec.gob.sri.comprobantes.ws.aut.Autorizacion
 import firma.XAdESBESSignature
 import utils.UtilsFacturacionElectronica
 import utils.mensajeNulo
@@ -17,6 +18,8 @@ import javax.validation.Validation
 import javax.validation.constraints.NotNull
 import kotlin.collections.ArrayList
 import java.io.File
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -327,24 +330,41 @@ class Factura {
                                             println("numeroComprobantes ${respuestaComprobante?.numeroComprobantes}")
                                         }
                                         var autorizaciones = ""
-                                        respuestaComprobante?.autorizaciones?.autorizacion?.forEachIndexed { index, it ->
+                                        respuestaComprobante?.autorizaciones?.autorizacion?.forEachIndexed { index, it: Autorizacion ->
 
                                             if (debug) {
                                                 println("numeroAutorizacion ${it.numeroAutorizacion}")
                                                 println("comprobante ${it.comprobante}")
                                                 println("estado ${it.estado}")
                                                 println("fechaAutorizacion ${it.fechaAutorizacion}")
-                                                println("Mensajes:")
                                             }
                                             val comprobanteString = eliminarCaracteresEspeciales(it.comprobante)
+
+                                            val fechaActual = LocalDateTime.now()
+                                            val formatterFecha = DateTimeFormatter.ISO_LOCAL_DATE
+                                            val fechaString = fechaActual.format(formatterFecha)
+                                            val formatterHoraMinutoSegundo = DateTimeFormatter.ISO_TIME
+                                            val horaMinutoSegundoString = fechaActual.format(formatterHoraMinutoSegundo)
+
+
+                                            val xmlCompleto = """
+                                            ${eliminarCaracteresEspeciales(("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"))}
+                                            <autorizacion>
+                                              <estado>${it.estado}</estado>
+                                              <numeroAutorizacion>${it.numeroAutorizacion}</numeroAutorizacion>
+                                              <fechaAutorizacion class=\"fechaAutorizacion\">${fechaString} ${horaMinutoSegundoString}</fechaAutorizacion>
+                                              <comprobante>${comprobanteString}</comprobante>
+                                              <mensajes/>
+                                            </autorizacion>
+                                            """.trimIndent()
                                             var autorizacion = """
                                                 {
                                                     "numeroAutorizacion" : "${it.numeroAutorizacion}",
                                                     "comprobante" : "${comprobanteString}",
                                                     "estado" : "${it.estado}",
                                                     "fechaAutorizacion" : "${it.fechaAutorizacion}",
+                                                    "xmlCompleto": "${eliminarEspacios(xmlCompleto)}",
                                             """.trimIndent()
-
 
                                             var mensajeString = ""
                                             it.mensajes.mensaje.forEachIndexed { indiceMensaje, mensaje ->
@@ -412,12 +432,32 @@ class Factura {
                                                 println(mensaje.mensaje)
 
                                             }
+
+                                            val fechaActual = LocalDateTime.now()
+                                            val formatterFecha = DateTimeFormatter.ISO_LOCAL_DATE
+                                            val fechaString = fechaActual.format(formatterFecha)
+                                            val formatterHoraMinutoSegundo = DateTimeFormatter.ISO_TIME
+                                            val horaMinutoSegundoString = fechaActual.format(formatterHoraMinutoSegundo)
+                                            var xmlCompleto = ""
+                                            if(mensaje.identificador == "45" || mensaje.identificador == "43"){
+                                                xmlCompleto = """
+                                           ,"xmlCompleto": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+                                            <autorizacion>
+                                              <estado>AUTORIZADO</estado>
+                                              <numeroAutorizacion>${resultado.infoTributario.claveAcceso}</numeroAutorizacion>
+                                              <fechaAutorizacion class=\"fechaAutorizacion\">${fechaString} ${horaMinutoSegundoString}</fechaAutorizacion>
+                                              <comprobante>${eliminarCaracteresEspeciales(File(directorioYNombreArchivoXMLFirmado).readText())}</comprobante>
+                                              <mensajes/>
+                                            </autorizacion>"
+                                            """.trimIndent()
+                                            }
+
                                             mensajes += """
                                                 {
                                                     "tipo":"${mensaje.tipo}",
                                                     "identificador":"${mensaje.identificador}",
                                                     "informacionAdicional":"${eliminarCaracteresEspeciales(mensaje.informacionAdicional)}",
-                                                    "mensaje":"${eliminarCaracteresEspeciales(mensaje.mensaje)}"
+                                                    "mensaje":"${eliminarCaracteresEspeciales(mensaje.mensaje)}${eliminarEspacios(xmlCompleto)}
                                                 }${if (index != (it.mensajes.mensaje.size - 1)) "," else ""}
                                             """.trimIndent()
 
@@ -769,7 +809,14 @@ class Factura {
     }
 
     private fun eliminarCaracteresEspeciales(texto: String): String {
-        return texto.replace("\"", "\\\"").replace("\n", "")
+        return texto
+            .replace("\"", "\\\"").replace("\n", "")
+            .replace("\r", "")
+    }
+
+    private fun eliminarEspacios(texto: String): String {
+        return texto
+            .replace("\n", "")
             .replace("\r", "")
     }
 

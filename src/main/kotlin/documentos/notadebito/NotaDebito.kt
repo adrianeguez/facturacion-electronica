@@ -13,11 +13,18 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.logging.Level
 import java.util.logging.Logger
+import javax.management.relation.RelationSupport
 import javax.validation.Validation
 import javax.validation.constraints.NotNull
+import jdk.nashorn.internal.objects.NativeDate.getTime
+import java.util.GregorianCalendar
+
+
 
 class NotaDebito {
 
@@ -325,13 +332,29 @@ class NotaDebito {
                                                 println("fechaAutorizacion ${it.fechaAutorizacion}")
                                                 println("Mensajes:")
                                             }
+                                            val fechaActual = LocalDateTime.now()
+                                            val formatterFecha = DateTimeFormatter.ISO_LOCAL_DATE
+                                            var fechaString = fechaActual.format(formatterFecha)
+                                            val formatterHoraMinutoSegundo = DateTimeFormatter.ISO_TIME
+                                            var horaMinutoSegundoString = fechaActual.format(formatterHoraMinutoSegundo)
                                             val comprobanteString = eliminarCaracteresEspeciales(it.comprobante)
+                                            val xmlCompleto = """
+                                            <?xml version=\"1.0\" encoding=\"UTF-8\"?>
+                                            <autorizacion>
+                                              <estado>${it.estado}</estado>
+                                              <numeroAutorizacion>${it.numeroAutorizacion}</numeroAutorizacion>
+                                              <fechaAutorizacion class=\"fechaAutorizacion\">${fechaString} ${horaMinutoSegundoString}</fechaAutorizacion>
+                                              <comprobante>${comprobanteString}</comprobante>
+                                              <mensajes/>
+                                            </autorizacion>
+                                            """.trimIndent()
                                             var autorizacion = """
                                                 {
                                                     "numeroAutorizacion" : "${it.numeroAutorizacion}",
                                                     "comprobante" : "${comprobanteString}",
                                                     "estado" : "${it.estado}",
                                                     "fechaAutorizacion" : "${it.fechaAutorizacion}",
+                                                    "xmlCompleto": "${eliminarEspacios(xmlCompleto)}",
                                             """.trimIndent()
 
 
@@ -388,6 +411,7 @@ class NotaDebito {
                                                 """
                                     }
                                 } else {
+
                                     var mensajesRespuestaSolicitudNoRecibida = "["
                                     respuestaSolicitud.comprobantes.comprobante.forEach {
                                         it.mensajes.mensaje.forEachIndexed { index, mensaje ->
@@ -399,17 +423,46 @@ class NotaDebito {
                                                 println(mensaje.informacionAdicional)
                                                 println(mensaje.mensaje)
                                             }
+                                            val fechaActual = LocalDateTime.now()
+                                            val formatterFecha = DateTimeFormatter.ISO_LOCAL_DATE
+                                            val fechaString = fechaActual.format(formatterFecha)
+                                            val formatterHoraMinutoSegundo = DateTimeFormatter.ISO_TIME
+                                            val horaMinutoSegundoString = fechaActual.format(formatterHoraMinutoSegundo)
+                                            var xmlCompleto = ""
+                                            if (mensaje.identificador == "45" || mensaje.identificador == "43") {
+                                                xmlCompleto = """
+                                           ,"xmlCompleto": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+                                            <autorizacion>
+                                              <estado>AUTORIZADO</estado>
+                                              <numeroAutorizacion>${resultado.infoTributario.claveAcceso}</numeroAutorizacion>
+                                              <fechaAutorizacion class=\"fechaAutorizacion\">${fechaString} ${horaMinutoSegundoString}</fechaAutorizacion>
+                                              <comprobante>${eliminarCaracteresEspeciales(
+                                                    File(
+                                                        directorioYNombreArchivoXMLFirmado
+                                                    ).readText()
+                                                )}</comprobante>
+                                              <mensajes/>
+                                            </autorizacion>"
+                                            """.trimIndent()
+                                            }
                                             mensajesRespuestaSolicitudNoRecibida += """
                                                 {
                                                     "tipo":"${mensaje.tipo}",
                                                     "identificador":"${mensaje.identificador}",
                                                     "informacionAdicional":"${eliminarCaracteresEspeciales(mensaje.informacionAdicional)}",
-                                                    "mensaje":"${mensaje.mensaje}"
+                                                    "mensaje":"${mensaje.mensaje}"${eliminarEspacios(xmlCompleto)}
                                                 }${if (index != (it.mensajes.mensaje.size - 1)) "," else ""}
                                             """.trimIndent()
 
                                         }
                                     }
+
+                                    var pattern = "yyyy-MM-dd'T'HH:mm:ssZ"
+
+
+                                    val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZ")
+                                    val dateString = sdf.format("2019-10-05T11:48:42-05:00")
+
                                     mensajesRespuestaSolicitudNoRecibida += "]"
                                     return """
                                         {
@@ -678,7 +731,14 @@ class NotaDebito {
     }
 
     private fun eliminarCaracteresEspeciales(texto: String): String {
-        return texto.replace("\"", "\\\"").replace("\n", "")
+        return texto
+            .replace("\"", "\\\"").replace("\n", "")
+            .replace("\r", "")
+    }
+
+    private fun eliminarEspacios(texto: String): String {
+        return texto
+            .replace("\n", "")
             .replace("\r", "")
     }
 

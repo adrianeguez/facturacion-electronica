@@ -13,6 +13,8 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -313,14 +315,32 @@ class GuiaRemision {
                                                 println("Mensajes:")
                                             }
                                             val comprobanteString = eliminarCaracteresEspeciales(it.comprobante)
+
+                                            val fechaActual = LocalDateTime.now()
+                                            val formatterFecha = DateTimeFormatter.ISO_LOCAL_DATE
+                                            val fechaString = fechaActual.format(formatterFecha)
+                                            val formatterHoraMinutoSegundo = DateTimeFormatter.ISO_TIME
+                                            val horaMinutoSegundoString = fechaActual.format(formatterHoraMinutoSegundo)
+
+
+                                            val xmlCompleto = """
+                                            <?xml version=\"1.0\" encoding=\"UTF-8\"?>
+                                            <autorizacion>
+                                              <estado>${it.estado}</estado>
+                                              <numeroAutorizacion>${it.numeroAutorizacion}</numeroAutorizacion>
+                                              <fechaAutorizacion class=\"fechaAutorizacion\">${fechaString} ${horaMinutoSegundoString}</fechaAutorizacion>
+                                              <comprobante>${comprobanteString}</comprobante>
+                                              <mensajes/>
+                                            </autorizacion>
+                                            """.trimIndent()
                                             var autorizacion = """
                                                 {
                                                     "numeroAutorizacion" : "${it.numeroAutorizacion}",
                                                     "comprobante" : "${comprobanteString}",
                                                     "estado" : "${it.estado}",
                                                     "fechaAutorizacion" : "${it.fechaAutorizacion}",
+                                                    "xmlCompleto": "${eliminarEspacios(xmlCompleto)}",
                                             """.trimIndent()
-
 
                                             var mensajeString = ""
                                             it.mensajes.mensaje.forEachIndexed { indiceMensaje, mensaje ->
@@ -387,12 +407,31 @@ class GuiaRemision {
                                                 println(mensaje.informacionAdicional)
                                                 println(mensaje.mensaje)
                                             }
+
+                                            val fechaActual = LocalDateTime.now()
+                                            val formatterFecha = DateTimeFormatter.ISO_LOCAL_DATE
+                                            val fechaString = fechaActual.format(formatterFecha)
+                                            val formatterHoraMinutoSegundo = DateTimeFormatter.ISO_TIME
+                                            val horaMinutoSegundoString = fechaActual.format(formatterHoraMinutoSegundo)
+                                            var xmlCompleto = ""
+                                            if(mensaje.identificador == "45" || mensaje.identificador == "43"){
+                                                xmlCompleto = """
+                                           ,"xmlCompleto": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+                                            <autorizacion>
+                                              <estado>AUTORIZADO</estado>
+                                              <numeroAutorizacion>${resultado.infoTributario.claveAcceso}</numeroAutorizacion>
+                                              <fechaAutorizacion class=\"fechaAutorizacion\">${fechaString} ${horaMinutoSegundoString}</fechaAutorizacion>
+                                              <comprobante>${eliminarCaracteresEspeciales(File(directorioYNombreArchivoXMLFirmado).readText())}</comprobante>
+                                              <mensajes/>
+                                            </autorizacion>"
+                                            """.trimIndent()
+                                            }
                                             mensajes += """
                                                 {
                                                     "tipo":"${mensaje.tipo}",
                                                     "identificador":"${mensaje.identificador}",
                                                     "informacionAdicional":"${eliminarCaracteresEspeciales(mensaje.informacionAdicional)}",
-                                                    "mensaje":"${eliminarCaracteresEspeciales(mensaje.mensaje)}"
+                                                    "mensaje":"${eliminarCaracteresEspeciales(mensaje.mensaje)}"${eliminarEspacios(xmlCompleto)}
                                                 }${if (index != (it.mensajes.mensaje.size - 1)) "," else ""}
                                             """.trimIndent()
 
@@ -708,7 +747,14 @@ class GuiaRemision {
     }
 
     private fun eliminarCaracteresEspeciales(texto: String): String {
-        return texto.replace("\"", "\\\"").replace("\n", "")
+        return texto
+            .replace("\"", "\\\"").replace("\n", "")
+            .replace("\r", "")
+    }
+
+    private fun eliminarEspacios(texto: String): String {
+        return texto
+            .replace("\n", "")
             .replace("\r", "")
     }
 
