@@ -420,10 +420,16 @@ class Factura {
                                                 """
                                     }
                                 } else {
+                                    if (debug) {
+                                        println("Existen ${respuestaSolicitud.comprobantes.comprobante.size} comprobantes")
+                                    }
+
+
                                     var mensajes = ""
                                     respuestaSolicitud.comprobantes.comprobante.forEach {
                                         it.mensajes.mensaje.forEachIndexed { index, mensaje ->
                                             if (debug) {
+                                                println("Imprimiendo los mensajes")
                                                 mensaje.informacionAdicional =
                                                     if (mensaje.informacionAdicional == null) "ninguno" else mensaje.informacionAdicional
                                                 println(mensaje.tipo)
