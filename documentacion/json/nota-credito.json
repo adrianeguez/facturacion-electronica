@@ -1,10 +1,10 @@
 {
-  "directorioGuardarXML":"${directorioGuardarXML}",
-  "directorioGuardarXMLFirmados":"${directorioGuardarXMLFirmados}",
-  "nombreArchivoXML":"${nombreArchivoXML}",
-  "nombreArchivoXMLFirmado":"${nombreArchivoXMLFirmado}",
-  "clave":"${clave}",
-  "directorioYNombreArchivoRegistroCivilP12":"${directorioYNombreArchivoRegistroCivilP12}",
+  "directorioGuardarXML": "${directorioGuardarXML}",
+  "directorioGuardarXMLFirmados": "${directorioGuardarXMLFirmados}",
+  "nombreArchivoXML": "${nombreArchivoXML}",
+  "nombreArchivoXMLFirmado": "${nombreArchivoXMLFirmado}",
+  "clave": "${clave}",
+  "directorioYNombreArchivoRegistroCivilP12": "${directorioYNombreArchivoRegistroCivilP12}",
   "debug": true,
   "infoTributario": {
     "ambiente": "1",
@@ -25,50 +25,49 @@
     "tipoIdentificacionComprador": "04",
     "razonSocialComprador": "BAZAR Y PAPELERIA MEXICO",
     "identificacionComprador": "1800095612001",
-    "contribuyenteEspecial":"5368",
+    "contribuyenteEspecial": "5368",
     "obligadoContabilidad": "SI",
-    "rise":"Contribuyente Régimen Simplificado RISE",
+    "rise": "Contribuyente Régimen Simplificado RISE",
     "codDocModificado": "01",
     "numDocModificado": "001-020-000000007",
     "fechaEmisionDocSustento": "14/02/2019",
     "totalSinImpuestos": "161.79",
     "valorModificacion": "181.20",
     "moneda": "DOLAR",
-    "totalConImpuesto":[
+    "totalConImpuesto": [
       {
-        "codigo":"2",
-        "codigoPorcentaje":"2",
-        "descuentoAdicional":null,
-        "baseImponible":"161.79",
-        "valor":"19.41",
-        "tarifa":null,
-        "valorDevolucionIva":null
+        "codigo": "2",
+        "codigoPorcentaje": "2",
+        "descuentoAdicional": null,
+        "baseImponible": "161.79",
+        "valor": "19.41",
+        "tarifa": null,
+        "valorDevolucionIva": null
       }
     ],
-    "motivo":"CLIENTE - NO HAY QUIEN RECIBA"
+    "motivo": "CLIENTE - NO HAY QUIEN RECIBA"
   },
   "detalles": [
     {
-      "codigoInterno": "0152002",
-      "codigoAdicional": "7450008864655",
-      "codigoPrincipal": null,
-      "codigoAuxiliar": null,
+      "codigoPrincipal": "0152002",
+      "codigoAuxiliar": "7450008864655",
       "descripcion": "ASILICON BARRA MERLETTO 11.2X27 FUNDA/30 UNID",
       "cantidad": "8.00",
-      "precioUnitario":"7.75",
+      "unidadMedida": null,
+      "precioUnitario": "7.75",
       "descuento": "10.46",
       "precioTotalSinImpuesto": "51.54",
       "detallesAdicionales": null,
       "impuestos": [
         {
-          "codigo":"2",
-          "codigoPorcentaje":"2",
-          "tarifa":"12.00",
-          "baseImponible":"51.54",
-          "valor":"6.18"
+          "codigo": "2",
+          "codigoPorcentaje": "2",
+          "tarifa": "12.00",
+          "baseImponible": "51.54",
+          "valor": "6.18"
         }
       ]
     }
   ],
-  "infoAdicional":null
+  "infoAdicional": null
 }

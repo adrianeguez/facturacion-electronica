@@ -51,6 +51,12 @@ class LiquidacionBienesServicios {
         return Optional.of(maquinaFiscal!!)
     }
 
+    var reembolsos: ArrayList<ReembolsoDetalle>?
+
+    fun getReembolsos(): Optional<ArrayList<ReembolsoDetalle>> {
+        return Optional.of(reembolsos!!)
+    }
+
 
     @NotNull(message = "detalles $mensajeNulo")
     var detalles: ArrayList<Detalle>
@@ -69,6 +75,7 @@ class LiquidacionBienesServicios {
         infoTributario: InformacionTributaria,
         infoLiquidacionCompra: InfoLiquidacionCompra,
         detalles: ArrayList<Detalle>,
+        reembolsos: ArrayList<ReembolsoDetalle>?,
         maquinaFiscal: MaquinaFiscal?,
         infoAdicional: ArrayList<CampoAdicional>?,
         directorioGuardarXML: String,
@@ -84,6 +91,7 @@ class LiquidacionBienesServicios {
         this.infoTributario = infoTributario
         this.infoLiquidacionCompra = infoLiquidacionCompra
         this.detalles = detalles
+        this.reembolsos = reembolsos
         this.maquinaFiscal = maquinaFiscal
         this.infoAdicional = infoAdicional
         val format = SimpleDateFormat("dd/MM/yyyy")
@@ -130,6 +138,25 @@ class LiquidacionBienesServicios {
 
         for (violation in violationsInformacionFactura) {
             errores.add(violation.message)
+        }
+
+        if (this.reembolsos != null) {
+            this.reembolsos?.forEach {
+
+                val violationsReembolsos = validator.validate(it)
+
+                for (violation in violationsReembolsos) {
+                    errores.add(violation.message)
+                }
+                it.detalleImpuestos?.forEach { detalleImpuesto ->
+
+                    val violationsDetalleImpuesto = validator.validate(detalleImpuesto)
+
+                    for (violation in violationsDetalleImpuesto) {
+                        errores.add(violation.message)
+                    }
+                }
+            }
         }
 
         if (this.maquinaFiscal != null) {
@@ -595,6 +622,7 @@ class LiquidacionBienesServicios {
         val contenidoFactura = generarInformacionTributaria() +
                 generarInformacionLiquidacionCompra() +
                 generarDetalles() +
+                generarReembolsos(this.reembolsos) +
                 generarMaquinaFiscal(this.maquinaFiscal) +
                 generarInformacionAdicional()
 
@@ -865,6 +893,136 @@ class LiquidacionBienesServicios {
             totalDetalle += ("            <detAdicional nombre=\"${it.nombre}\" valor=\"${it.valor}\"/>\n")
         }
         return totalDetalle
+    }
+
+
+
+    private fun generarReembolsos(reembolsos: ArrayList<ReembolsoDetalle>?): String {
+        val nombreEtiqueta = "reembolsos"
+        var reembolsosString = ""
+        if(reembolsos != null){
+            reembolsosString = ("        <$nombreEtiqueta>\n"
+                    + generarReembolso(reembolsos)
+                    + "         </$nombreEtiqueta>\n")
+        }
+        return reembolsosString
+    }
+
+
+    private fun generarReembolso(reembolsos: ArrayList<ReembolsoDetalle>): String {
+        val nombreEtiqueta = "reembolsoDetalle"
+        var reembolsoString = ""
+        reembolsos.forEach {
+
+            var tipoIdentificacionProveedorReembolso = ""
+            if (it.tipoIdentificacionProveedorReembolso != null) {
+                tipoIdentificacionProveedorReembolso = "         <tipoIdentificacionProveedorReembolso>${it.tipoIdentificacionProveedorReembolso ?: ""}</tipoIdentificacionProveedorReembolso>\n"
+            }
+            var identificacionProveedor = ""
+            if (it.identificacionProveedor != null) {
+                identificacionProveedor = "         <identificacionProveedor>${it.identificacionProveedor ?: ""}</identificacionProveedor>\n"
+            }
+            var tipoProveedorReembolso = ""
+            if (it.tipoProveedorReembolso != null) {
+                tipoProveedorReembolso = "         <tipoProveedorReembolso>${it.tipoProveedorReembolso ?: ""}</tipoProveedorReembolso>\n"
+            }
+            var codPaisPagoProveedorReembolso = ""
+            if (it.codPaisPagoProveedorReembolso != null) {
+                codPaisPagoProveedorReembolso = "         <codPaisPagoProveedorReembolso>${it.codPaisPagoProveedorReembolso ?: ""}</codPaisPagoProveedorReembolso>\n"
+            }
+            var codDocReembolso = ""
+            if (it.codDocReembolso != null) {
+                codDocReembolso = "         <codDocReembolso>${it.codDocReembolso ?: ""}</codDocReembolso>\n"
+            }
+            var estabDocReembolso = ""
+            if (it.estabDocReembolso != null) {
+                estabDocReembolso = "         <estabDocReembolso>${it.estabDocReembolso ?: ""}</estabDocReembolso>\n"
+            }
+            var ptoEmiDocReembolso = ""
+            if (it.ptoEmiDocReembolso != null) {
+                ptoEmiDocReembolso = "         <ptoEmiDocReembolso>${it.ptoEmiDocReembolso ?: ""}</ptoEmiDocReembolso>\n"
+            }
+            var secuencialDocReembolso = ""
+            if (it.secuencialDocReembolso != null) {
+                secuencialDocReembolso = "         <secuencialDocReembolso>${it.secuencialDocReembolso ?: ""}</secuencialDocReembolso>\n"
+            }
+            var fechaEmisionDocReembolso = ""
+            if (it.fechaEmisionDocReembolso != null) {
+                fechaEmisionDocReembolso = "         <fechaEmisionDocReembolso>${it.fechaEmisionDocReembolso ?: ""}</fechaEmisionDocReembolso>\n"
+            }
+            var numeroautorizacionDocReemb = ""
+            if (it.numeroautorizacionDocReemb != null) {
+                numeroautorizacionDocReemb = "         <numeroautorizacionDocReemb>${it.numeroautorizacionDocReemb ?: ""}</numeroautorizacionDocReemb>\n"
+            }
+
+
+            reembolsoString += ("            <$nombreEtiqueta>\n"
+                    + tipoIdentificacionProveedorReembolso
+                    + identificacionProveedor
+                    + tipoProveedorReembolso
+                    + codPaisPagoProveedorReembolso
+                    + codDocReembolso
+                    + estabDocReembolso
+                    + ptoEmiDocReembolso
+                    + secuencialDocReembolso
+                    + fechaEmisionDocReembolso
+                    + numeroautorizacionDocReemb
+                    + generarDetallesImpuestosReembolso(it.detalleImpuestos)
+                    + "             </$nombreEtiqueta>\n")
+        }
+        return reembolsoString
+    }
+
+
+
+    private fun generarDetallesImpuestosReembolso(detalleImpuestos: ArrayList<ImpuestoReembolso>?): String {
+        val nombreEtiqueta = "detalleImpuestos"
+        var reembolsosString = ""
+        if(detalleImpuestos != null){
+            reembolsosString = ("        <$nombreEtiqueta>\n"
+                    + generarDetalleImpuestoReembolso(detalleImpuestos)
+                    + "         </$nombreEtiqueta>\n")
+        }
+        return reembolsosString
+    }
+
+
+    private fun generarDetalleImpuestoReembolso(reembolsos: ArrayList<ImpuestoReembolso>): String {
+        val nombreEtiqueta = "detalleImpuesto"
+        var reembolsoString = ""
+        reembolsos.forEach {
+
+            var codigo = ""
+            if (it.codigo != null) {
+                codigo = "         <codigo>${it.codigo ?: ""}</codigo>\n"
+            }
+            var codigoPorcentaje = ""
+            if (it.codigoPorcentaje != null) {
+                codigoPorcentaje = "         <codigoPorcentaje>${it.codigoPorcentaje ?: ""}</codigoPorcentaje>\n"
+            }
+            var baseImponibleReembolso = ""
+            if (it.baseImponibleReembolso != null) {
+                baseImponibleReembolso = "         <baseImponibleReembolso>${it.baseImponibleReembolso ?: ""}</baseImponibleReembolso>\n"
+            }
+            var tarifa = ""
+            if (it.tarifa != null) {
+                tarifa = "         <tarifa>${it.tarifa ?: ""}</tarifa>\n"
+            }
+            var impuestoReembolso = ""
+            if (it.impuestoReembolso != null) {
+                impuestoReembolso = "         <impuestoReembolso>${it.impuestoReembolso ?: ""}</impuestoReembolso>\n"
+            }
+
+
+            reembolsoString += ("            <$nombreEtiqueta>\n"
+                    + codigo
+                    + codigoPorcentaje
+                    + baseImponibleReembolso
+                    + tarifa
+                    + impuestoReembolso
+                    + "             </$nombreEtiqueta>\n")
+        }
+        return reembolsoString
     }
 
     private fun generarImpuestos(totalImpuestos: ArrayList<Impuesto>): String {

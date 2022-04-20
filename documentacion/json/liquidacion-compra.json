@@ -19,18 +19,21 @@
     "secuencial": "000000016",
     "dirMatriz": "PICHINCHA / QUITO / QUITO/ LLANO CHICO"
   },
-  "infoFactura": {
+  "infoLiquidacionCompra": {
     "fechaEmision": "13/02/2019",
     "dirEstablecimiento": "PICHINCHA / CAYAMBE / CAYAMBE / ROCAFUERTE N0-45 Y LIBERTAD",
     "contribuyenteEspecial": "0047",
     "obligadoContabilidad": "SI",
-    "tipoIdentificacionComprador": "04",
-    "guiaRemision": null,
-    "razonSocialComprador": "BAZAR Y PAPELERIA MEXICO",
-    "identificacionComprador": "1800095612001",
-    "direccionComprador": "CHAMBO 1067 Y GUAYLLABAMBA",
+    "tipoIdentificacionProveedor": "04",
+    "razonSocialProveedor": "BAZAR Y PAPELERIA MEXICO",
+    "identificacionProveedor": "1800095612001",
+    "direccionProveedor": null,
     "totalSinImpuestos": "161.79",
     "totalDescuento": "20.48",
+    "codDocReembolso":  null,
+    "totalComprobantesReembolso":  null,
+    "totalBaseImponibleReembolso":  null,
+    "totalImpuestoReembolso":  null,
     "totalConImpuestos": [
       {
         "codigo": "2",
@@ -42,7 +45,6 @@
         "valorDevolucionIva": null
       }
     ],
-    "propina": "0.00",
     "importeTotal": "181.20",
     "moneda": "DOLAR",
     "pagos": [
@@ -52,9 +54,7 @@
         "plazo": "30.00",
         "unidadTiempo": "dias"
       }
-    ],
-    "valorRetIva": "0.00",
-    "valorRetRenta": "0.00"
+    ]
   },
   "detalles": [
     {
@@ -97,6 +97,34 @@
       ]
     }
   ],
+  "reembolsos": [
+    {
+      "tipoIdentificacionProveedorReembolso": "04",
+      "identificacionProveedor": "1718137159",
+      "tipoProveedorReembolso": "01",
+      "codPaisPagoProveedorReembolso": "593",
+      "codDocReembolso": "2",
+      "estabDocReembolso": "001",
+      "ptoEmiDocReembolso": "001",
+      "secuencialDocReembolso": "000000001",
+      "fechaEmisionDocReembolso": "13/02/2019",
+      "numeroautorizacionDocReemb": "1231231234",
+      "detalleImpuestos": [
+        {
+          "codigo": "2",
+          "codigoPorcentaje": "2",
+          "tarifa": "12.00",
+          "baseImponibleReembolso": "51.54",
+          "impuestoReembolso": "6.18"
+        }
+      ]
+    }
+  ],
+  "maquinaFiscal": {
+    "marca": "SISPAU",
+    "modelo": "ABC123",
+    "serie": "CGMC1405"
+  },
   "infoAdicional": [
     {
       "nombre": "DIRECCION",
