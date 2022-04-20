@@ -34,6 +34,16 @@ open class Detalle {
     @Size(min = 1, max = 300, message = "descripcion $mensajeValores de 1 a 300 caracteres")
     var descripcion: String
 
+
+
+    @NotEmpty(message = "unidadMedida $mensajeVacio")
+    @Size(min = 1, max = 50, message = "unidadMedida $mensajeValores de 1 a 25 caracteres")
+    var unidadMedida: String?
+
+    fun getUnidadMedida(): Optional<String> {
+        return Optional.of(unidadMedida!!)
+    }
+
     @NotNull(message = "cantidad $mensajeNulo")
     @Pattern(
         regexp = expresionRegularMoneda,
@@ -71,6 +81,7 @@ open class Detalle {
         codigoPrincipal: String?,
         codigoAuxiliar: String?,
         descripcion: String,
+        unidadMedida: String,
         cantidad: String,
         precioUnitario: String,
         descuento: String,
@@ -83,6 +94,7 @@ open class Detalle {
         this.codigoAuxiliar =
                 if (codigoAuxiliar == null) null else GenerarDocumentos.removerCaracteresEspeciales(codigoAuxiliar)
         this.descripcion = GenerarDocumentos.removerCaracteresEspeciales(descripcion)
+        this.unidadMedida = GenerarDocumentos.removerCaracteresEspeciales(unidadMedida)
         this.cantidad = cantidad
         this.precioUnitario = precioUnitario
         this.descuento = descuento
