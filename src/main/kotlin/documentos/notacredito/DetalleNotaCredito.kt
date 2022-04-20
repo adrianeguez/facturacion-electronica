@@ -2,6 +2,7 @@ package documentos.notacredito
 
 import documentos.Detalle
 import documentos.DetalleAdicional
+import documentos.GenerarDocumentos
 import documentos.Impuesto
 import utils.mensajeVacio
 import utils.mensajeValores
@@ -10,30 +11,11 @@ import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.Size
 
 class DetalleNotaCredito : Detalle {
-
-    @NotEmpty(message = "codigoInterno $mensajeVacio")
-    @Size(min = 1, max = 25, message = "codigoInterno $mensajeValores de 1 a 25 caracteres")
-    var codigoInterno: String?
-
-    fun getCodigoInterno(): Optional<String> {
-        return Optional.of(codigoInterno!!)
-    }
-
-    @NotEmpty(message = "codigoAdicional $mensajeVacio")
-    @Size(min = 1, max = 25, message = "codigoAdicional $mensajeValores de 1 a 25 caracteres")
-    var codigoAdicional: String?
-
-    fun getCodigoAdicional(): Optional<String> {
-        return Optional.of(codigoAdicional!!)
-    }
-
-
     constructor(
-        codigoInterno: String?,
-        codigoAdicional: String?,
-        codigoPrincipal: String? = null,
-        codigoAuxiliar: String? = null,
+        codigoPrincipal: String?,
+        codigoAuxiliar: String?,
         descripcion: String,
+        unidadMedida: String,
         cantidad: String,
         precioUnitario: String,
         descuento: String,
@@ -44,6 +26,7 @@ class DetalleNotaCredito : Detalle {
         codigoPrincipal,
         codigoAuxiliar,
         descripcion,
+        unidadMedida,
         cantidad,
         precioUnitario,
         descuento,
@@ -51,7 +34,6 @@ class DetalleNotaCredito : Detalle {
         detallesAdicionales,
         impuestos
     ) {
-        this.codigoInterno = codigoInterno
-        this.codigoAdicional = codigoAdicional
+
     }
 }

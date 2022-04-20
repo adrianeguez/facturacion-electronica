@@ -696,13 +696,13 @@ class NotaCredito {
         detalles.forEach {
 
             var codigoInterno = ""
-            if (it.codigoInterno != null) {
-                codigoInterno = "                <codigoInterno>${it.codigoInterno}</codigoInterno>\n"
+            if (it.codigoPrincipal != null) {
+                codigoInterno = "                <codigoInterno>${it.codigoPrincipal}</codigoInterno>\n"
             }
 
             var codigoAdicional = ""
-            if (it.codigoAdicional != null) {
-                codigoAdicional = "                <codigoAdicional>${it.codigoAdicional}</codigoAdicional>\n"
+            if (it.codigoAuxiliar != null) {
+                codigoAdicional = "                <codigoAdicional>${it.codigoAuxiliar}</codigoAdicional>\n"
             }
             var detallesAdicionales = ""
             if (it.detallesAdicionales != null) {
