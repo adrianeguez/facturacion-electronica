@@ -56,13 +56,20 @@ class InformacionComprobanteRetencion {
         flags = [Pattern.Flag.CASE_INSENSITIVE],
         message = "tipoIdentificacionComprador $mensajeValores de 04|05|06|07|08|09"
     )
-    var tipoIdentificacionSujetoRetenido: String
+    var tipoIdentificacionSujetoRetenido: String?
+
+    fun getTipoIdentificacionSujetoRetenido(): Optional<String> {
+        return Optional.of(tipoIdentificacionSujetoRetenido!!)
+    }
 
 
-    @NotNull(message = "razonSocialSujetoRetenido $mensajeNulo")
-    @NotEmpty(message = "razonSocialSujetoRetenido $mensajeVacio")
     @Size(min = 1, max = 300, message = "razonSocialSujetoRetenido $mensajeValores de 1 a 300 caracteres")
-    var razonSocialSujetoRetenido: String
+    var razonSocialSujetoRetenido: String?
+
+    fun getRazonSocialSujetoRetenido(): Optional<String> {
+        return Optional.of(razonSocialSujetoRetenido!!)
+    }
+
 
     @NotEmpty(message = "identificacionSujetoRetenido $mensajeVacio")
     @Size(min = 1, max = 20, message = "identificacionSujetoRetenido $mensajeValores de 1 a 20 caracteres")
@@ -76,13 +83,28 @@ class InformacionComprobanteRetencion {
     )
     var periodoFiscal: String
 
+    var tipoSujetoRetenido: String?
+
+    fun getTipoSujetoRetenido(): Optional<String> {
+        return Optional.of(tipoSujetoRetenido!!)
+    }
+
+
+    var parteRel: String?
+
+    fun getParteRel(): Optional<String> {
+        return Optional.of(parteRel!!)
+    }
+
     constructor(
         fechaEmision: String,
         dirEstablecimiento: String?,
         contribuyenteEspecial: String?,
         obligadoContabilidad: String?,
-        tipoIdentificacionSujetoRetenido: String,
-        razonSocialSujetoRetenido: String,
+        tipoIdentificacionSujetoRetenido: String?,
+        tipoSujetoRetenido: String?,
+        parteRel: String?,
+        razonSocialSujetoRetenido: String?,
         identificacionSujetoRetenido: String,
         periodoFiscal: String
     ) {
@@ -95,8 +117,11 @@ class InformacionComprobanteRetencion {
             )
         this.obligadoContabilidad = obligadoContabilidad
         this.tipoIdentificacionSujetoRetenido = tipoIdentificacionSujetoRetenido
-        this.razonSocialSujetoRetenido = GenerarDocumentos.removerCaracteresEspeciales(razonSocialSujetoRetenido)
+        this.razonSocialSujetoRetenido = if(razonSocialSujetoRetenido != null)
+            GenerarDocumentos.removerCaracteresEspeciales(razonSocialSujetoRetenido) else null
         this.identificacionSujetoRetenido = identificacionSujetoRetenido
         this.periodoFiscal = periodoFiscal
+        this.tipoSujetoRetenido = tipoSujetoRetenido
+        this.parteRel = parteRel
     }
 }
