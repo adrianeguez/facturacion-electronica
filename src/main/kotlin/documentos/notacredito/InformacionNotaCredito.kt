@@ -26,27 +26,29 @@ class InformacionNotaCredito(
 
 
     init {
-        fun getDirEstablecimiento(): Optional<String> {
-            return Optional.of(dirEstablecimiento!!)
-        }
 
-        fun getContribuyenteEspecial(): Optional<String> {
-            return Optional.of(contribuyenteEspecial!!)
-        }
-
-
-        fun getObligadoContabilidad(): Optional<String> {
-            return Optional.of(obligadoContabilidad!!)
-        }
-
-        fun getRise(): Optional<String> {
-            return Optional.of(rise!!)
-        }
 
         this.dirEstablecimiento = if (dirEstablecimiento == null) null else GenerarDocumentos
             .removerCaracteresEspeciales(dirEstablecimiento!!)
 
         this.razonSocialComprador = GenerarDocumentos.removerCaracteresEspeciales(razonSocialComprador)
+    }
+
+    fun getDirEstablecimiento(): Optional<String> {
+        return Optional.of(dirEstablecimiento!!)
+    }
+
+    fun getContribuyenteEspecial(): Optional<String> {
+        return Optional.of(contribuyenteEspecial!!)
+    }
+
+
+    fun getObligadoContabilidad(): Optional<String> {
+        return Optional.of(obligadoContabilidad!!)
+    }
+
+    fun getRise(): Optional<String> {
+        return Optional.of(rise!!)
     }
 
 

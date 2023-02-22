@@ -15,9 +15,11 @@ class TotalImpuesto(
 ) : Impuesto(codigo, codigoPorcentaje, baseImponible, valor, tarifa) {
 
     init {
-        fun getValorDevolucionIva(): Optional<String> {
-            return Optional.of(valorDevolucionIva!!)
-        }
+
+    }
+
+    fun getValorDevolucionIva(): Optional<String> {
+        return Optional.of(valorDevolucionIva!!)
     }
 
 

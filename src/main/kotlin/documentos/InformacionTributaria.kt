@@ -18,24 +18,19 @@ class InformacionTributaria(
     var dirMatriz: String
 
 ) {
-
-
     init {
-
-        fun getNombreComercial(): Optional<String> {
-            return Optional.of(nombreComercial!!)
-        }
-
-        fun getClaveAcceso(): Optional<String> {
-            return Optional.of(claveAcceso!!)
-        }
-
         this.razonSocial = GenerarDocumentos.removerCaracteresEspeciales(razonSocial)
         this.nombreComercial =
             if (nombreComercial == null) null else GenerarDocumentos.removerCaracteresEspeciales(nombreComercial!!)
 
         this.dirMatriz = GenerarDocumentos.removerCaracteresEspeciales(dirMatriz)
+   }
+    fun getNombreComercial(): Optional<String> {
+        return Optional.of(nombreComercial!!)
+    }
 
+    fun getClaveAcceso(): Optional<String> {
+        return Optional.of(claveAcceso!!)
     }
 
 }

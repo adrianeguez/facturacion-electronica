@@ -1,105 +1,45 @@
 package documentos
 
-import utils.expresionRegularMoneda
-import utils.mensajeNulo
-import utils.mensajeVacio
-import utils.mensajeValores
 import java.util.*
-import javax.validation.constraints.NotEmpty
-import javax.validation.constraints.NotNull
-import javax.validation.constraints.Pattern
-import javax.validation.constraints.Size
 import kotlin.collections.ArrayList
 
-open class Detalle {
+open class Detalle(
+    var codigoPrincipal: String?,
+    var codigoAuxiliar: String?,
+    var descripcion: String,
+    var unidadMedida: String?,
+    var cantidad: String,
+    var precioUnitario: String,
+    var descuento: String,
+    var precioTotalSinImpuesto: String,
+    var detallesAdicionales: ArrayList<DetalleAdicional>?,
+    var impuestos: ArrayList<Impuesto>
+) {
 
-    @NotEmpty(message = "codigoPrincipal $mensajeVacio")
-    @Size(min = 1, max = 25, message = "codigoPrincipal $mensajeValores de 1 a 25 caracteres")
-    var codigoPrincipal: String?
+    init {
+
+        this.codigoPrincipal =
+            if (codigoPrincipal == null) null else GenerarDocumentos.removerCaracteresEspeciales(codigoPrincipal!!)
+        this.codigoAuxiliar =
+            if (codigoAuxiliar == null) null else GenerarDocumentos.removerCaracteresEspeciales(codigoAuxiliar!!)
+        this.descripcion = GenerarDocumentos.removerCaracteresEspeciales(descripcion)
+        this.unidadMedida = GenerarDocumentos.removerCaracteresEspeciales(unidadMedida!!)
+
+    }
 
     fun getCodigoPrincipal(): Optional<String> {
         return Optional.of(codigoPrincipal!!)
     }
 
-    @NotEmpty(message = "codigoAuxiliar $mensajeVacio")
-    @Size(min = 1, max = 25, message = "codigoAuxiliar $mensajeValores de 1 a 25 caracteres")
-    var codigoAuxiliar: String?
-
     fun getCodigoAuxiliar(): Optional<String> {
         return Optional.of(codigoAuxiliar!!)
     }
-
-    @NotNull(message = "descripcion $mensajeNulo")
-    @NotEmpty(message = "descripcion $mensajeVacio")
-    @Size(min = 1, max = 300, message = "descripcion $mensajeValores de 1 a 300 caracteres")
-    var descripcion: String
-
-
-
-    @NotEmpty(message = "unidadMedida $mensajeVacio")
-    @Size(min = 1, max = 50, message = "unidadMedida $mensajeValores de 1 a 25 caracteres")
-    var unidadMedida: String?
 
     fun getUnidadMedida(): Optional<String> {
         return Optional.of(unidadMedida!!)
     }
 
-    @NotNull(message = "cantidad $mensajeNulo")
-    @Pattern(
-        regexp = expresionRegularMoneda,
-        message = "cantidad $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
-    )
-    var cantidad: String
-
-    @NotNull(message = "precioUnitario $mensajeNulo")
-    @Pattern(
-        regexp = expresionRegularMoneda,
-        message = "precioUnitario $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
-    )
-    var precioUnitario: String
-
-    @NotNull(message = "descuento $mensajeNulo")
-    @Pattern(
-        regexp = expresionRegularMoneda,
-        message = "descuento $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
-    )
-    var descuento: String
-
-    @NotNull(message = "precioTotalSinImpuesto $mensajeNulo")
-    @Pattern(
-        regexp = expresionRegularMoneda,
-        message = "precioTotalSinImpuesto $mensajeValores de 1 a 14 enteros y desde 1 hasta 6 decimales separados por punto"
-    )
-    var precioTotalSinImpuesto: String
-
-    var detallesAdicionales: ArrayList<DetalleAdicional>?
-
-    @NotNull(message = "impuestos $mensajeNulo")
-    var impuestos: ArrayList<Impuesto>
-
-    constructor(
-        codigoPrincipal: String?,
-        codigoAuxiliar: String?,
-        descripcion: String,
-        unidadMedida: String,
-        cantidad: String,
-        precioUnitario: String,
-        descuento: String,
-        precioTotalSinImpuesto: String,
-        detallesAdicionales: ArrayList<DetalleAdicional>?,
-        impuestos: ArrayList<Impuesto>
-    ) {
-        this.codigoPrincipal =
-                if (codigoPrincipal == null) null else GenerarDocumentos.removerCaracteresEspeciales(codigoPrincipal)
-        this.codigoAuxiliar =
-                if (codigoAuxiliar == null) null else GenerarDocumentos.removerCaracteresEspeciales(codigoAuxiliar)
-        this.descripcion = GenerarDocumentos.removerCaracteresEspeciales(descripcion)
-        this.unidadMedida = GenerarDocumentos.removerCaracteresEspeciales(unidadMedida)
-        this.cantidad = cantidad
-        this.precioUnitario = precioUnitario
-        this.descuento = descuento
-        this.precioTotalSinImpuesto = precioTotalSinImpuesto
-        this.detallesAdicionales = detallesAdicionales
-        this.impuestos = impuestos
+    fun getDetallesAdicionales(): Optional<ArrayList<DetalleAdicional>> {
+        return Optional.of<ArrayList<DetalleAdicional>>(detallesAdicionales!!)
     }
 }

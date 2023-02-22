@@ -30,11 +30,6 @@ class NotaCredito(
     var stringNotaCreditoXML = ""
 
     init {
-
-        fun getInfoAdicional(): Optional<ArrayList<CampoAdicional>>{
-            return Optional.of<ArrayList<CampoAdicional>>(infoAdicional!!)
-        }
-
         val format = SimpleDateFormat("dd/MM/yyyy")
         val fecha: Date = format.parse(this.infoNotaCredito.fechaEmision)
 
@@ -57,6 +52,14 @@ class NotaCredito(
             this.versionXML = versionXML
         }
 
+    }
+
+    fun getInfoAdicional(): Optional<ArrayList<CampoAdicional>>{
+        return Optional.of<ArrayList<CampoAdicional>>(infoAdicional!!)
+    }
+
+    fun getVersionXML(): Optional<String>{
+        return Optional.of(versionXML)
     }
 
 
