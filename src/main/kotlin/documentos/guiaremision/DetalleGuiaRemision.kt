@@ -13,7 +13,7 @@ class DetalleGuiaRemision(
     var cantidad: String,
     var detallesAdicionales: ArrayList<DetalleAdicional>?
 ) {
-    
+
     init {
         this.descripcion = GenerarDocumentos.removerCaracteresEspeciales(descripcion)
     }
