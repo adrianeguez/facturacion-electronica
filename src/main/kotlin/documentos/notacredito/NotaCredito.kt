@@ -3,7 +3,6 @@ package documentos.notacredito
 import documentos.*
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.swing.text.html.Option
 import kotlin.collections.ArrayList
 
 class NotaCredito(
