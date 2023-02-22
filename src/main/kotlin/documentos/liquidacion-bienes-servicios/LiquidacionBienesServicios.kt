@@ -1,34 +1,30 @@
 package documentos.factura
 
-import com.beust.klaxon.Klaxon
-import com.beust.klaxon.KlaxonException
+
 import documentos.*
 import documentos.GenerarDocumentos.Companion.generarClave
-import ec.gob.sri.comprobantes.exception.RespuestaAutorizacionException
-import ec.gob.sri.comprobantes.util.ArchivoUtils
-import ec.gob.sri.comprobantes.ws.aut.Autorizacion
-import firma.XAdESBESSignature
-import utils.UtilsFacturacionElectronica
-import utils.mensajeNulo
-import java.io.FileNotFoundException
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.validation.Validation
-import javax.validation.constraints.NotNull
 import kotlin.collections.ArrayList
-import java.io.File
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.logging.Level
-import java.util.logging.Logger
 
 
-class LiquidacionBienesServicios {
+class LiquidacionBienesServicios(
+    var infoTributario: InformacionTributaria,
+    var infoLiquidacionCompra: InfoLiquidacionCompra,
+    var detalles: ArrayList<Detalle>,
+    var reembolsos: ArrayList<ReembolsoDetalle>?,
+    var maquinaFiscal: MaquinaFiscal?,
+    var infoAdicional: ArrayList<CampoAdicional>?,
+    var directorioGuardarXML: String,
+    var directorioGuardarXMLFirmados: String,
+    var nombreArchivoXML: String,
+    var nombreArchivoXMLFirmado: String,
+    var clave: String,
+    var directorioYNombreArchivoRegistroCivilP12: String,
+    var debug: Boolean = true,
+    versionXML: String?
+){
 
-
-    private val factory = Validation.buildDefaultValidatorFactory()
-    private val validator = factory.getValidator()
 
     var codigoNumerico = "12345678" // Codigo Quemado en guía del SRI
     var versionXML = "1.0"
@@ -39,61 +35,7 @@ class LiquidacionBienesServicios {
     var versionFacturaXML = "1.1.0" // Codigo Quemado en guía del SRI
     var stringFacturaXML = ""
 
-    @NotNull(message = "infoTributario $mensajeNulo")
-    var infoTributario: InformacionTributaria
-
-    @NotNull(message = "infoFactura $mensajeNulo")
-    var infoLiquidacionCompra: InfoLiquidacionCompra
-
-    var maquinaFiscal: MaquinaFiscal?
-
-    fun getMaquinaFiscal(): Optional<MaquinaFiscal> {
-        return Optional.of(maquinaFiscal!!)
-    }
-
-    var reembolsos: ArrayList<ReembolsoDetalle>?
-
-    fun getReembolsos(): Optional<ArrayList<ReembolsoDetalle>> {
-        return Optional.of(reembolsos!!)
-    }
-
-
-    @NotNull(message = "detalles $mensajeNulo")
-    var detalles: ArrayList<Detalle>
-
-    var infoAdicional: ArrayList<CampoAdicional>?
-
-    var directorioGuardarXML: String
-    var directorioGuardarXMLFirmados: String
-    var nombreArchivoXML: String
-    var nombreArchivoXMLFirmado: String
-    var clave: String
-    var directorioYNombreArchivoRegistroCivilP12: String
-    val debug: Boolean
-
-    constructor(
-        infoTributario: InformacionTributaria,
-        infoLiquidacionCompra: InfoLiquidacionCompra,
-        detalles: ArrayList<Detalle>,
-        reembolsos: ArrayList<ReembolsoDetalle>?,
-        maquinaFiscal: MaquinaFiscal?,
-        infoAdicional: ArrayList<CampoAdicional>?,
-        directorioGuardarXML: String,
-        directorioGuardarXMLFirmados: String,
-        nombreArchivoXML: String,
-        nombreArchivoXMLFirmado: String,
-        clave: String,
-        directorioYNombreArchivoRegistroCivilP12: String,
-        debug: Boolean = true,
-        versionXML: String?
-    ) {
-
-        this.infoTributario = infoTributario
-        this.infoLiquidacionCompra = infoLiquidacionCompra
-        this.detalles = detalles
-        this.reembolsos = reembolsos
-        this.maquinaFiscal = maquinaFiscal
-        this.infoAdicional = infoAdicional
+    init {
         val format = SimpleDateFormat("dd/MM/yyyy")
         val fecha: Date = format.parse(this.infoLiquidacionCompra.fechaEmision)
         if (this.infoTributario.claveAcceso == null) {
@@ -111,21 +53,37 @@ class LiquidacionBienesServicios {
             this.infoTributario.claveAcceso = infoTributario.claveAcceso
         }
 
-        this.directorioGuardarXML = directorioGuardarXML
-        this.directorioGuardarXMLFirmados = directorioGuardarXMLFirmados
-        this.nombreArchivoXML = nombreArchivoXML
-        this.nombreArchivoXMLFirmado = nombreArchivoXMLFirmado
-        this.clave = clave
-        this.directorioYNombreArchivoRegistroCivilP12 = directorioYNombreArchivoRegistroCivilP12
-
-
-        this.debug = debug
         if (versionXML != null) {
             this.versionXML = versionXML
         }
     }
 
-    fun validar(): ArrayList<String> {
+
+//    private val factory = Validation.buildDefaultValidatorFactory()
+//    private val validator = factory.getValidator()
+
+    fun getReembolsos(): Optional<ArrayList<ReembolsoDetalle>> {
+        return Optional.of(reembolsos!!)
+    }
+
+    fun getMaquinaFiscal(): Optional<MaquinaFiscal> {
+        return Optional.of(maquinaFiscal!!)
+    }
+
+    fun getInfoAdicional(): Optional<ArrayList<CampoAdicional>> {
+        return Optional.of(infoAdicional!!)
+    }
+
+    fun getVersionXML(): Optional<String> {
+        return Optional.of(versionXML)
+    }
+
+
+
+
+
+
+ /*   fun validar(): ArrayList<String> {
         val errores = arrayListOf<String>()
 
         val violationsInfoTributaria = validator.validate(this.infoTributario)
@@ -1079,5 +1037,5 @@ class LiquidacionBienesServicios {
             .replace("\n", "")
             .replace("\r", "")
     }
-
+*/
 }
