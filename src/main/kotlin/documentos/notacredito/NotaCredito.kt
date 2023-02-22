@@ -3,6 +3,7 @@ package documentos.notacredito
 import documentos.*
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.swing.text.html.Option
 import kotlin.collections.ArrayList
 
 class NotaCredito(
@@ -30,6 +31,11 @@ class NotaCredito(
     var stringNotaCreditoXML = ""
 
     init {
+
+        fun getInfoAdicional(): Optional<ArrayList<CampoAdicional>>{
+            return Optional.of<ArrayList<CampoAdicional>>(infoAdicional!!)
+        }
+
         val format = SimpleDateFormat("dd/MM/yyyy")
         val fecha: Date = format.parse(this.infoNotaCredito.fechaEmision)
 
