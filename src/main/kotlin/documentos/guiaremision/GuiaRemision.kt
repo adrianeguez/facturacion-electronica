@@ -1,30 +1,32 @@
 package documentos.guiaremision
 
-import com.beust.klaxon.Klaxon
-import com.beust.klaxon.KlaxonException
+
 import documentos.*
-import documentos.factura.Factura
-import ec.gob.sri.comprobantes.exception.RespuestaAutorizacionException
-import ec.gob.sri.comprobantes.util.ArchivoUtils
-import firma.XAdESBESSignature
-import utils.UtilsFacturacionElectronica
-import utils.mensajeNulo
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.IOException
+
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+
 import java.util.*
-import java.util.logging.Level
-import java.util.logging.Logger
-import javax.validation.Validation
-import javax.validation.constraints.NotNull
+
 import kotlin.collections.ArrayList
 
-class GuiaRemision {
-    private val factory = Validation.buildDefaultValidatorFactory()
-    private val validator = factory.getValidator()
+class GuiaRemision(
+    var infoTributario: InformacionTributaria,
+    var infoGuiaRemision: InformacionGuiaRemision,
+    var destinatarios: ArrayList<Destinatario>,
+    var infoAdicional: ArrayList<CampoAdicional>?,
+    var directorioGuardarXML: String,
+    var directorioGuardarXMLFirmados: String,
+    var nombreArchivoXML: String,
+    var nombreArchivoXMLFirmado: String,
+    var clave: String,
+    var directorioYNombreArchivoRegistroCivilP12: String,
+    var debug: Boolean = true,
+    versionXML: String?
+) {
+
+
+//    private val factory = Validation.buildDefaultValidatorFactory()
+//    private val validator = factory.getValidator()
 
     var codigoNumerico = "12345678" // Codigo Quemado en guía del SRI
 
@@ -36,44 +38,7 @@ class GuiaRemision {
     var versionGuiaRemisionXML = "1.0.0" // Codigo Quemado en guía del SRI
     var stringGuiaRemisionXML = ""
 
-    @NotNull(message = "infoTributario $mensajeNulo")
-    var infoTributario: InformacionTributaria
-
-    @NotNull(message = "infoTributario $mensajeNulo")
-    var infoGuiaRemision: InformacionGuiaRemision
-
-    @NotNull(message = "destinatario $mensajeNulo")
-    var destinatarios: ArrayList<Destinatario>
-
-    var infoAdicional: ArrayList<CampoAdicional>?
-
-    var directorioGuardarXML: String
-    var directorioGuardarXMLFirmados: String
-    var nombreArchivoXML: String
-    var nombreArchivoXMLFirmado: String
-    var clave: String
-    var directorioYNombreArchivoRegistroCivilP12: String
-
-    val debug: Boolean
-
-    constructor(
-        infoTributario: InformacionTributaria,
-        infoGuiaRemision: InformacionGuiaRemision,
-        destinatarios: ArrayList<Destinatario>,
-        infoAdicional: ArrayList<CampoAdicional>?,
-        directorioGuardarXML: String,
-        directorioGuardarXMLFirmados: String,
-        nombreArchivoXML: String,
-        nombreArchivoXMLFirmado: String,
-        clave: String,
-        directorioYNombreArchivoRegistroCivilP12: String,
-        debug: Boolean = true,
-        versionXML: String?
-    ) {
-        this.infoTributario = infoTributario
-        this.infoGuiaRemision = infoGuiaRemision
-        this.destinatarios = destinatarios
-        this.infoAdicional = infoAdicional
+    init {
 
         val format = SimpleDateFormat("dd/MM/yyyy")
         val fecha: Date = format.parse(this.infoGuiaRemision.fechaIniTransporte)
@@ -93,19 +58,21 @@ class GuiaRemision {
             this.infoTributario.claveAcceso = infoTributario.claveAcceso
         }
 
-        this.directorioGuardarXML = directorioGuardarXML
-        this.directorioGuardarXMLFirmados = directorioGuardarXMLFirmados
-        this.nombreArchivoXML = nombreArchivoXML
-        this.nombreArchivoXMLFirmado = nombreArchivoXMLFirmado
-        this.clave = clave
-        this.directorioYNombreArchivoRegistroCivilP12 = directorioYNombreArchivoRegistroCivilP12
-        this.debug = debug
         if (versionXML != null) {
             this.versionXML = versionXML
         }
     }
 
-    fun validar(): ArrayList<String> {
+
+    fun getVersionXML(): Optional<String> {
+        return Optional.of(versionXML)
+    }
+
+    fun getInfoAdicional(): Optional<ArrayList<CampoAdicional>>{
+        return Optional.of<ArrayList<CampoAdicional>>(infoAdicional!!)
+    }
+
+ /*   fun validar(): ArrayList<String> {
         val errores = arrayListOf<String>()
 
         val violationsInfoTributaria = validator.validate(this.infoTributario)
@@ -362,9 +329,11 @@ class GuiaRemision {
                                             val mensajeArreglo = "[" + mensajeString + "]"
                                             autorizacion += """
                                                 "mensajes": ${mensajeArreglo}
-                                                }${if (index != ((respuestaComprobante.autorizaciones?.autorizacion?.size
-                                                    ?: 1) - 1)
-                                            ) "," else ""}
+                                                }${
+                                                if (index != ((respuestaComprobante.autorizaciones?.autorizacion?.size
+                                                        ?: 1) - 1)
+                                                ) "," else ""
+                                            }
                                             """.trimIndent()
 
                                             autorizaciones += autorizacion
@@ -414,14 +383,20 @@ class GuiaRemision {
                                             val formatterHoraMinutoSegundo = DateTimeFormatter.ISO_TIME
                                             val horaMinutoSegundoString = fechaActual.format(formatterHoraMinutoSegundo)
                                             var xmlCompleto = ""
-                                            if(mensaje.identificador == "45" || mensaje.identificador == "43"){
+                                            if (mensaje.identificador == "45" || mensaje.identificador == "43") {
                                                 xmlCompleto = """
                                            ,"xmlCompleto": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
                                             <autorizacion>
                                               <estado>AUTORIZADO</estado>
                                               <numeroAutorizacion>${resultado.infoTributario.claveAcceso}</numeroAutorizacion>
                                               <fechaAutorizacion class=\"fechaAutorizacion\">${fechaString} ${horaMinutoSegundoString}</fechaAutorizacion>
-                                              <comprobante>${eliminarCaracteresEspeciales(File(directorioYNombreArchivoXMLFirmado).readText())}</comprobante>
+                                              <comprobante>${
+                                                    eliminarCaracteresEspeciales(
+                                                        File(
+                                                            directorioYNombreArchivoXMLFirmado
+                                                        ).readText()
+                                                    )
+                                                }</comprobante>
                                               <mensajes/>
                                             </autorizacion>"
                                             """.trimIndent()
@@ -431,7 +406,11 @@ class GuiaRemision {
                                                     "tipo":"${mensaje.tipo}",
                                                     "identificador":"${mensaje.identificador}",
                                                     "informacionAdicional":"${eliminarCaracteresEspeciales(mensaje.informacionAdicional)}",
-                                                    "mensaje":"${eliminarCaracteresEspeciales(mensaje.mensaje)}"${eliminarEspacios(xmlCompleto)}
+                                                    "mensaje":"${eliminarCaracteresEspeciales(mensaje.mensaje)}"${
+                                                eliminarEspacios(
+                                                    xmlCompleto
+                                                )
+                                            }
                                                 }${if (index != (it.mensajes.mensaje.size - 1)) "," else ""}
                                             """.trimIndent()
 
@@ -757,6 +736,6 @@ class GuiaRemision {
             .replace("\n", "")
             .replace("\r", "")
     }
-
+*/
 
 }
