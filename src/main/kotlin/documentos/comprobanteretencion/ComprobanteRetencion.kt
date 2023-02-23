@@ -3,12 +3,10 @@ package documentos.comprobanteretencion
 import com.beust.klaxon.Klaxon
 import com.beust.klaxon.KlaxonException
 import documentos.*
-import documentos.factura.Factura
 import ec.gob.sri.comprobantes.exception.RespuestaAutorizacionException
 import ec.gob.sri.comprobantes.util.ArchivoUtils
 import firma.XAdESBESSignature
 import utils.UtilsFacturacionElectronica
-import utils.mensajeNulo
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -19,13 +17,24 @@ import java.util.*
 import java.util.logging.Level
 import java.util.logging.Logger
 import javax.validation.Validation
-import javax.validation.constraints.NotNull
-import kotlin.Any as Any1
 
-class ComprobanteRetencion {
 
-    private val factory = Validation.buildDefaultValidatorFactory()
-    private val validator = factory.getValidator()
+class ComprobanteRetencion(
+
+    var infoTributario: InformacionTributaria,
+    var infoCompRetencion: InformacionComprobanteRetencion,
+    var impuestos: ArrayList<ImpuestoRetencion>,
+    var infoAdicional: ArrayList<CampoAdicional>?,
+    var directorioGuardarXML: String,
+    var directorioGuardarXMLFirmados: String,
+    var nombreArchivoXML: String,
+    var nombreArchivoXMLFirmado: String,
+    var clave: String,
+    var directorioYNombreArchivoRegistroCivilP12: String,
+    var debug: Boolean = true,
+    versionXML: String?
+) {
+
 
     var codigoNumerico = "12345678" // Codigo Quemado en guía del SRI
 
@@ -36,46 +45,10 @@ class ComprobanteRetencion {
     var versionComprobanteRetencionXML = "1.0.0" // Codigo Quemado en guía del SRI
     var stringComprobanteRetencionXML = ""
 
-    @NotNull(message = "infoTributario $mensajeNulo")
-    var infoTributario: InformacionTributaria
+    private val factory = Validation.buildDefaultValidatorFactory()
+    private val validator = factory.getValidator()
 
-    @NotNull(message = "infoCompRetencion $mensajeNulo")
-    var infoCompRetencion: InformacionComprobanteRetencion
-
-    @NotNull(message = "impuestos $mensajeNulo")
-    var impuestos: ArrayList<ImpuestoRetencion>
-
-    var infoAdicional: ArrayList<CampoAdicional>?
-
-
-    var directorioGuardarXML: String
-    var directorioGuardarXMLFirmados: String
-    var nombreArchivoXML: String
-    var nombreArchivoXMLFirmado: String
-    var clave: String
-    var directorioYNombreArchivoRegistroCivilP12: String
-
-
-    val debug: Boolean
-
-    constructor(
-        infoTributario: InformacionTributaria,
-        infoCompRetencion: InformacionComprobanteRetencion,
-        impuestos: ArrayList<ImpuestoRetencion>,
-        infoAdicional: ArrayList<CampoAdicional>?,
-        directorioGuardarXML: String,
-        directorioGuardarXMLFirmados: String,
-        nombreArchivoXML: String,
-        nombreArchivoXMLFirmado: String,
-        clave: String,
-        directorioYNombreArchivoRegistroCivilP12: String,
-        debug: Boolean = true,
-        versionXML: String?
-    ) {
-        this.infoTributario = infoTributario
-        this.infoCompRetencion = infoCompRetencion
-        this.impuestos = impuestos
-        this.infoAdicional = infoAdicional
+    init {
 
 
         val format = SimpleDateFormat("dd/MM/yyyy")
@@ -97,27 +70,24 @@ class ComprobanteRetencion {
             this.infoTributario.claveAcceso = infoTributario.claveAcceso
         }
 
-
-
-
-        this.directorioGuardarXML = directorioGuardarXML
-        this.directorioGuardarXMLFirmados = directorioGuardarXMLFirmados
-        this.nombreArchivoXML = nombreArchivoXML
-        this.nombreArchivoXMLFirmado = nombreArchivoXMLFirmado
-        this.clave = clave
-        this.directorioYNombreArchivoRegistroCivilP12 = directorioYNombreArchivoRegistroCivilP12
-
-        this.debug = debug
-
         if (versionXML != null) {
             this.versionXML = versionXML
         }
+
+    }
+
+    fun getInfoAdicional(): Optional<ArrayList<CampoAdicional>>{
+        return Optional.of<ArrayList<CampoAdicional>>(infoAdicional!!)
+    }
+
+    fun getVersionXML(): Optional<String> {
+        return Optional.of(versionXML)
     }
 
     fun validar(): ArrayList<String> {
         val errores = arrayListOf<String>()
 
-        val violationsInfoTributaria = validator.validate(this.infoTributario)
+      /*  val violationsInfoTributaria = validator.validate(this.infoTributario)
 
         for (violation in violationsInfoTributaria) {
             errores.add(violation.message)
@@ -145,8 +115,7 @@ class ComprobanteRetencion {
             for (violation in violationsInfoAdicional) {
                 errores.add(violation.message)
             }
-        }
-
+        }*/
 
         return errores
     }
@@ -667,5 +636,9 @@ class ComprobanteRetencion {
             .replace("\n", "")
             .replace("\r", "")
     }
+
+
+
+
 
 }

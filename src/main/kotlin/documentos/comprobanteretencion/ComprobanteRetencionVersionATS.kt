@@ -7,7 +7,6 @@ import ec.gob.sri.comprobantes.exception.RespuestaAutorizacionException
 import ec.gob.sri.comprobantes.util.ArchivoUtils
 import firma.XAdESBESSignature
 import utils.UtilsFacturacionElectronica
-import utils.mensajeNulo
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -18,9 +17,21 @@ import java.util.*
 import java.util.logging.Level
 import java.util.logging.Logger
 import javax.validation.Validation
-import javax.validation.constraints.NotNull
 
-class ComprobanteRetencionVersionATS {
+class ComprobanteRetencionVersionATS(
+    var infoTributario: InformacionTributaria,
+    var infoCompRetencion: InformacionComprobanteRetencion,
+    var docsSustento: ArrayList<DocSustento>,
+    var infoAdicional: ArrayList<CampoAdicional>?,
+    var directorioGuardarXML: String,
+    var directorioGuardarXMLFirmados: String,
+    var nombreArchivoXML: String,
+    var nombreArchivoXMLFirmado: String,
+    var clave: String,
+    var directorioYNombreArchivoRegistroCivilP12: String,
+    var debug: Boolean = true,
+    versionXML: String?
+) {
 
     private val factory = Validation.buildDefaultValidatorFactory()
     private val validator = factory.getValidator()
@@ -34,47 +45,7 @@ class ComprobanteRetencionVersionATS {
     var versionComprobanteRetencionXML = "2.0.0" // Codigo Quemado en guía del SRI
     var stringComprobanteRetencionXML = ""
 
-    @NotNull(message = "infoTributario $mensajeNulo")
-    var infoTributario: InformacionTributaria
-
-    @NotNull(message = "infoCompRetencion $mensajeNulo")
-    var infoCompRetencion: InformacionComprobanteRetencion
-
-
-    var docsSustento: ArrayList<DocSustento>
-    var infoAdicional: ArrayList<CampoAdicional>?
-
-
-    var directorioGuardarXML: String
-    var directorioGuardarXMLFirmados: String
-    var nombreArchivoXML: String
-    var nombreArchivoXMLFirmado: String
-    var clave: String
-    var directorioYNombreArchivoRegistroCivilP12: String
-
-
-    val debug: Boolean
-
-    constructor(
-        infoTributario: InformacionTributaria,
-        infoCompRetencion: InformacionComprobanteRetencion,
-        docsSustento: ArrayList<DocSustento>,
-        infoAdicional: ArrayList<CampoAdicional>?,
-        directorioGuardarXML: String,
-        directorioGuardarXMLFirmados: String,
-        nombreArchivoXML: String,
-        nombreArchivoXMLFirmado: String,
-        clave: String,
-        directorioYNombreArchivoRegistroCivilP12: String,
-        debug: Boolean = true,
-        versionXML: String?
-    ) {
-        this.infoTributario = infoTributario
-        this.infoCompRetencion = infoCompRetencion
-        this.infoAdicional = infoAdicional
-        this.docsSustento = docsSustento
-
-
+    init {
         val format = SimpleDateFormat("dd/MM/yyyy")
         val fecha: Date = format.parse(this.infoCompRetencion.fechaEmision)
 
@@ -94,27 +65,24 @@ class ComprobanteRetencionVersionATS {
             this.infoTributario.claveAcceso = infoTributario.claveAcceso
         }
 
-
-
-
-        this.directorioGuardarXML = directorioGuardarXML
-        this.directorioGuardarXMLFirmados = directorioGuardarXMLFirmados
-        this.nombreArchivoXML = nombreArchivoXML
-        this.nombreArchivoXMLFirmado = nombreArchivoXMLFirmado
-        this.clave = clave
-        this.directorioYNombreArchivoRegistroCivilP12 = directorioYNombreArchivoRegistroCivilP12
-
-        this.debug = debug
-
         if (versionXML != null) {
             this.versionXML = versionXML
         }
+
+    }
+
+    fun getVersionXML(): Optional<String> {
+        return Optional.of(versionXML)
+    }
+
+    fun getInfoAdicional(): Optional<ArrayList<CampoAdicional>>{
+        return Optional.of<ArrayList<CampoAdicional>>(infoAdicional!!)
     }
 
     fun validar(): ArrayList<String> {
         val errores = arrayListOf<String>()
 
-        val violationsInfoTributaria = validator.validate(this.infoTributario)
+        /*val violationsInfoTributaria = validator.validate(this.infoTributario)
 
         for (violation in violationsInfoTributaria) {
             errores.add(violation.message)
@@ -140,7 +108,7 @@ class ComprobanteRetencionVersionATS {
             for (violation in violationsInfoAdicional) {
                 errores.add(violation.message)
             }
-        }
+        }*/
 
 
         return errores
@@ -304,8 +272,8 @@ class ComprobanteRetencionVersionATS {
                     + "                <totalSinImpuestos>${it.totalSinImpuestos}</totalSinImpuestos>\n"
                     + "                <importeTotal>${it.importeTotal}</importeTotal>\n"
                     + "                <impuestosDocSustento>${generarImpuestoDocSustento(it.impuestosDocSustento)}</impuestosDocSustento>\n"
-                    + if(it.retenciones != null) "               <retenciones>${generarRetencion(it.retenciones!!)}</retenciones>\n" else ""
-                    + if(it.reembolsos != null) "                <reembolsos>${generarReembolso(it.reembolsos!!)}</reembolsos>\n" else ""
+                    + if (it.retenciones != null) "               <retenciones>${generarRetencion(it.retenciones!!)}</retenciones>\n" else ""
+                    + if (it.reembolsos != null) "                <reembolsos>${generarReembolso(it.reembolsos!!)}</reembolsos>\n" else ""
                     + "                <pagos>${generarPagos(it.pagos)}</pagos>\n"
                     + "             </$nombreEtiquetaDocSustento>\n")
         }
@@ -525,14 +493,18 @@ class ComprobanteRetencionVersionATS {
         var direccionEstablecimiento = ""
         if (this.infoCompRetencion.dirEstablecimiento != null) {
             direccionEstablecimiento =
-                "        <dirEstablecimiento>${this.infoCompRetencion.dirEstablecimiento
-                    ?: ""}</dirEstablecimiento>\n"
+                "        <dirEstablecimiento>${
+                    this.infoCompRetencion.dirEstablecimiento
+                        ?: ""
+                }</dirEstablecimiento>\n"
         }
         var tipoIdentificacionSujetoRetenido = ""
         if (this.infoCompRetencion.tipoIdentificacionSujetoRetenido != null) {
             tipoIdentificacionSujetoRetenido =
-                "        <tipoIdentificacionSujetoRetenido>${this.infoCompRetencion.tipoIdentificacionSujetoRetenido
-                    ?: ""}</tipoIdentificacionSujetoRetenido>\n"
+                "        <tipoIdentificacionSujetoRetenido>${
+                    this.infoCompRetencion.tipoIdentificacionSujetoRetenido
+                        ?: ""
+                }</tipoIdentificacionSujetoRetenido>\n"
         }
 
         val informacionComprobanteRetencion = ("<$nombreEtiquetaInformacionComprobanteretencion>\n"
@@ -731,9 +703,11 @@ class ComprobanteRetencionVersionATS {
                                             val mensajeArreglo = "[" + mensajeString + "]"
                                             autorizacion += """
                                                 "mensajes": ${mensajeArreglo}
-                                                }${if (index != ((respuestaComprobante.autorizaciones?.autorizacion?.size
-                                                    ?: 1) - 1)
-                                            ) "," else ""}
+                                                }${
+                                                if (index != ((respuestaComprobante.autorizaciones?.autorizacion?.size
+                                                        ?: 1) - 1)
+                                                ) "," else ""
+                                            }
                                             """.trimIndent()
 
                                             autorizaciones += autorizacion
@@ -783,14 +757,20 @@ class ComprobanteRetencionVersionATS {
                                             val formatterHoraMinutoSegundo = DateTimeFormatter.ISO_TIME
                                             val horaMinutoSegundoString = fechaActual.format(formatterHoraMinutoSegundo)
                                             var xmlCompleto = ""
-                                            if(mensaje.identificador == "45" || mensaje.identificador == "43"){
+                                            if (mensaje.identificador == "45" || mensaje.identificador == "43") {
                                                 xmlCompleto = """
                                            ,"xmlCompleto": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
                                             <autorizacion>
                                               <estado>AUTORIZADO</estado>
                                               <numeroAutorizacion>${resultado.infoTributario.claveAcceso}</numeroAutorizacion>
                                               <fechaAutorizacion class=\"fechaAutorizacion\">${fechaString} ${horaMinutoSegundoString}</fechaAutorizacion>
-                                              <comprobante>${eliminarCaracteresEspeciales(File(directorioYNombreArchivoXMLFirmado).readText())}</comprobante>
+                                              <comprobante>${
+                                                    eliminarCaracteresEspeciales(
+                                                        File(
+                                                            directorioYNombreArchivoXMLFirmado
+                                                        ).readText()
+                                                    )
+                                                }</comprobante>
                                               <mensajes/>
                                             </autorizacion>"
                                             """.trimIndent()
@@ -801,7 +781,11 @@ class ComprobanteRetencionVersionATS {
                                                     "tipo":"${mensaje.tipo}",
                                                     "identificador":"${mensaje.identificador}",
                                                     "informacionAdicional":"${eliminarCaracteresEspeciales(mensaje.informacionAdicional)}",
-                                                    "mensaje":"${eliminarCaracteresEspeciales(mensaje.mensaje)}"${eliminarEspacios(xmlCompleto)}
+                                                    "mensaje":"${eliminarCaracteresEspeciales(mensaje.mensaje)}"${
+                                                eliminarEspacios(
+                                                    xmlCompleto
+                                                )
+                                            }
                                                 }${if (index != (it.mensajes.mensaje.size - 1)) "," else ""}
                                             """.trimIndent()
 
