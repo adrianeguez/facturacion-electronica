@@ -85,7 +85,9 @@ class Factura(
     }
 
     fun validar(): ArrayList<String> {
+
         val errores = arrayListOf<String>()
+/*
 
         val violationsInfoTributaria = validator.validate(this.infoTributario)
 
@@ -147,7 +149,7 @@ class Factura(
                 errores.add(violation.message)
             }
         }
-
+*/
 
         return errores
     }
