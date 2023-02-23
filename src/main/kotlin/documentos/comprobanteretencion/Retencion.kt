@@ -1,7 +1,5 @@
 package documentos.comprobanteretencion
-import utils.mensajeNulo
 import java.util.*
-import javax.validation.constraints.NotNull
 
 
 class Retencion(
