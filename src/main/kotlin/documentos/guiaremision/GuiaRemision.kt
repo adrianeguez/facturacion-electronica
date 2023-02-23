@@ -1,12 +1,23 @@
 package documentos.guiaremision
 
 
+import com.beust.klaxon.Klaxon
+import com.beust.klaxon.KlaxonException
 import documentos.*
-
+import ec.gob.sri.comprobantes.exception.RespuestaAutorizacionException
+import ec.gob.sri.comprobantes.util.ArchivoUtils
+import firma.XAdESBESSignature
+import utils.UtilsFacturacionElectronica
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.IOException
 import java.text.SimpleDateFormat
-
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
-
+import java.util.logging.Level
+import java.util.logging.Logger
+import javax.validation.Validation
 import kotlin.collections.ArrayList
 
 class GuiaRemision(
@@ -25,8 +36,8 @@ class GuiaRemision(
 ) {
 
 
-//    private val factory = Validation.buildDefaultValidatorFactory()
-//    private val validator = factory.getValidator()
+    private val factory = Validation.buildDefaultValidatorFactory()
+    private val validator = factory.getValidator()
 
     var codigoNumerico = "12345678" // Codigo Quemado en guía del SRI
 
@@ -72,10 +83,10 @@ class GuiaRemision(
         return Optional.of<ArrayList<CampoAdicional>>(infoAdicional!!)
     }
 
- /*   fun validar(): ArrayList<String> {
+    fun validar(): ArrayList<String> {
         val errores = arrayListOf<String>()
 
-        val violationsInfoTributaria = validator.validate(this.infoTributario)
+    /*    val violationsInfoTributaria = validator.validate(this.infoTributario)
 
         for (violation in violationsInfoTributaria) {
             errores.add(violation.message)
@@ -114,7 +125,8 @@ class GuiaRemision(
             for (violation in violationsInfoAdicional) {
                 errores.add(violation.message)
             }
-        }
+        }*/
+
         return errores
 
     }
@@ -736,6 +748,5 @@ class GuiaRemision(
             .replace("\n", "")
             .replace("\r", "")
     }
-*/
 
 }
