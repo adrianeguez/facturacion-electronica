@@ -14,7 +14,6 @@ import java.io.FileNotFoundException
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.validation.Validation
 import kotlin.collections.ArrayList
 import java.io.File
 import java.time.LocalDateTime
@@ -39,9 +38,6 @@ class Factura(
     versionXML: String?
 
 ) {
-
-    private val factory = Validation.buildDefaultValidatorFactory()
-    private val validator = factory.getValidator()
 
     var codigoNumerico = "12345678" // Codigo Quemado en guía del SRI
     var versionXML = "1.0"
@@ -83,6 +79,7 @@ class Factura(
     fun getInfoAdicional(): Optional<ArrayList<CampoAdicional>>{
         return Optional.of<ArrayList<CampoAdicional>>(infoAdicional!!)
     }
+
 
     fun validar(): ArrayList<String> {
 
@@ -150,6 +147,7 @@ class Factura(
             }
         }
 */
+
 
         return errores
     }
