@@ -45,9 +45,6 @@ class ComprobanteRetencion(
     var versionComprobanteRetencionXML = "1.0.0" // Codigo Quemado en guía del SRI
     var stringComprobanteRetencionXML = ""
 
-    private val factory = Validation.buildDefaultValidatorFactory()
-    private val validator = factory.getValidator()
-
     init {
 
 

@@ -17,7 +17,6 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.logging.Level
 import java.util.logging.Logger
-import javax.validation.Validation
 import kotlin.collections.ArrayList
 
 class GuiaRemision(
@@ -34,10 +33,6 @@ class GuiaRemision(
     var debug: Boolean = true,
     versionXML: String?
 ) {
-
-
-    private val factory = Validation.buildDefaultValidatorFactory()
-    private val validator = factory.getValidator()
 
     var codigoNumerico = "12345678" // Codigo Quemado en guía del SRI
 

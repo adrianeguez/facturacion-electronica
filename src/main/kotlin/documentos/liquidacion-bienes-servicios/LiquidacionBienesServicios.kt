@@ -11,13 +11,10 @@ import ec.gob.sri.comprobantes.util.ArchivoUtils
 import ec.gob.sri.comprobantes.ws.aut.Autorizacion
 import firma.XAdESBESSignature
 import utils.UtilsFacturacionElectronica
-import utils.mensajeNulo
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.validation.Validation
-import javax.validation.constraints.NotNull
 import kotlin.collections.ArrayList
 import java.io.File
 import java.time.LocalDateTime
@@ -45,8 +42,6 @@ class LiquidacionBienesServicios(
 
 
 
-    private val factory = Validation.buildDefaultValidatorFactory()
-    private val validator = factory.getValidator()
 
     var codigoNumerico = "12345678" // Codigo Quemado en guía del SRI
     var versionXML = "1.0"

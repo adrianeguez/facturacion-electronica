@@ -33,8 +33,6 @@ class ComprobanteRetencionVersionATS(
     versionXML: String?
 ) {
 
-    private val factory = Validation.buildDefaultValidatorFactory()
-    private val validator = factory.getValidator()
 
     var codigoNumerico = "12345678" // Codigo Quemado en guía del SRI
 
