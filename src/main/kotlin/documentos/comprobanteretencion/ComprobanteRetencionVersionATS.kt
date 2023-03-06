@@ -16,7 +16,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.logging.Level
 import java.util.logging.Logger
-import javax.validation.Validation
+
 
 class ComprobanteRetencionVersionATS(
     var infoTributario: InformacionTributaria,
@@ -236,7 +236,7 @@ class ComprobanteRetencionVersionATS(
             var totalComprobantesReembolse = ""
             if (it.totalComprobantesReembolse != null) {
                 totalComprobantesReembolse =
-                    "        <totalComprobantesReembolse>${it.totalComprobantesReembolse}</totalComprobantesReembolse>\n"
+                    "        <totalComprobantesReembolso>${it.totalComprobantesReembolse}</totalComprobantesReembolso>\n"
             }
 
             var totalBaseImponibleReembolso = ""
@@ -249,6 +249,19 @@ class ComprobanteRetencionVersionATS(
             if (it.totalImpuestoReembolso != null) {
                 totalImpuestoReembolso =
                     "        <totalImpuestoReembolso>${it.totalImpuestoReembolso}</totalImpuestoReembolso>\n"
+            }
+
+            var retenciones = ""
+            if (it.retenciones != null){
+                retenciones =
+                    "        <retenciones>${generarRetencion(it.retenciones!!)}</retenciones>\n"
+
+            }
+
+            var reembolsos = ""
+            if (it.reembolsos != null){
+                reembolsos =
+                    "      <reembolsos>${generarReembolso(it.reembolsos!!)}</reembolsos>\n"
             }
 
             etiquetaDocSustento += ("            <$nombreEtiquetaDocSustento>\n"
@@ -270,11 +283,14 @@ class ComprobanteRetencionVersionATS(
                     + "                <totalSinImpuestos>${it.totalSinImpuestos}</totalSinImpuestos>\n"
                     + "                <importeTotal>${it.importeTotal}</importeTotal>\n"
                     + "                <impuestosDocSustento>${generarImpuestoDocSustento(it.impuestosDocSustento)}</impuestosDocSustento>\n"
-                    + if (it.retenciones != null) "               <retenciones>${generarRetencion(it.retenciones!!)}</retenciones>\n" else ""
-                    + if (it.reembolsos != null) "                <reembolsos>${generarReembolso(it.reembolsos!!)}</reembolsos>\n" else ""
+                    + retenciones
+                    + reembolsos
                     + "                <pagos>${generarPagos(it.pagos)}</pagos>\n"
-                    + "             </$nombreEtiquetaDocSustento>\n")
+                    + "            </$nombreEtiquetaDocSustento>\n")
         }
+
+        println("Etiqueta chucha")
+        println(etiquetaDocSustento)
         return etiquetaDocSustento
     }
 
@@ -284,9 +300,9 @@ class ComprobanteRetencionVersionATS(
         impuestoDocSustento.forEach {
 
             etiquetaImpuestoDocSustento += ("<$nombreEtiquetaImpuestoDocSustento>\n"
-                    + "                <baseImponible>${it.baseImponible}</baseImponible>\n"
                     + "                <codImpuestoDocSustento>${it.codImpuestoDocSustento}</codImpuestoDocSustento>\n"
                     + "                <codigoPorcentaje>${it.codigoPorcentaje}</codigoPorcentaje>\n"
+                    + "                <baseImponible>${it.baseImponible}</baseImponible>\n"
                     + "                <tarifa>${it.tarifa}</tarifa>\n"
                     + "                <valorImpuesto>${it.valorImpuesto}</valorImpuesto>\n"
                     + "</$nombreEtiquetaImpuestoDocSustento>\n")
@@ -443,9 +459,6 @@ class ComprobanteRetencionVersionATS(
             etiquetaPagos += ("<$nombreEtiquetaPago>\n"
                     + "                <formaPago>${it.formaPago}</formaPago>\n"
                     + "                <total>${it.total}</total>\n"
-                    + plazo
-                    + unidadTiempo
-
                     + "</$nombreEtiquetaPago>\n")
         }
         return etiquetaPagos
@@ -505,13 +518,19 @@ class ComprobanteRetencionVersionATS(
                 }</tipoIdentificacionSujetoRetenido>\n"
         }
 
+        var tipoSujetoRetenido = ""
+        if (this.infoCompRetencion.tipoSujetoRetenido != null){
+            tipoSujetoRetenido =
+                "        <tipoSujetoRetenido>${this.infoCompRetencion.tipoSujetoRetenido}</tipoSujetoRetenido>\n"
+        }
+
         val informacionComprobanteRetencion = ("<$nombreEtiquetaInformacionComprobanteretencion>\n"
                 + "        <fechaEmision>${this.infoCompRetencion.fechaEmision}</fechaEmision>\n"
                 + direccionEstablecimiento
                 + contribuyenteEspecial
                 + obligadoContabilidad
                 + tipoIdentificacionSujetoRetenido
-                + "        <tipoSujetoRetenido>${this.infoCompRetencion.tipoSujetoRetenido}</tipoSujetoRetenido>\n"
+                + tipoSujetoRetenido
                 + "        <parteRel>${this.infoCompRetencion.parteRel}</parteRel>\n"
                 + "        <razonSocialSujetoRetenido>${this.infoCompRetencion.razonSocialSujetoRetenido}</razonSocialSujetoRetenido>\n"
                 + "        <identificacionSujetoRetenido>${this.infoCompRetencion.identificacionSujetoRetenido}</identificacionSujetoRetenido>\n"
@@ -546,7 +565,7 @@ class ComprobanteRetencionVersionATS(
         val nombreDocumento = "Comprobante de Retencion"
 
         val resultado = Klaxon()
-            .parse<ComprobanteRetencion?>(
+            .parse<ComprobanteRetencionVersionATS?>(
                 json
             )
         try {
@@ -737,6 +756,8 @@ class ComprobanteRetencionVersionATS(
                                                 """
                                     }
                                 } else {
+
+
                                     var mensajes = ""
                                     respuestaSolicitud.comprobantes.comprobante.forEach {
                                         it.mensajes.mensaje.forEachIndexed { index, mensaje ->
