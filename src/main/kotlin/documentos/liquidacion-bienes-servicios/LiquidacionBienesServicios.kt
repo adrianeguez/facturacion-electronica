@@ -735,8 +735,8 @@ class LiquidacionBienesServicios(
                     + "                <codigo>${it.codigo}</codigo>\n"
                     + "                <codigoPorcentaje>${it.codigoPorcentaje}</codigoPorcentaje>\n"
                     + descuentoAdicional
-                    + tarifa
                     + "                <baseImponible>${it.baseImponible}</baseImponible>\n"
+                    + tarifa
                     + "                <valor>${it.valor}</valor>\n"
                     + valorDevolucionIva
                     + "             </$nombreEtiquetaTotalImpuestos>\n")
@@ -888,7 +888,7 @@ class LiquidacionBienesServicios(
             }
             var identificacionProveedor = ""
             if (it.identificacionProveedor != null) {
-                identificacionProveedor = "         <identificacionProveedor>${it.identificacionProveedor ?: ""}</identificacionProveedor>\n"
+                identificacionProveedor = "         <identificacionProveedorReembolso>${it.identificacionProveedor ?: ""}</identificacionProveedorReembolso>\n"
             }
             var tipoProveedorReembolso = ""
             if (it.tipoProveedorReembolso != null) {
@@ -927,8 +927,8 @@ class LiquidacionBienesServicios(
             reembolsoString += ("            <$nombreEtiqueta>\n"
                     + tipoIdentificacionProveedorReembolso
                     + identificacionProveedor
-                    + tipoProveedorReembolso
                     + codPaisPagoProveedorReembolso
+                    + tipoProveedorReembolso
                     + codDocReembolso
                     + estabDocReembolso
                     + ptoEmiDocReembolso
@@ -968,14 +968,17 @@ class LiquidacionBienesServicios(
             if (it.codigoPorcentaje != null) {
                 codigoPorcentaje = "         <codigoPorcentaje>${it.codigoPorcentaje ?: ""}</codigoPorcentaje>\n"
             }
-            var baseImponibleReembolso = ""
-            if (it.baseImponibleReembolso != null) {
-                baseImponibleReembolso = "         <baseImponibleReembolso>${it.baseImponibleReembolso ?: ""}</baseImponibleReembolso>\n"
-            }
+
             var tarifa = ""
             if (it.tarifa != null) {
                 tarifa = "         <tarifa>${it.tarifa ?: ""}</tarifa>\n"
             }
+
+            var baseImponibleReembolso = ""
+            if (it.baseImponibleReembolso != null) {
+                baseImponibleReembolso = "         <baseImponibleReembolso>${it.baseImponibleReembolso ?: ""}</baseImponibleReembolso>\n"
+            }
+
             var impuestoReembolso = ""
             if (it.impuestoReembolso != null) {
                 impuestoReembolso = "         <impuestoReembolso>${it.impuestoReembolso ?: ""}</impuestoReembolso>\n"
@@ -985,8 +988,8 @@ class LiquidacionBienesServicios(
             reembolsoString += ("            <$nombreEtiqueta>\n"
                     + codigo
                     + codigoPorcentaje
-                    + baseImponibleReembolso
                     + tarifa
+                    + baseImponibleReembolso
                     + impuestoReembolso
                     + "             </$nombreEtiqueta>\n")
         }

@@ -23,7 +23,8 @@ open class Detalle(
         this.codigoAuxiliar =
             if (codigoAuxiliar == null) null else GenerarDocumentos.removerCaracteresEspeciales(codigoAuxiliar!!)
         this.descripcion = GenerarDocumentos.removerCaracteresEspeciales(descripcion)
-        this.unidadMedida = GenerarDocumentos.removerCaracteresEspeciales(unidadMedida!!)
+        this.unidadMedida =
+            if(unidadMedida == null) null else GenerarDocumentos.removerCaracteresEspeciales(unidadMedida!!)
 
     }
 
