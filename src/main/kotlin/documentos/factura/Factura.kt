@@ -164,7 +164,7 @@ class Factura(
     }
 
     fun generarArchivoFacturaXML(
-        directorioAGuardarArchivo: String,
+        directorioAGuardarArchivo: String, // poniendo el /
         nombreArchivoXMLAGuardar: String,
         stringFacturaXML: String? = null
     ): String? {
@@ -249,7 +249,7 @@ class Factura(
                 )
 
                 val archivoGenerado = resultado?.generarArchivoFacturaXML(
-                    resultado.directorioGuardarXML,
+                    resultado.directorioGuardarXML + "/",
                     resultado.nombreArchivoXML
                 )
                 println("archivo generado: $archivoGenerado")
@@ -257,7 +257,7 @@ class Factura(
                 if (archivoGenerado != null) {
                     val archivoFirmado = XAdESBESSignature
                         .firmar(
-                            resultado.directorioGuardarXML + resultado.nombreArchivoXML,
+                            resultado.directorioGuardarXML + "/" +resultado.nombreArchivoXML,
                             resultado.nombreArchivoXMLFirmado,
                             resultado.clave,
                             resultado.directorioYNombreArchivoRegistroCivilP12,
@@ -329,7 +329,7 @@ class Factura(
                                               <estado>${it.estado}</estado>
                                               <numeroAutorizacion>${it.numeroAutorizacion}</numeroAutorizacion>
                                               <fechaAutorizacion class=\"fechaAutorizacion\">${fechaString} ${horaMinutoSegundoString}</fechaAutorizacion>
-                                              <comprobante>${comprobanteString}</comprobante>
+                                              <comprobante><![CDATA[${comprobanteString}]]></comprobante>
                                               <mensajes/>
                                             </autorizacion>
                                             """.trimIndent()
@@ -340,6 +340,7 @@ class Factura(
                                                     "estado" : "${it.estado}",
                                                     "fechaAutorizacion" : "${it.fechaAutorizacion}",
                                                     "xmlCompleto": "${eliminarEspacios(xmlCompleto)}",
+                                                }
                                             """.trimIndent()
 
                                             var mensajeString = ""
@@ -428,7 +429,7 @@ class Factura(
                                               <estado>AUTORIZADO</estado>
                                               <numeroAutorizacion>${resultado.infoTributario.claveAcceso}</numeroAutorizacion>
                                               <fechaAutorizacion class=\"fechaAutorizacion\">${fechaString} ${horaMinutoSegundoString}</fechaAutorizacion>
-                                              <comprobante>${eliminarCaracteresEspeciales(File(directorioYNombreArchivoXMLFirmado).readText())}</comprobante>
+                                              <comprobante><![CDATA[${eliminarCaracteresEspeciales(File(directorioYNombreArchivoXMLFirmado).readText())} ]]></comprobante>
                                               <mensajes/>
                                             </autorizacion>"
                                             """.trimIndent()
