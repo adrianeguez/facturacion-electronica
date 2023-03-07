@@ -222,7 +222,7 @@ class GuiaRemision(
                 )
 
                 val archivoGenerado = resultado?.generarArchivoGuiaRemisionXML(
-                    resultado.directorioGuardarXML,
+                    resultado.directorioGuardarXML + "/",
                     resultado.nombreArchivoXML
                 )
                 println("archivo generado: $archivoGenerado")
@@ -230,7 +230,7 @@ class GuiaRemision(
                 if (archivoGenerado != null) {
                     val archivoFirmado = XAdESBESSignature
                         .firmar(
-                            resultado.directorioGuardarXML + resultado.nombreArchivoXML,
+                            resultado.directorioGuardarXML + "/" + resultado.nombreArchivoXML,
                             resultado.nombreArchivoXMLFirmado,
                             resultado.clave,
                             resultado.directorioYNombreArchivoRegistroCivilP12,
@@ -303,7 +303,7 @@ class GuiaRemision(
                                               <estado>${it.estado}</estado>
                                               <numeroAutorizacion>${it.numeroAutorizacion}</numeroAutorizacion>
                                               <fechaAutorizacion class=\"fechaAutorizacion\">${fechaString} ${horaMinutoSegundoString}</fechaAutorizacion>
-                                              <comprobante>${comprobanteString}</comprobante>
+                                              <comprobante><![CDATA[${comprobanteString}]]></comprobante>
                                               <mensajes/>
                                             </autorizacion>
                                             """.trimIndent()
@@ -397,13 +397,13 @@ class GuiaRemision(
                                               <estado>AUTORIZADO</estado>
                                               <numeroAutorizacion>${resultado.infoTributario.claveAcceso}</numeroAutorizacion>
                                               <fechaAutorizacion class=\"fechaAutorizacion\">${fechaString} ${horaMinutoSegundoString}</fechaAutorizacion>
-                                              <comprobante>${
+                                              <comprobante><![CDATA[${
                                                     eliminarCaracteresEspeciales(
                                                         File(
                                                             directorioYNombreArchivoXMLFirmado
                                                         ).readText()
                                                     )
-                                                }</comprobante>
+                                                }]]></comprobante>
                                               <mensajes/>
                                             </autorizacion>"
                                             """.trimIndent()
