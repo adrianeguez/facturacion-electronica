@@ -340,7 +340,6 @@ class Factura(
                                                     "estado" : "${it.estado}",
                                                     "fechaAutorizacion" : "${it.fechaAutorizacion}",
                                                     "xmlCompleto": "${eliminarEspacios(xmlCompleto)}",
-                                                }
                                             """.trimIndent()
 
                                             var mensajeString = ""
