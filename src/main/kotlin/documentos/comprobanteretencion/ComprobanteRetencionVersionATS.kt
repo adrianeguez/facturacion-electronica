@@ -74,7 +74,7 @@ class ComprobanteRetencionVersionATS(
         return Optional.of(versionXML)
     }
 
-    fun getInfoAdicional(): Optional<ArrayList<CampoAdicional>>{
+    fun getInfoAdicional(): Optional<ArrayList<CampoAdicional>> {
         return Optional.of<ArrayList<CampoAdicional>>(infoAdicional!!)
     }
 
@@ -175,10 +175,10 @@ class ComprobanteRetencionVersionATS(
 
     private fun generarDocsSustento(docsSustento: ArrayList<DocSustento>): String {
         val nombreEtiquetaDocsSustento = "docsSustento"
-        val totalConImpuestos = ("        <$nombreEtiquetaDocsSustento>\n"
+        val docsSustentos = ("        <$nombreEtiquetaDocsSustento>\n"
                 + generarDocSustento(docsSustento)
                 + "         </$nombreEtiquetaDocsSustento>\n")
-        return totalConImpuestos
+        return docsSustentos
     }
 
     private fun generarDocSustento(docsSustento: ArrayList<DocSustento>): String {
@@ -253,14 +253,14 @@ class ComprobanteRetencionVersionATS(
             }
 
             var retenciones = ""
-            if (it.retenciones != null){
+            if (it.retenciones != null) {
                 retenciones =
                     "        <retenciones>${generarRetencion(it.retenciones!!)}</retenciones>\n"
 
             }
 
             var reembolsos = ""
-            if (it.reembolsos != null){
+            if (it.reembolsos != null) {
                 reembolsos =
                     "      <reembolsos>${generarReembolso(it.reembolsos!!)}</reembolsos>\n"
             }
@@ -290,8 +290,6 @@ class ComprobanteRetencionVersionATS(
                     + "            </$nombreEtiquetaDocSustento>\n")
         }
 
-        println("Etiqueta chucha")
-        println(etiquetaDocSustento)
         return etiquetaDocSustento
     }
 
@@ -317,7 +315,7 @@ class ComprobanteRetencionVersionATS(
         retenciones.forEach {
 
             var dividendos = ""
-            if (it.dividendos != null){
+            if (it.dividendos != null) {
                 dividendos = this.generarDividendos(it.dividendos!!)
             }
 
@@ -340,56 +338,54 @@ class ComprobanteRetencionVersionATS(
         return etiquetaRetenciones
     }
 
-    private fun generarDividendos(dividendos: ArrayList<Dividendos>): String{
+    private fun generarDividendos(dividendo: Dividendos): String {
         val nombreEtiquetaDividendos = "dividendos"
         var etiquetaDividendos = ""
 
-        dividendos.forEach{
-            var fechaPagoDiv = ""
-            if (it.fechaPagoDiv != null){
-                fechaPagoDiv =
-                    "           <fechaPagoDiv>${it.fechaPagoDiv}</fechaPagoDiv>\n"
-            }
-            var imRentaSoc = ""
-            if(it.imRentaSoc != null ){
-                imRentaSoc =
-                    "           <imRentaSoc>${it.imRentaSoc}</imRentaSoc>"
-            }
-            var ejerFisUtDiv = ""
-            if(it.ejerFisUtDiv != null){
-                ejerFisUtDiv =
-                    "           <ejerFisUtDiv>${it.ejerFisUtDiv}</ejerFisUtDiv>"
-            }
-            etiquetaDividendos += ("<$nombreEtiquetaDividendos>\n"
-                    + fechaPagoDiv
-                    + imRentaSoc
-                    + ejerFisUtDiv
-                    + "</$nombreEtiquetaDividendos>\n")
+        var fechaPagoDiv = ""
+        if (dividendo.fechaPagoDiv != null) {
+            fechaPagoDiv =
+                "           <fechaPagoDiv>${dividendo.fechaPagoDiv}</fechaPagoDiv>\n"
         }
+        var imRentaSoc = ""
+        if (dividendo.imRentaSoc != null) {
+            imRentaSoc =
+                "           <imRentaSoc>${dividendo.imRentaSoc}</imRentaSoc>\n"
+        }
+        var ejerFisUtDiv = ""
+        if (dividendo.ejerFisUtDiv != null) {
+            ejerFisUtDiv =
+                "           <ejerFisUtDiv>${dividendo.ejerFisUtDiv}</ejerFisUtDiv>\n"
+        }
+        etiquetaDividendos += ("<$nombreEtiquetaDividendos>\n"
+                + fechaPagoDiv
+                + imRentaSoc
+                + ejerFisUtDiv
+                + "</$nombreEtiquetaDividendos>\n")
+
         return etiquetaDividendos
     }
 
-    private fun generarCompraCajBanano(compraCajBanano: ArrayList<CompraCajBanano>): String{
+    private fun generarCompraCajBanano(compraCajBanano: CompraCajBanano): String {
         val nombreEtiquetaCajBanano = "compraCaBanano"
         var etiquetaCompraCajBanano = ""
 
-        compraCajBanano.forEach{
-            var numCajBan = ""
-            if (it.NumCajBan != null){
-                numCajBan =
-                    "           <NumCajBan>${it.NumCajBan}</NumCajBan>\n"
-            }
-            var precCajBan = ""
-            if(it.PrecCajBan != null ){
-                precCajBan =
-                    "           <PrecCajBan>${it.PrecCajBan}</PrecCajBan>"
-            }
-
-            etiquetaCompraCajBanano += ("<$nombreEtiquetaCajBanano>\n"
-                    + numCajBan
-                    + precCajBan
-                    + "</$nombreEtiquetaCajBanano>\n")
+        var numCajBan = ""
+        if (compraCajBanano.NumCajBan != null) {
+            numCajBan =
+                "           <NumCajBan>${compraCajBanano.NumCajBan}</NumCajBan>\n"
         }
+        var precCajBan = ""
+        if (compraCajBanano.PrecCajBan != null) {
+            precCajBan =
+                "           <PrecCajBan>${compraCajBanano.PrecCajBan}</PrecCajBan>\n"
+        }
+
+        etiquetaCompraCajBanano += ("<$nombreEtiquetaCajBanano>\n"
+                + numCajBan
+                + precCajBan
+                + "</$nombreEtiquetaCajBanano>\n")
+
         return etiquetaCompraCajBanano
     }
 
@@ -451,7 +447,7 @@ class ComprobanteRetencionVersionATS(
             var detalleImpuestos = ""
             if (it.detalleImpuestos != null) {
                 detalleImpuestos =
-                    "        <detalleImpuestos>${it.detalleImpuestos}</detalleImpuestos>\n"
+                    "        <detalleImpuestos>${this.generarDetallesImpuestos(it.detalleImpuestos!!)}</detalleImpuestos>\n"
             }
 
             etiquetaReembolso += ("<$nombreEtiquetaReembolso>\n"
@@ -472,7 +468,7 @@ class ComprobanteRetencionVersionATS(
     }
 
     private fun generarDetallesImpuestos(detallesImpuesto: ArrayList<DetalleImpuestoRetencion>): String {
-        val nombreEtiquetaDetalleImpuesto = "detalleImpuestos"
+        val nombreEtiquetaDetalleImpuesto = "detalleImpuesto"
         var etiquetaDetalleImpuesto = ""
         detallesImpuesto.forEach {
 
@@ -507,8 +503,11 @@ class ComprobanteRetencionVersionATS(
             }
 
             etiquetaDetalleImpuesto += ("<$nombreEtiquetaDetalleImpuesto>\n"
-                    + "                <formaPago>${it.formaPago}</formaPago>\n"
-                    + "                <total>${it.total}</total>\n"
+                    + codigo
+                    + codigoPorcentaje
+                    + tarifa
+                    + baseImponibleReembolso
+                    + impuestoReembolso
                     + "</$nombreEtiquetaDetalleImpuesto>\n")
         }
         return etiquetaDetalleImpuesto
@@ -519,17 +518,17 @@ class ComprobanteRetencionVersionATS(
         var etiquetaPagos = ""
         pagos.forEach {
 
-            var plazo = ""
-            if (it.plazo != null) {
-                plazo =
-                    "        <plazo>${it.plazo}</plazo>\n"
-            }
-
-            var unidadTiempo = ""
-            if (it.unidadTiempo != null) {
-                unidadTiempo =
-                    "        <unidadTiempo>${it.unidadTiempo}</unidadTiempo>\n"
-            }
+//            var plazo = ""
+//            if (it.plazo != null) {
+//                plazo =
+//                    "        <plazo>${it.plazo}</plazo>\n"
+//            }
+//
+//            var unidadTiempo = ""
+//            if (it.unidadTiempo != null) {
+//                unidadTiempo =
+//                    "        <unidadTiempo>${it.unidadTiempo}</unidadTiempo>\n"
+//            }
 
             etiquetaPagos += ("<$nombreEtiquetaPago>\n"
                     + "                <formaPago>${it.formaPago}</formaPago>\n"
@@ -594,7 +593,7 @@ class ComprobanteRetencionVersionATS(
         }
 
         var tipoSujetoRetenido = ""
-        if (this.infoCompRetencion.tipoSujetoRetenido != null){
+        if (this.infoCompRetencion.tipoSujetoRetenido != null) {
             tipoSujetoRetenido =
                 "        <tipoSujetoRetenido>${this.infoCompRetencion.tipoSujetoRetenido}</tipoSujetoRetenido>\n"
         }

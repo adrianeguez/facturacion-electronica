@@ -12,16 +12,16 @@ class Retencion(
     var baseImponible: String,
     var porcentajeRetener: String,
     var valorRetenido: String,
-    var dividendos: ArrayList<Dividendos>?,
-    var compraCajBanano: ArrayList<CompraCajBanano>?
+    var dividendos: Dividendos?,
+    var compraCajBanano: CompraCajBanano?
 
 ){
 
-    fun getDividendos(): Optional<ArrayList<Dividendos>> {
+    fun getDividendos(): Optional<Dividendos> {
         return Optional.of(dividendos!!)
     }
 
-    fun getCompraCajBanano(): Optional<ArrayList<CompraCajBanano>> {
+    fun getCompraCajBanano(): Optional<CompraCajBanano> {
         return Optional.of(compraCajBanano!!)
     }
 
