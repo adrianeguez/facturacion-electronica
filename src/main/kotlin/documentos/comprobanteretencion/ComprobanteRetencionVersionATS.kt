@@ -16,6 +16,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.logging.Level
 import java.util.logging.Logger
+import kotlin.collections.ArrayList
 
 
 class ComprobanteRetencionVersionATS(
@@ -315,35 +316,16 @@ class ComprobanteRetencionVersionATS(
         var etiquetaRetenciones = ""
         retenciones.forEach {
 
-            var fechaPagoDiv = ""
-            if (it.fechaPagoDiv != null) {
-                fechaPagoDiv =
-                    "        <fechaPagoDiv>${it.fechaPagoDiv}</fechaPagoDiv>\n"
-            }
-
-            var ejerFisUtDiv = ""
-            if (it.ejerFisUtDiv != null) {
-                ejerFisUtDiv =
-                    "        <ejerFisUtDiv>${it.ejerFisUtDiv}</ejerFisUtDiv>\n"
+            var dividendos = ""
+            if (it.dividendos != null){
+                dividendos = this.generarDividendos(it.dividendos!!)
             }
 
             var compraCajBanano = ""
             if (it.compraCajBanano != null) {
-                compraCajBanano =
-                    "        <compraCajBanano>${it.compraCajBanano}</compraCajBanano>\n"
+                compraCajBanano = this.generarCompraCajBanano(it.compraCajBanano!!)
             }
 
-            var NumCajBan = ""
-            if (it.NumCajBan != null) {
-                NumCajBan =
-                    "        <NumCajBan>${it.NumCajBan}</NumCajBan>\n"
-            }
-
-            var PrecCajBan = ""
-            if (it.PrecCajBan != null) {
-                PrecCajBan =
-                    "        <PrecCajBan>${it.PrecCajBan}</PrecCajBan>\n"
-            }
 
             etiquetaRetenciones += ("<$nombreEtiquetaRetencion>\n"
                     + "                <codigo>${it.codigo}</codigo>\n"
@@ -351,14 +333,64 @@ class ComprobanteRetencionVersionATS(
                     + "                <baseImponible>${it.baseImponible}</baseImponible>\n"
                     + "                <porcentajeRetener>${it.porcentajeRetener}</porcentajeRetener>\n"
                     + "                <valorRetenido>${it.valorRetenido}</valorRetenido>\n"
-                    + fechaPagoDiv
-                    + ejerFisUtDiv
+                    + dividendos
                     + compraCajBanano
-                    + NumCajBan
-                    + PrecCajBan
                     + "</$nombreEtiquetaRetencion>\n")
         }
         return etiquetaRetenciones
+    }
+
+    private fun generarDividendos(dividendos: ArrayList<Dividendos>): String{
+        val nombreEtiquetaDividendos = "dividendos"
+        var etiquetaDividendos = ""
+
+        dividendos.forEach{
+            var fechaPagoDiv = ""
+            if (it.fechaPagoDiv != null){
+                fechaPagoDiv =
+                    "           <fechaPagoDiv>${it.fechaPagoDiv}</fechaPagoDiv>\n"
+            }
+            var imRentaSoc = ""
+            if(it.imRentaSoc != null ){
+                imRentaSoc =
+                    "           <imRentaSoc>${it.imRentaSoc}</imRentaSoc>"
+            }
+            var ejerFisUtDiv = ""
+            if(it.ejerFisUtDiv != null){
+                ejerFisUtDiv =
+                    "           <ejerFisUtDiv>${it.ejerFisUtDiv}</ejerFisUtDiv>"
+            }
+            etiquetaDividendos += ("<$nombreEtiquetaDividendos>\n"
+                    + fechaPagoDiv
+                    + imRentaSoc
+                    + ejerFisUtDiv
+                    + "</$nombreEtiquetaDividendos>\n")
+        }
+        return etiquetaDividendos
+    }
+
+    private fun generarCompraCajBanano(compraCajBanano: ArrayList<CompraCajBanano>): String{
+        val nombreEtiquetaCajBanano = "compraCaBanano"
+        var etiquetaCompraCajBanano = ""
+
+        compraCajBanano.forEach{
+            var numCajBan = ""
+            if (it.NumCajBan != null){
+                numCajBan =
+                    "           <NumCajBan>${it.NumCajBan}</NumCajBan>\n"
+            }
+            var precCajBan = ""
+            if(it.PrecCajBan != null ){
+                precCajBan =
+                    "           <PrecCajBan>${it.PrecCajBan}</PrecCajBan>"
+            }
+
+            etiquetaCompraCajBanano += ("<$nombreEtiquetaCajBanano>\n"
+                    + numCajBan
+                    + precCajBan
+                    + "</$nombreEtiquetaCajBanano>\n")
+        }
+        return etiquetaCompraCajBanano
     }
 
     private fun generarReembolso(reembolsos: ArrayList<ReembolsoDetalle>): String {
@@ -437,6 +469,49 @@ class ComprobanteRetencionVersionATS(
                     + "</$nombreEtiquetaReembolso>\n")
         }
         return etiquetaReembolso
+    }
+
+    private fun generarDetallesImpuestos(detallesImpuesto: ArrayList<DetalleImpuestoRetencion>): String {
+        val nombreEtiquetaDetalleImpuesto = "detalleImpuestos"
+        var etiquetaDetalleImpuesto = ""
+        detallesImpuesto.forEach {
+
+            var codigo = ""
+            if (it.codigo != null) {
+                codigo =
+                    "        <codigo>${it.codigo}</codigo>\n"
+            }
+
+            var codigoPorcentaje = ""
+            if (it.codigoPorcentaje != null) {
+                codigoPorcentaje =
+                    "        <codigoPorcentaje>${it.codigoPorcentaje}</codigoPorcentaje>\n"
+            }
+
+            var tarifa = ""
+            if (it.tarifa != null) {
+                tarifa =
+                    "        <tarifa>${it.tarifa}</tarifa>\n"
+            }
+
+            var baseImponibleReembolso = ""
+            if (it.baseImponibleReembolso != null) {
+                baseImponibleReembolso =
+                    "        <baseImponibleReembolso>${it.baseImponibleReembolso}</baseImponibleReembolso>\n"
+            }
+
+            var impuestoReembolso = ""
+            if (it.impuestoReembolso != null) {
+                impuestoReembolso =
+                    "        <impuestoReembolso>${it.impuestoReembolso}</impuestoReembolso>\n"
+            }
+
+            etiquetaDetalleImpuesto += ("<$nombreEtiquetaDetalleImpuesto>\n"
+                    + "                <formaPago>${it.formaPago}</formaPago>\n"
+                    + "                <total>${it.total}</total>\n"
+                    + "</$nombreEtiquetaDetalleImpuesto>\n")
+        }
+        return etiquetaDetalleImpuesto
     }
 
     private fun generarPagos(pagos: ArrayList<Pago>): String {
