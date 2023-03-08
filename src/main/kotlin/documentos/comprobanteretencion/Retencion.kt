@@ -1,5 +1,8 @@
 package documentos.comprobanteretencion
+
+
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class Retencion(
@@ -9,36 +12,19 @@ class Retencion(
     var baseImponible: String,
     var porcentajeRetener: String,
     var valorRetenido: String,
-    var fechaPagoDiv: String?,
-    var imRentaSoc: String?,
-    var ejerFisUtDiv: String?,
-    var compraCajBanano: String?,
-    var NumCajBan: String?,
-    var PrecCajBan: String?
+    var dividendos: Dividendos?,
+    var compraCajBanano: CompraCajBanano?
+
 ){
 
-
-    fun getFechaPagoDiv(): Optional<String> {
-        return Optional.of(fechaPagoDiv!!)
+    fun getDividendos(): Optional<Dividendos> {
+        return Optional.of(dividendos!!)
     }
 
-    fun getImRentaSoc(): Optional<String> {
-        return Optional.of(imRentaSoc!!)
-    }
-
-    fun getEjerFisUtDiv(): Optional<String> {
-        return Optional.of(ejerFisUtDiv!!)
-    }
-
-    fun getCompraCajBanano(): Optional<String> {
+    fun getCompraCajBanano(): Optional<CompraCajBanano> {
         return Optional.of(compraCajBanano!!)
     }
 
-    fun getNumCajBan(): Optional<String> {
-        return Optional.of(NumCajBan!!)
-    }
 
-    fun getPrecCajBan(): Optional<String> {
-        return Optional.of(PrecCajBan!!)
-    }
+
 }
